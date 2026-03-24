@@ -1,0 +1,8 @@
+name: shopgraph
+description: Structured product data from the open web — where platform APIs don't reach. Schema.org + AI extraction. Pay per call via Stripe MPP.
+icon: https://shopgraph.dev/icon.svg
+configSchema:
+  type: object
+  properties: {}
+  additionalProperties: false
+  description: No configuration required. Payment is handled inline via Stripe MPP when tools are called.
