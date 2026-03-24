@@ -34,7 +34,7 @@ async function main() {
   app.get('/health', (_req, res) => {
     res.json({
       status: 'ok',
-      service: 'product-enrichment',
+      service: 'shopgraph',
       version: '1.0.0',
       tools: ['enrich_product', 'enrich_basic'],
     });
@@ -87,7 +87,7 @@ async function main() {
   });
 
   app.listen(PORT, () => {
-    console.log(`Product Enrichment MCP server listening on port ${PORT}`);
+    console.log(`ShopGraph MCP server listening on port ${PORT}`);
     console.log(`  Health: http://localhost:${PORT}/health`);
     console.log(`  MCP:    http://localhost:${PORT}/mcp`);
   });

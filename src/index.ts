@@ -25,7 +25,7 @@ async function main() {
   await server.connect(transport);
 
   // Log to stderr (stdout is for MCP protocol)
-  console.error('Product Enrichment MCP server started');
+  console.error('ShopGraph MCP server started');
 }
 
 main().catch((err) => {

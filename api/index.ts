@@ -27,7 +27,7 @@ function getPayments() {
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'product-enrichment',
+    service: 'shopgraph',
     version: '1.0.0',
     runtime: 'vercel-serverless',
     tools: ['enrich_product', 'enrich_basic'],
@@ -37,7 +37,7 @@ app.get('/health', (_req, res) => {
 app.get('/', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'product-enrichment',
+    service: 'shopgraph',
     version: '1.0.0',
   });
 });

@@ -1,5 +1,5 @@
 {
-  "name": "@laundromatic/product-enrichment",
+  "name": "@laundromatic/shopgraph",
   "version": "1.0.0",
   "description": "MCP server for product data enrichment with Stripe MPP payments",
   "type": "module",
@@ -15,7 +15,7 @@
   },
   "keywords": [
     "mcp",
-    "product-enrichment",
+    "shopgraph",
     "stripe",
     "mpp"
   ],

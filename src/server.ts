@@ -14,7 +14,7 @@ export function createServer(
   payments: PaymentManager,
 ): McpServer {
   const server = new McpServer({
-    name: 'product-enrichment',
+    name: 'shopgraph',
     version: '1.0.0',
   });
 

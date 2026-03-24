@@ -1,4 +1,4 @@
-# @laundromatic/product-enrichment
+# @laundromatic/shopgraph
 
 MCP server for product data enrichment with Stripe MPP (Machine Payments Protocol) payment gating.
 
@@ -63,9 +63,9 @@ Add to your MCP client config:
 ```json
 {
   "mcpServers": {
-    "product-enrichment": {
+    "shopgraph": {
       "command": "node",
-      "args": ["/path/to/product-enrichment/dist/index.js"]
+      "args": ["/path/to/shopgraph/dist/index.js"]
     }
   }
 }

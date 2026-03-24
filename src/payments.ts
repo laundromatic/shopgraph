@@ -33,7 +33,7 @@ export class PaymentManager {
       provider: 'stripe',
       amount,
       currency: 'usd',
-      description: `Product enrichment: ${toolName} ($${(amount / 100).toFixed(2)})`,
+      description: `ShopGraph: ${toolName} ($${(amount / 100).toFixed(2)})`,
       payment_methods: ['card'],
     };
   }
@@ -57,7 +57,7 @@ export class PaymentManager {
         enabled: true,
         allow_redirects: 'never',
       },
-      description: `Product enrichment: ${toolName}`,
+      description: `ShopGraph: ${toolName}`,
       metadata: {
         tool: toolName,
         protocol: 'mpp',
