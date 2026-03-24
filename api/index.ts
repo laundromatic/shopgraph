@@ -193,7 +193,7 @@ const footer = `<footer class="footer-section">
   <div class="footer-inner">
     <div class="footer-brand">
       <strong>ShopGraph</strong>
-      <p>Structured product data for AI agents. Built by Krishna Brown, LLC.</p>
+      <p>Structured product data for AI agents. Built by Krishna Brown.</p>
     </div>
     <div class="footer-links">
       <div class="footer-col">
@@ -214,7 +214,7 @@ const footer = `<footer class="footer-section">
     </div>
   </div>
   <div class="footer-bottom">
-    Krishna Brown, LLC &middot; Los Angeles, CA &middot; Apache 2.0
+    Krishna Brown &middot; Los Angeles, CA &middot; Apache 2.0
   </div>
 </footer>`;
 
@@ -371,6 +371,27 @@ ${nav}
 </section>
 
 <!-- Integration -->
+
+<!-- Works With -->
+<section class="section" style="background:#f8f9fa">
+  <div class="container">
+    <div class="section-header">
+      <h2>Works With</h2>
+      <p>Any MCP-compatible client can connect to ShopGraph.</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:800px;margin:0 auto">
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">✦ Claude</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">✦ Claude Code</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">⚡ Cursor</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">🌊 Windsurf</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">◆ OpenAI</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">⚙ CrewAI</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">⚡ LangGraph</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">🔄 AutoGen</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124">🐍 Any MCP Client</span>
+    </div>
+  </div>
+</section>
 <section class="section">
   <div class="container">
     <div class="section-header">
@@ -413,7 +434,7 @@ ${nav}
 
   <h2>1. Service Description</h2>
   <p>ShopGraph provides structured product data extraction via the Model Context Protocol (MCP). The service accepts product URLs and returns structured data including product name, brand, price, availability, categories, images, and confidence scores.</p>
-  <p>ShopGraph is operated by <strong>Krishna Brown, LLC</strong>, a California limited liability company based in Los Angeles, CA.</p>
+  <p>ShopGraph is operated by <strong>Krishna Brown</strong>, a California limited liability company based in Los Angeles, CA.</p>
 
   <h2>2. Payment Terms</h2>
   <p>ShopGraph charges per successful API call:</p>
@@ -440,13 +461,13 @@ ${nav}
   </ul>
 
   <h2>6. Limitation of Liability</h2>
-  <p>ShopGraph is provided "as is" without warranty of any kind, express or implied. Krishna Brown, LLC shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or data, arising from your use of the service. Total liability shall not exceed the amount you paid to ShopGraph in the 30 days preceding the claim.</p>
+  <p>ShopGraph is provided "as is" without warranty of any kind, express or implied. Krishna Brown shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or data, arising from your use of the service. Total liability shall not exceed the amount you paid to ShopGraph in the 30 days preceding the claim.</p>
 
   <h2>7. Changes to Terms</h2>
   <p>We may update these terms from time to time. Continued use of ShopGraph after changes constitutes acceptance of the updated terms. Material changes will be noted on this page with an updated effective date.</p>
 
   <h2>8. Contact</h2>
-  <p>Krishna Brown, LLC<br>Los Angeles, CA<br><a href="mailto:hi@kb.computer">hi@kb.computer</a></p>
+  <p>Krishna Brown<br>Los Angeles, CA<br><a href="mailto:hi@kb.computer">hi@kb.computer</a></p>
 
   <div class="gradient-line"></div>
 </div>
@@ -492,7 +513,7 @@ ${nav}
 
   <h2>Contact</h2>
   <p>Questions about this policy? Contact us at <a href="mailto:hi@kb.computer">hi@kb.computer</a>.</p>
-  <p>Krishna Brown, LLC<br>Los Angeles, CA</p>
+  <p>Krishna Brown<br>Los Angeles, CA</p>
 
   <div class="gradient-line"></div>
 </div>
