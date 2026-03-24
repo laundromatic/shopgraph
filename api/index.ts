@@ -140,7 +140,7 @@ ul,ol{padding-left:24px}
 .cache-note p{margin:0;font-size:.95em;color:#202124}
 
 /* Footer */
-.footer-section{border-top:1px solid #dadce0;padding:48px 0 32px;margin-top:0}
+.footer-section{border-top:1px solid #dadce0;padding:32px 0 32px;margin-top:0}
 .footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px}
 .footer-brand{max-width:300px}
 .footer-brand strong{color:#202124;font-size:1.05em;display:block;margin-bottom:8px}
@@ -418,7 +418,7 @@ ${nav}
   </div>
 </section>
 
-<div class="gradient-line"></div>
+<div class="gradient-line" style="display:none"></div>
 
 ${footer}
 `, `<meta name="description" content="Structured product data extraction for AI agents. Any URL, any merchant, any platform. MCP server with Schema.org and LLM extraction.">`);
@@ -469,7 +469,7 @@ ${nav}
   <h2>8. Contact</h2>
   <p>Krishna Brown<br>Los Angeles, CA<br><a href="mailto:hi@kb.computer">hi@kb.computer</a></p>
 
-  <div class="gradient-line"></div>
+  <div class="gradient-line" style="display:none"></div>
 </div>
 
 ${footer}
@@ -515,7 +515,7 @@ ${nav}
   <p>Questions about this policy? Contact us at <a href="mailto:hi@kb.computer">hi@kb.computer</a>.</p>
   <p>Krishna Brown<br>Los Angeles, CA</p>
 
-  <div class="gradient-line"></div>
+  <div class="gradient-line" style="display:none"></div>
 </div>
 
 ${footer}
