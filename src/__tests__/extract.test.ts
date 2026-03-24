@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -11,8 +11,14 @@ vi.mock('../llm-extract.js', () => ({
   extractWithLlm: vi.fn(),
 }));
 
+// Mock browser-extract module
+vi.mock('../browser-extract.js', () => ({
+  extractWithBrowser: vi.fn(),
+}));
+
 import { extractProduct } from '../extract.js';
 import { extractWithLlm } from '../llm-extract.js';
+import { extractWithBrowser } from '../browser-extract.js';
 
 const FIXTURES = join(import.meta.dirname, 'fixtures');
 const shopifyHtml = readFileSync(join(FIXTURES, 'shopify-product.html'), 'utf-8');
@@ -22,13 +28,45 @@ function mockResponse(body: string, status = 200) {
   return {
     ok: status >= 200 && status < 300,
     status,
-    statusText: status === 200 ? 'OK' : 'Not Found',
+    statusText: status === 200 ? 'OK' : status === 403 ? 'Forbidden' : 'Not Found',
     text: () => Promise.resolve(body),
   };
 }
 
+/** Build a minimal ProductData for browser mock */
+function browserResult(overrides: Record<string, unknown> = {}) {
+  return {
+    url: 'https://example.com/product',
+    extracted_at: new Date().toISOString(),
+    extraction_method: 'hybrid' as const,
+    product_name: 'Browser Product',
+    brand: 'BrowserBrand',
+    description: 'Extracted via browser',
+    price: { amount: 29.99, currency: 'USD', sale_price: null },
+    availability: 'in_stock' as const,
+    categories: [],
+    image_urls: [],
+    primary_image_url: null,
+    color: [],
+    material: [],
+    dimensions: null,
+    schema_org_raw: null,
+    confidence: { overall: 0.8, per_field: {} },
+    ...overrides,
+  };
+}
+
+const originalEnv = process.env;
+
 beforeEach(() => {
   vi.clearAllMocks();
+  // Default: browser fallback disabled
+  process.env = { ...originalEnv };
+  delete process.env.ENABLE_BROWSER_FALLBACK;
+});
+
+afterEach(() => {
+  process.env = originalEnv;
 });
 
 describe('extractProduct', () => {
@@ -128,5 +166,190 @@ describe('extractProduct', () => {
     const fetchCall = mockFetch.mock.calls[0];
     const headers = fetchCall[1].headers;
     expect(headers['User-Agent']).toContain('Chrome');
+  });
+});
+
+describe('browser fallback', () => {
+  it('does NOT trigger browser when fetch succeeds with price data', async () => {
+    // shopifyHtml has price in schema.org
+    mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    const result = await extractProduct('https://example.com/product');
+    expect(result.extraction_method).toBe('schema_org');
+    expect(result.price).not.toBeNull();
+    expect(extractWithBrowser).not.toHaveBeenCalled();
+  });
+
+  it('triggers browser fallback when fetch result has no price AND no availability', async () => {
+    // Return HTML with no schema.org, LLM returns data but no price/availability
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'Target Lamp',
+      brand: null,
+      description: 'A lamp from Target',
+      price: null,
+      availability: 'unknown',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: { overall: 0.5, per_field: {} },
+    });
+    vi.mocked(extractWithBrowser).mockResolvedValueOnce(browserResult());
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    const result = await extractProduct('https://target.com/lamp');
+    expect(extractWithBrowser).toHaveBeenCalledWith('https://target.com/lamp');
+    expect(result.extraction_method).toBe('hybrid');
+    expect(result.price).not.toBeNull();
+  });
+
+  it('triggers browser fallback on 403 (bot blocked)', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse('Forbidden', 403));
+    vi.mocked(extractWithBrowser).mockResolvedValueOnce(browserResult());
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    const result = await extractProduct('https://example.com/blocked');
+    expect(extractWithBrowser).toHaveBeenCalledWith('https://example.com/blocked');
+    expect(result.extraction_method).toBe('hybrid');
+  });
+
+  it('returns original fetch result when browser fallback also fails', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'Partial Product',
+      brand: null,
+      description: null,
+      price: null,
+      availability: 'unknown',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: { overall: 0.3, per_field: {} },
+    });
+    vi.mocked(extractWithBrowser).mockRejectedValueOnce(new Error('Browser launch failed'));
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    const result = await extractProduct('https://example.com/partial');
+    // Should return the original fetch result (partial data better than nothing)
+    expect(result.product_name).toBe('Partial Product');
+    expect(result.extraction_method).toBe('llm');
+  });
+
+  it('re-throws 403 when browser fallback fails and there is no fetch result', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse('Forbidden', 403));
+    vi.mocked(extractWithBrowser).mockRejectedValueOnce(new Error('Browser launch failed'));
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    await expect(extractProduct('https://example.com/blocked')).rejects.toThrow('HTTP 403');
+  });
+
+  it('NEVER triggers browser when ENABLE_BROWSER_FALLBACK is not set', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'No Price Product',
+      brand: null,
+      description: null,
+      price: null,
+      availability: 'unknown',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: { overall: 0.3, per_field: {} },
+    });
+    // ENABLE_BROWSER_FALLBACK is NOT set (deleted in beforeEach)
+
+    const result = await extractProduct('https://example.com/no-price');
+    expect(extractWithBrowser).not.toHaveBeenCalled();
+    expect(result.product_name).toBe('No Price Product');
+  });
+
+  it('NEVER triggers browser when ENABLE_BROWSER_FALLBACK=false', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'No Price Product',
+      brand: null,
+      description: null,
+      price: null,
+      availability: 'unknown',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: { overall: 0.3, per_field: {} },
+    });
+    process.env.ENABLE_BROWSER_FALLBACK = 'false';
+
+    const result = await extractProduct('https://example.com/no-price');
+    expect(extractWithBrowser).not.toHaveBeenCalled();
+  });
+
+  it('does NOT trigger browser when result has price but no availability', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'Product With Price',
+      brand: null,
+      description: null,
+      price: { amount: 19.99, currency: 'USD', sale_price: null },
+      availability: 'unknown',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: { overall: 0.5, per_field: {} },
+    });
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    const result = await extractProduct('https://example.com/has-price');
+    // Has price, so no fallback needed even though availability is unknown
+    expect(extractWithBrowser).not.toHaveBeenCalled();
+  });
+
+  it('does NOT trigger browser when result has availability but no price', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'Product In Stock',
+      brand: null,
+      description: null,
+      price: null,
+      availability: 'in_stock',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: { overall: 0.5, per_field: {} },
+    });
+    process.env.ENABLE_BROWSER_FALLBACK = 'true';
+
+    const result = await extractProduct('https://example.com/in-stock');
+    // Has availability, so no fallback needed even though price is null
+    expect(extractWithBrowser).not.toHaveBeenCalled();
   });
 });
