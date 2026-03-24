@@ -19,7 +19,7 @@
     "stripe",
     "mpp"
   ],
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
