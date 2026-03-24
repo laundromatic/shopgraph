@@ -11,7 +11,12 @@
     "test": "vitest",
     "test:run": "vitest run"
   },
-  "keywords": ["mcp", "product-enrichment", "stripe", "mpp"],
+  "keywords": [
+    "mcp",
+    "product-enrichment",
+    "stripe",
+    "mpp"
+  ],
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
@@ -24,7 +29,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.12.0",
-    "tsx": "^4.19.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   }
