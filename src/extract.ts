@@ -8,10 +8,68 @@ const USER_AGENT =
 const FETCH_TIMEOUT_MS = 15_000;
 
 /**
+ * Check if browser fallback is enabled via environment variable.
+ */
+export function isBrowserFallbackEnabled(): boolean {
+  return process.env.ENABLE_BROWSER_FALLBACK === 'true';
+}
+
+/**
+ * Determine if a result is missing price/availability data and should trigger browser fallback.
+ */
+function needsBrowserFallback(result: ProductData): boolean {
+  return result.price === null && result.availability === 'unknown';
+}
+
+/**
  * Main extraction orchestrator.
  * Fetches URL, tries schema.org first, falls back to LLM.
+ * If result is missing price AND availability, tries browser fallback (when enabled).
  */
 export async function extractProduct(url: string): Promise<ProductData> {
+  let fetchResult: ProductData;
+  let fetchFailed403 = false;
+
+  try {
+    fetchResult = await extractFromHtml(url);
+  } catch (error: unknown) {
+    // If fetch returns 403 (bot blocked), try browser fallback
+    if (error instanceof Error && error.message.includes('HTTP 403') && isBrowserFallbackEnabled()) {
+      fetchFailed403 = true;
+      fetchResult = null as unknown as ProductData; // will be replaced by browser result
+    } else {
+      throw error;
+    }
+  }
+
+  // Determine if we need browser fallback
+  const shouldFallback = isBrowserFallbackEnabled() && (
+    fetchFailed403 || (fetchResult && needsBrowserFallback(fetchResult))
+  );
+
+  if (shouldFallback) {
+    try {
+      const { extractWithBrowser } = await import('./browser-extract.js');
+      const browserResult = await extractWithBrowser(url);
+      return browserResult;
+    } catch {
+      // Browser fallback failed — return original fetch result if we have it
+      if (fetchFailed403) {
+        // Re-throw original error since we have no result at all
+        throw new Error(`HTTP 403: Forbidden`);
+      }
+      return fetchResult;
+    }
+  }
+
+  return fetchResult;
+}
+
+/**
+ * Extract product data from HTML fetched via fetch().
+ * This is the original extraction path (schema.org → LLM).
+ */
+async function extractFromHtml(url: string): Promise<ProductData> {
   const html = await fetchPage(url);
   const now = new Date().toISOString();
 
