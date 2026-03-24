@@ -12,5 +12,8 @@
   },
   "rewrites": [
     { "source": "/(.*)", "destination": "/api" }
+  ],
+  "crons": [
+    { "path": "/api/run-tests", "schedule": "0 6 * * *" }
   ]
 }

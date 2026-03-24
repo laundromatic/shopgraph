@@ -1,0 +1,70 @@
+{
+  "total_tested": 95,
+  "total_successful": 79,
+  "overall_success_rate": 89,
+  "overall_confidence": 0.81,
+  "last_updated": "2026-03-24",
+  "note": "Stats from 95-URL test run on 2026-03-24. Success rate calculated on reachable pages (excludes bot-blocked). Verticals Pets, Automotive, Office not yet tested — URLs added to corpus for future runs.",
+  "verticals": [
+    {
+      "name": "Fashion & Apparel",
+      "tested": 21,
+      "success_rate": 90,
+      "avg_confidence": 0.86
+    },
+    {
+      "name": "Electronics & Tech",
+      "tested": 18,
+      "success_rate": 94,
+      "avg_confidence": 0.73
+    },
+    {
+      "name": "Home & Furniture",
+      "tested": 13,
+      "success_rate": 77,
+      "avg_confidence": 0.79
+    },
+    {
+      "name": "Health & Beauty",
+      "tested": 13,
+      "success_rate": 85,
+      "avg_confidence": 0.84
+    },
+    {
+      "name": "Sports & Outdoors",
+      "tested": 7,
+      "success_rate": 100,
+      "avg_confidence": 0.84
+    },
+    {
+      "name": "Jewelry & Accessories",
+      "tested": 2,
+      "success_rate": 100,
+      "avg_confidence": 0.95
+    },
+    {
+      "name": "Food & Beverage",
+      "tested": 2,
+      "success_rate": 100,
+      "avg_confidence": 0.82
+    },
+    {
+      "name": "Pets",
+      "tested": 0,
+      "success_rate": 0,
+      "avg_confidence": 0
+    },
+    {
+      "name": "Automotive & Parts",
+      "tested": 0,
+      "success_rate": 0,
+      "avg_confidence": 0
+    },
+    {
+      "name": "Office & Supplies",
+      "tested": 0,
+      "success_rate": 0,
+      "avg_confidence": 0
+    }
+  ]
+}

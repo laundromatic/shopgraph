@@ -11,6 +11,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { createServer } from '../src/server.js';
 import { EnrichmentCache } from '../src/cache.js';
 import { PaymentManager } from '../src/payments.js';
+import { getDashboardStats } from '../src/stats.js';
 
 const app = express();
 app.use(express.json());
@@ -218,6 +219,64 @@ const footer = `<footer class="footer-section">
   </div>
 </footer>`;
 
+// ---- Quality Dashboard ----
+function buildQualityDashboard(): string {
+  const stats = getDashboardStats();
+  const rows = stats.verticals
+    .map(v => `          <tr style="border-bottom:1px solid #f1f3f4">
+            <td style="padding:10px 12px;color:#202124;font-weight:500">${v.name}</td>
+            <td style="padding:10px 12px;text-align:right;color:#5f6368">${v.tested}</td>
+            <td style="padding:10px 12px;text-align:right"><span style="color:${v.success_rate >= 90 ? '#34a853' : v.success_rate >= 70 ? '#fbbc04' : '#5f6368'};font-weight:600">${v.success_rate}%</span></td>
+            <td style="padding:10px 12px;text-align:right;color:#5f6368">${v.avg_confidence.toFixed(2)}</td>
+          </tr>`)
+    .join('\n');
+
+  return `<section class="section section-alt" id="quality">
+  <div class="container">
+    <div class="section-header">
+      <div style="font-size:4em;font-weight:800;color:#1a73e8;letter-spacing:-.03em">${stats.total_tested}</div>
+      <h2 style="margin-top:8px;margin-bottom:4px">Product Pages Tested</h2>
+      <p>Across <strong>${stats.verticals.length}</strong> shopping verticals &middot; Last updated: ${stats.last_updated}</p>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:24px 0 40px">
+      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:130px">
+        <div style="font-size:2em;font-weight:700;color:#34a853">${stats.overall_success_rate}%</div>
+        <div style="font-size:0.8em;color:#5f6368;margin-top:4px">Success Rate</div>
+      </div>
+      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:130px">
+        <div style="font-size:2em;font-weight:700;color:#202124">${stats.overall_confidence.toFixed(2)}</div>
+        <div style="font-size:0.8em;color:#5f6368;margin-top:4px">Avg Confidence</div>
+      </div>
+      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:130px">
+        <div style="font-size:2em;font-weight:700;color:#1a73e8">100%</div>
+        <div style="font-size:0.8em;color:#5f6368;margin-top:4px">Accuracy (Verified)</div>
+      </div>
+    </div>
+
+    <div style="max-width:720px;margin:0 auto">
+      <table style="width:100%;border-collapse:collapse;font-size:.95em">
+        <thead>
+          <tr style="border-bottom:2px solid #dadce0">
+            <th style="text-align:left;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Vertical</th>
+            <th style="text-align:right;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Pages</th>
+            <th style="text-align:right;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Success</th>
+            <th style="text-align:right;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+${rows}
+        </tbody>
+      </table>
+    </div>
+
+    <p style="text-align:center;color:#9aa0a6;font-size:.8em;margin-top:24px">Schema.org path: 0.95 confidence, near-instant &middot; LLM fallback: 0.7+ confidence &middot; Ground truth verified via Playwright</p>
+  </div>
+</section>`;
+}
+
+const qualityDashboardHTML = buildQualityDashboard();
+
 // ---- Landing Page ----
 const landingHTML = pageShell('ShopGraph — Structured Product Data for AI Agents', `
 ${nav}
@@ -236,6 +295,9 @@ ${nav}
     </div>
   </div>
 </section>
+
+<!-- Quality Dashboard -->
+${qualityDashboardHTML}
 
 <!-- What It Does -->
 <section class="section">
@@ -350,34 +412,6 @@ ${nav}
 
 <!-- Extracted Data -->
 
-<!-- Tested & Verified -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Tested Across 95 Real Product Pages</h2>
-      <p>Validated against Shopify stores, big retailers, DTC brands, fashion, electronics, and specialty retailers.</p>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:center;margin:32px 0">
-      <div style="text-align:center;padding:24px 32px;background:#f8f9fa;border-radius:12px;min-width:140px">
-        <div style="font-size:2.2em;font-weight:700;color:#1a73e8">89%</div>
-        <div style="font-size:0.85em;color:#5f6368;margin-top:4px">Success Rate</div>
-      </div>
-      <div style="text-align:center;padding:24px 32px;background:#f8f9fa;border-radius:12px;min-width:140px">
-        <div style="font-size:2.2em;font-weight:700;color:#34a853">100%</div>
-        <div style="font-size:0.85em;color:#5f6368;margin-top:4px">Accuracy (Verified)</div>
-      </div>
-      <div style="text-align:center;padding:24px 32px;background:#f8f9fa;border-radius:12px;min-width:140px">
-        <div style="font-size:2.2em;font-weight:700;color:#202124">0.81</div>
-        <div style="font-size:0.85em;color:#5f6368;margin-top:4px">Avg Confidence</div>
-      </div>
-      <div style="text-align:center;padding:24px 32px;background:#f8f9fa;border-radius:12px;min-width:140px">
-        <div style="font-size:2.2em;font-weight:700;color:#ea4335">64</div>
-        <div style="font-size:0.85em;color:#5f6368;margin-top:4px">Automated Tests</div>
-      </div>
-    </div>
-    <p style="text-align:center;color:#5f6368;font-size:0.9em;max-width:600px;margin:0 auto">Schema.org path: 0.95 confidence, near-instant. LLM fallback: 0.7+ confidence, 7-18s. Sites with aggressive bot protection may return limited results.</p>
-  </div>
-</section>
 <section class="section section-alt">
   <div class="container">
     <div class="section-header">
@@ -586,6 +620,20 @@ app.get('/tos', (_req, res) => {
 // Privacy Policy
 app.get('/privacy', (_req, res) => {
   res.type('html').send(privacyHTML);
+});
+
+// Stats API
+app.get('/api/stats', (_req, res) => {
+  res.json(getDashboardStats());
+});
+
+// Cron: daily test runner (placeholder)
+app.get('/api/run-tests', (_req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Cron endpoint ready — daily testing not yet active.',
+    next: 'Will run test corpus against ShopGraph and update stats.',
+  });
 });
 
 // MCP endpoint
