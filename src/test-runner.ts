@@ -28,7 +28,7 @@ interface CorpusEntry {
   added: string;
 }
 
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 12;
 const EXTRACTION_TIMEOUT_MS = 15_000;
 
 /**

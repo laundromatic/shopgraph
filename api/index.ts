@@ -66,7 +66,7 @@ ul,ol{padding-left:24px}
 .nav-links a:hover{color:#202124;text-decoration:none}
 
 /* Hero */
-.hero{position:relative;padding:100px 0 80px;overflow:hidden;text-align:center}
+}
 .hero-blob{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:.35;pointer-events:none}
 .hero-blob-1{background:radial-gradient(circle,#4285f4,transparent 70%);top:-200px;right:-100px}
 .hero-blob-2{background:radial-gradient(circle,#34a853,transparent 70%);bottom:-200px;left:-100px}
@@ -81,7 +81,7 @@ ul,ol{padding-left:24px}
 .btn-outline:hover{background:#f8f9fa;border-color:#1a73e8;text-decoration:none}
 
 /* Sections */
-.section{padding:72px 0}
+.section{padding:40px 0}
 .section-alt{background:#f8f9fa}
 .section-header{text-align:center;margin-bottom:48px}
 .section-header p{max-width:640px;margin:0 auto;font-size:1.1em}
@@ -178,6 +178,35 @@ ul,ol{padding-left:24px}
 </head>
 <body>
 ${body}
+
+<script>
+(function(){
+  const el = document.getElementById('counter');
+  if (!el) return;
+  const target = parseInt(el.dataset.target, 10);
+  let current = 0;
+  const duration = 1500;
+  const step = Math.max(1, Math.floor(target / 60));
+  const interval = duration / (target / step);
+  el.textContent = '0';
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = current.toLocaleString();
+  }, interval);
+  // Refresh stats every 5 minutes
+  setInterval(async () => {
+    try {
+      const res = await fetch('/api/stats');
+      const data = await res.json();
+      if (data.total_tested > target) {
+        el.dataset.target = data.total_tested;
+        el.textContent = data.total_tested.toLocaleString();
+      }
+    } catch {}
+  }, 300000);
+})();
+</script>
 </body>
 </html>`;
 
@@ -238,7 +267,7 @@ function buildQualityDashboard(stats: ReturnType<typeof getDashboardStats>): str
   return `<section class="section section-alt" id="quality">
   <div class="container">
     <div class="section-header">
-      <div style="font-size:4em;font-weight:800;color:#1a73e8;letter-spacing:-.03em">${stats.total_tested}</div>
+      <div id="counter" style="font-size:4em;font-weight:800;color:#1a73e8;letter-spacing:-.03em" data-target="${stats.total_tested}">${stats.total_tested}</div>
       <h2 style="margin-top:8px;margin-bottom:4px">Product Pages Tested</h2>
       <p>Across <strong>${stats.verticals.length}</strong> shopping verticals &middot; Last updated: ${stats.last_updated}</p>
     </div>
