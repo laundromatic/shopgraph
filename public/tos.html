@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code&display=swap" rel="stylesheet"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of Service — ShopGraph</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#ffffff;color:#202124;font-family:'Google Sans Flex','Google Sans','Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:#1a73e8;text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre{font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace}
+code{background:#f1f3f4;padding:2px 8px;border-radius:4px;font-size:.85em;color:#202124}
+pre{background:#1e1e2e;color:#cdd6f4;padding:20px 24px;border-radius:12px;overflow-x:auto;font-size:.85em;line-height:1.6;border:1px solid #dadce0}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+h1{font-size:3.2em;font-weight:700;letter-spacing:-.03em;color:#202124;line-height:1.1}
+h2{font-size:1.6em;font-weight:600;color:#202124;margin-bottom:16px}
+p{color:#595959;margin-bottom:12px;font-size:1.05em}
+li{color:#595959;margin-bottom:6px}
+ul,ol{padding-left:24px}
+.nav{padding:16px 0;border-bottom:1px solid #dadce0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 24px}
+.nav-logo{font-size:1.2em;font-weight:600;color:#202124;display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:#595959;font-size:.9em;font-weight:500}
+.nav-links a:hover{color:#202124;text-decoration:none}
+.footer-section{border-top:1px solid #dadce0;padding:32px 0 32px;margin-top:0}
+.footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px}
+.footer-brand{max-width:300px}
+.footer-brand strong{color:#202124;font-size:1.05em;display:block;margin-bottom:8px}
+.footer-brand p{font-size:.85em;color:#595959;margin:0}
+.footer-links{display:flex;gap:48px}
+.footer-col h4{font-size:.85em;font-weight:600;color:#202124;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.footer-col a{display:block;color:#595959;font-size:.9em;margin-bottom:8px}
+.footer-col a:hover{color:#1a73e8}
+.footer-bottom{text-align:center;color:#595959;font-size:.8em;margin-top:32px;padding-top:24px;border-top:1px solid #dadce0}
+@media(max-width:768px){
+  .footer-inner{flex-direction:column;align-items:center;text-align:center}
+  .footer-links{flex-direction:column;gap:24px}
+}
+.gradient-line{height:3px;background:linear-gradient(90deg,#4285f4,#34a853,#fbbc04,#ea4335);border-radius:2px;margin:40px auto;max-width:200px}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:#595959;font-size:.9em;margin-bottom:24px}
+.back-link:hover{color:#1a73e8;text-decoration:none}
+.legal-content{max-width:720px;margin:0 auto;padding:48px 24px 64px}
+.legal-content h1{font-size:2.2em;margin-bottom:8px}
+.legal-content h2{font-size:1.2em;margin-top:36px;margin-bottom:12px}
+.legal-content p,.legal-content li{font-size:.95em}
+.legal-date{color:#595959;font-size:.9em;margin-bottom:32px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">ShopGraph</a>
+    <div class="nav-links">
+      <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
+      <a href="/tos">Terms</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/health">Status</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="legal-content">
+  <a href="/" class="back-link">&larr; Back to ShopGraph</a>
+  <h1>Terms of Service</h1>
+  <p class="legal-date">Effective: March 2026</p>
+
+  <h2>1. Service Description</h2>
+  <p>ShopGraph provides structured product data extraction via the Model Context Protocol (MCP). The service accepts product URLs and returns structured data including product name, brand, price, availability, categories, images, and confidence scores.</p>
+  <p>ShopGraph is operated by <strong>Krishna Brown</strong>, a California limited liability company based in Los Angeles, CA.</p>
+
+  <h2>2. Payment Terms</h2>
+  <p>ShopGraph charges per successful API call:</p>
+  <ul>
+    <li><code>enrich_product</code> — $0.02 USD per call</li>
+    <li><code>enrich_basic</code> — $0.01 USD per call</li>
+  </ul>
+  <p>Payment is processed via <strong>Stripe Machine Payments Protocol (MPP)</strong>. No charge is made for cached results (within 24 hours of the original call) or for calls that fail to extract data.</p>
+  <p>If you believe you were charged in error, contact <a href="mailto:hi@kb.computer">hi@kb.computer</a> for a refund.</p>
+
+  <h2>3. Accuracy &amp; Data Quality</h2>
+  <p>ShopGraph provides product data on a <strong>best-effort basis</strong>. Extraction accuracy depends on the structure and quality of the source page. Every response includes confidence scores so you can assess data reliability. ShopGraph does not guarantee the accuracy, completeness, or timeliness of extracted data.</p>
+
+  <h2>4. Rate Limits</h2>
+  <p>API calls are limited to <strong>100 requests per minute</strong> per client. Exceeding this limit may result in temporary throttling. If you need higher limits, contact <a href="mailto:hi@kb.computer">hi@kb.computer</a>.</p>
+
+  <h2>5. Acceptable Use</h2>
+  <p>You agree not to:</p>
+  <ul>
+    <li>Use ShopGraph for systematic large-scale scraping intended to build a competing product data service</li>
+    <li>Abuse the service in a way that degrades performance for other users</li>
+    <li>Misrepresent ShopGraph data as your own proprietary dataset</li>
+    <li>Use the service for any unlawful purpose</li>
+  </ul>
+
+  <h2>6. Limitation of Liability</h2>
+  <p>ShopGraph is provided "as is" without warranty of any kind, express or implied. Krishna Brown shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or data, arising from your use of the service. Total liability shall not exceed the amount you paid to ShopGraph in the 30 days preceding the claim.</p>
+
+  <h2>7. Changes to Terms</h2>
+  <p>We may update these terms from time to time. Continued use of ShopGraph after changes constitutes acceptance of the updated terms. Material changes will be noted on this page with an updated effective date.</p>
+
+  <h2>8. Contact</h2>
+  <p>Krishna Brown<br>Los Angeles, CA<br><a href="mailto:hi@kb.computer">hi@kb.computer</a></p>
+
+  <div class="gradient-line" style="display:none"></div>
+</div>
+</main>
+
+<footer class="footer-section">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>ShopGraph</strong>
+      <p>Structured product data for AI agents. Built by Krishna Brown.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
+        <a href="/mcp">MCP Endpoint</a>
+        <a href="/health">Health Check</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/tos">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hi@kb.computer">hi@kb.computer</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    Krishna Brown &middot; Los Angeles, CA &middot; Apache 2.0
+  </div>
+</footer>
+</body>
+</html>
