@@ -52,17 +52,17 @@ pre{background:#1e1e2e;color:#cdd6f4;padding:20px 24px;border-radius:12px;overfl
 h1{font-size:3.2em;font-weight:700;letter-spacing:-.03em;color:#202124;line-height:1.1}
 h2{font-size:1.6em;font-weight:600;color:#202124;margin-bottom:16px}
 h3{font-size:1.1em;font-weight:600;color:#202124;margin-bottom:8px}
-p{color:#5f6368;margin-bottom:12px;font-size:1.05em}
-li{color:#5f6368;margin-bottom:6px}
+p{color:#595959;margin-bottom:12px;font-size:1.05em}
+li{color:#595959;margin-bottom:6px}
 ul,ol{padding-left:24px}
 
 /* Navigation */
 .nav{padding:16px 0;border-bottom:1px solid #dadce0}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 24px}
 .nav-logo{font-size:1.2em;font-weight:600;color:#202124;display:flex;align-items:center;gap:8px}
-.nav-logo span{color:#5f6368;font-weight:400;font-size:.85em}
+.nav-logo span{color:#595959;font-weight:400;font-size:.85em}
 .nav-links{display:flex;gap:24px;align-items:center}
-.nav-links a{color:#5f6368;font-size:.9em;font-weight:500}
+.nav-links a{color:#595959;font-size:.9em;font-weight:500}
 .nav-links a:hover{color:#202124;text-decoration:none}
 
 /* Hero */
@@ -72,7 +72,7 @@ ul,ol{padding-left:24px}
 .hero-blob-2{background:radial-gradient(circle,#34a853,transparent 70%);bottom:-200px;left:-100px}
 .hero-blob-3{background:radial-gradient(circle,#fbbc04,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
 .hero h1{font-size:3.6em;margin-bottom:16px;position:relative}
-.hero-sub{font-size:1.25em;color:#5f6368;max-width:640px;margin:0 auto 36px;line-height:1.6;position:relative}
+.hero-sub{font-size:1.25em;color:#595959;max-width:640px;margin:0 auto 36px;line-height:1.6;position:relative}
 .hero-buttons{display:flex;gap:12px;justify-content:center;position:relative;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-size:.95em;font-weight:500;transition:all .2s}
 .btn-primary{background:#1a73e8;color:#fff;box-shadow:0 1px 3px rgba(26,115,232,.3)}
@@ -92,7 +92,7 @@ ul,ol{padding-left:24px}
 .transform-card h3{margin-bottom:12px}
 .transform-card pre{font-size:.8em;margin:0}
 .transform-arrow{font-size:2em;color:#1a73e8;font-weight:700;text-align:center}
-.transform-label{font-size:.75em;color:#5f6368;text-align:center;display:block;margin-top:4px}
+.transform-label{font-size:.75em;color:#595959;text-align:center;display:block;margin-top:4px}
 @media(max-width:768px){
   .transform-visual{grid-template-columns:1fr;gap:16px}
   .transform-arrow{transform:rotate(90deg)}
@@ -103,8 +103,17 @@ ul,ol{padding-left:24px}
 .position-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:20px;text-align:center}
 .position-card .emoji{font-size:1.6em;margin-bottom:8px}
 .position-card strong{display:block;color:#202124;margin-bottom:4px}
-.position-card span{font-size:.85em;color:#5f6368}
+.position-card span{font-size:.85em;color:#595959}
 @media(max-width:768px){.position-grid{grid-template-columns:1fr}}
+
+
+/* Use case cards */
+.usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.usecase-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(60,64,67,.15)}
+.usecase-card .usecase-icon{font-size:1.6em;margin-bottom:12px}
+.usecase-card h3{margin-bottom:8px}
+.usecase-card p{font-size:.95em;margin:0}
+@media(max-width:768px){.usecase-grid{grid-template-columns:1fr}}
 
 /* Tool cards */
 .tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -113,9 +122,9 @@ ul,ol{padding-left:24px}
 .tool-card:first-child::before{background:linear-gradient(90deg,#4285f4,#34a853)}
 .tool-card:last-child::before{background:linear-gradient(90deg,#fbbc04,#ea4335)}
 .tool-name{font-size:1.05em;font-weight:600;font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace;color:#202124;margin-bottom:8px}
-.tool-desc{color:#5f6368;font-size:.95em;margin-bottom:16px}
+.tool-desc{color:#595959;font-size:.95em;margin-bottom:16px}
 .tool-price{font-size:2em;font-weight:700;color:#1a73e8}
-.tool-price-unit{font-size:.4em;color:#5f6368;font-weight:400;vertical-align:middle}
+.tool-price-unit{font-size:.4em;color:#595959;font-weight:400;vertical-align:middle}
 .tool-badge{display:inline-block;background:#e8f0fe;color:#1a73e8;padding:4px 12px;border-radius:20px;font-size:.8em;font-weight:500;margin-top:12px}
 @media(max-width:768px){.tools-grid{grid-template-columns:1fr}}
 
@@ -133,7 +142,7 @@ ul,ol{padding-left:24px}
 .data-field{background:#fff;border:1px solid #dadce0;border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:10px}
 .data-field .icon{font-size:1.1em}
 .data-field .label{font-weight:500;color:#202124;font-size:.9em}
-.data-field .meta{font-size:.75em;color:#5f6368;display:block}
+.data-field .meta{font-size:.75em;color:#595959;display:block}
 @media(max-width:768px){.data-grid{grid-template-columns:1fr}}
 
 /* Integration */
@@ -150,12 +159,12 @@ ul,ol{padding-left:24px}
 .footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px}
 .footer-brand{max-width:300px}
 .footer-brand strong{color:#202124;font-size:1.05em;display:block;margin-bottom:8px}
-.footer-brand p{font-size:.85em;color:#5f6368;margin:0}
+.footer-brand p{font-size:.85em;color:#595959;margin:0}
 .footer-links{display:flex;gap:48px}
 .footer-col h4{font-size:.85em;font-weight:600;color:#202124;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
-.footer-col a{display:block;color:#5f6368;font-size:.9em;margin-bottom:8px}
+.footer-col a{display:block;color:#595959;font-size:.9em;margin-bottom:8px}
 .footer-col a:hover{color:#1a73e8}
-.footer-bottom{text-align:center;color:#5f6368;font-size:.8em;margin-top:32px;padding-top:24px;border-top:1px solid #dadce0}
+.footer-bottom{text-align:center;color:#595959;font-size:.8em;margin-top:32px;padding-top:24px;border-top:1px solid #dadce0}
 @media(max-width:768px){
   .footer-inner{flex-direction:column;align-items:center;text-align:center}
   .footer-links{flex-direction:column;gap:24px}
@@ -165,7 +174,7 @@ ul,ol{padding-left:24px}
 .gradient-line{height:3px;background:linear-gradient(90deg,#4285f4,#34a853,#fbbc04,#ea4335);border-radius:2px;margin:40px auto;max-width:200px}
 
 /* Back link for subpages */
-.back-link{display:inline-flex;align-items:center;gap:6px;color:#5f6368;font-size:.9em;margin-bottom:24px}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:#595959;font-size:.9em;margin-bottom:24px}
 .back-link:hover{color:#1a73e8;text-decoration:none}
 
 /* Legal pages */
@@ -173,7 +182,7 @@ ul,ol{padding-left:24px}
 .legal-content h1{font-size:2.2em;margin-bottom:8px}
 .legal-content h2{font-size:1.2em;margin-top:36px;margin-bottom:12px}
 .legal-content p,.legal-content li{font-size:.95em}
-.legal-date{color:#5f6368;font-size:.9em;margin-bottom:32px}
+.legal-date{color:#595959;font-size:.9em;margin-bottom:32px}
 </style>
 </head>
 <body>
@@ -258,9 +267,9 @@ function buildQualityDashboard(stats: ReturnType<typeof getDashboardStats>): str
   const rows = stats.verticals
     .map(v => `          <tr style="border-bottom:1px solid #f1f3f4">
             <td style="padding:10px 12px;color:#202124;font-weight:500">${v.name}</td>
-            <td style="padding:10px 12px;text-align:right;color:#5f6368">${v.tested}</td>
-            <td style="padding:10px 12px;text-align:right"><span style="color:${v.success_rate >= 90 ? '#34a853' : v.success_rate >= 70 ? '#fbbc04' : '#5f6368'};font-weight:600">${v.success_rate}%</span></td>
-            <td style="padding:10px 12px;text-align:right;color:#5f6368">${v.avg_confidence.toFixed(2)}</td>
+            <td style="padding:10px 12px;text-align:right;color:#595959">${v.tested}</td>
+            <td style="padding:10px 12px;text-align:right"><span style="color:${v.success_rate >= 90 ? '#34a853' : v.success_rate >= 70 ? '#fbbc04' : '#595959'};font-weight:600">${v.success_rate}%</span></td>
+            <td style="padding:10px 12px;text-align:right;color:#595959">${v.avg_confidence.toFixed(2)}</td>
           </tr>`)
     .join('\n');
 
@@ -273,17 +282,15 @@ function buildQualityDashboard(stats: ReturnType<typeof getDashboardStats>): str
     </div>
 
     <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:24px 0 40px">
-      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:130px">
+      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:180px">
         <div style="font-size:2em;font-weight:700;color:#34a853">${stats.overall_success_rate}%</div>
-        <div style="font-size:0.8em;color:#5f6368;margin-top:4px">Success Rate</div>
+        <div style="font-size:0.85em;color:#595959;margin-top:4px">Extraction Success</div>
+        <div style="font-size:0.8em;color:#595959;margin-top:2px">Percentage of product pages that return structured data</div>
       </div>
-      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:130px">
-        <div style="font-size:2em;font-weight:700;color:#202124">${stats.overall_confidence.toFixed(2)}</div>
-        <div style="font-size:0.8em;color:#5f6368;margin-top:4px">Avg Confidence</div>
-      </div>
-      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:130px">
-        <div style="font-size:2em;font-weight:700;color:#1a73e8">100%</div>
-        <div style="font-size:0.8em;color:#5f6368;margin-top:4px">Accuracy (Verified)</div>
+      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:180px">
+        <div style="font-size:2em;font-weight:700;color:#1a73e8">${stats.verticals.length}</div>
+        <div style="font-size:0.85em;color:#595959;margin-top:4px">Verticals</div>
+        <div style="font-size:0.8em;color:#595959;margin-top:2px">B2C and B2B shopping categories tested</div>
       </div>
     </div>
 
@@ -291,10 +298,10 @@ function buildQualityDashboard(stats: ReturnType<typeof getDashboardStats>): str
       <table style="width:100%;border-collapse:collapse;font-size:.95em">
         <thead>
           <tr style="border-bottom:2px solid #dadce0">
-            <th style="text-align:left;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Vertical</th>
-            <th style="text-align:right;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Pages</th>
-            <th style="text-align:right;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Success</th>
-            <th style="text-align:right;padding:10px 12px;color:#5f6368;font-weight:600;font-size:.85em">Confidence</th>
+            <th style="text-align:left;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Vertical</th>
+            <th style="text-align:right;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Pages</th>
+            <th style="text-align:right;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Success</th>
+            <th style="text-align:right;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Confidence</th>
           </tr>
         </thead>
         <tbody>
@@ -303,7 +310,7 @@ ${rows}
       </table>
     </div>
 
-    <p style="text-align:center;color:#9aa0a6;font-size:.8em;margin-top:24px">Schema.org path: 0.95 confidence, near-instant &middot; LLM fallback: 0.7+ confidence &middot; Ground truth verified via Playwright</p>
+
   </div>
 </section>`;
 }
@@ -323,7 +330,7 @@ ${nav}
   <div class="hero-blob hero-blob-3"></div>
   <div class="container">
     <h1>ShopGraph</h1>
-    <p class="hero-sub">Structured product data for AI agents. Product data where platform APIs don't reach.</p>
+    <p class="hero-sub">Structured product data from the 30% of retailers that aren't on Shopify, Google, or Amazon &mdash; the DTC brands, independent shops, and niche suppliers that platform catalogs miss.</p>
     <div class="hero-buttons">
       <a class="btn btn-outline" href="https://github.com/laundromatic/shopgraph">View on GitHub</a>
       <a class="btn btn-primary" href="/mcp">MCP Endpoint</a>
@@ -383,6 +390,51 @@ ${dashboardHTML}
         <div class="emoji">🌐</div>
         <strong>ShopGraph</strong>
         <span>Covers the open web</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Who Uses ShopGraph -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2>Who Uses ShopGraph</h2>
+    </div>
+
+    <p style="max-width:700px;margin:0 auto 32px;color:#595959;text-align:center">Shopify Catalog and Google UCP cover their own merchants. ShopGraph covers the millions of product pages they don't &mdash; the DTC brands, specialty suppliers, and independent retailers with no API.</p>
+
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="usecase-icon">&#x1F50D;</div>
+        <h3>Price Comparison &amp; Market Research</h3>
+        <p>Survey a product category across hundreds of brands in hours, not weeks. Your agent calls ShopGraph for every merchant that isn't on Shopify or Amazon.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">&#x1F4CA;</div>
+        <h3>Competitive Intelligence</h3>
+        <p>Monitor competitors' pricing, availability, and catalog changes. No API access or partnership required &mdash; ShopGraph reads the public product page.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">&#x1F517;</div>
+        <h3>Affiliate Networks &amp; Content</h3>
+        <p>Building product roundups? Your agent needs prices and images from every merchant you link to. ShopGraph structures the data from the ones without feeds &mdash; Sovrn, Skimlinks, and independent publishers.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">&#x1F3ED;</div>
+        <h3>B2B Procurement &amp; Supply Chain</h3>
+        <p>Source components from niche industrial suppliers, farm equipment distributors, or specialty wholesalers. Most B2B suppliers have product pages but no API &mdash; ShopGraph structures their catalog data.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">&#x267B;&#xFE0F;</div>
+        <h3>Second-hand &amp; Circular Economy</h3>
+        <p>Track resale prices across ThredUp, Poshmark, BackMarket, and independent consignment shops. Structured listings with price, condition, and availability.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">&#x1F3E5;</div>
+        <h3>Healthcare &amp; Life Sciences</h3>
+        <p>Compare medical devices, lab equipment, and pharma supplies across specialty distributors like Fisher Scientific, Henry Schein, and niche manufacturers.</p>
       </div>
     </div>
   </div>
