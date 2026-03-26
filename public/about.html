@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code&display=swap" rel="stylesheet"><link rel="icon" type="image/png" href="/icon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Structured product data extraction for AI agents. Product data where platform APIs don't reach. MCP server with Schema.org and LLM extraction.">
+<title>ShopGraph — Structured Product Data for AI Agents</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#ffffff;color:#202124;font-family:'Google Sans Flex','Google Sans','Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:#1a73e8;text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre{font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace}
+code{background:#f1f3f4;padding:2px 8px;border-radius:4px;font-size:.85em;color:#202124}
+pre{background:#1e1e2e;color:#cdd6f4;padding:20px 24px;border-radius:12px;overflow-x:auto;font-size:.85em;line-height:1.6;border:1px solid #dadce0}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+h1{font-size:3.2em;font-weight:700;letter-spacing:-.03em;color:#202124;line-height:1.1}
+h2{font-size:1.6em;font-weight:600;color:#202124;margin-bottom:16px}
+h3{font-size:1.1em;font-weight:600;color:#202124;margin-bottom:8px}
+p{color:#595959;margin-bottom:12px;font-size:1.05em}
+li{color:#595959;margin-bottom:6px}
+ul,ol{padding-left:24px}
+.nav{padding:16px 0;border-bottom:1px solid #dadce0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 24px}
+.nav-logo{font-size:1.2em;font-weight:600;color:#202124;display:flex;align-items:center;gap:8px}
+.nav-logo span{color:#595959;font-weight:400;font-size:.85em}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:#595959;font-size:.9em;font-weight:500}
+.nav-links a:hover{color:#202124;text-decoration:none}
+.hero{position:relative;overflow:hidden;padding:50px 0;text-align:center}
+.hero-blob{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:.35;pointer-events:none}
+.hero-blob-1{background:radial-gradient(circle,#4285f4,transparent 70%);top:-200px;right:-100px}
+.hero-blob-2{background:radial-gradient(circle,#34a853,transparent 70%);bottom:-200px;left:-100px}
+.hero-blob-3{background:radial-gradient(circle,#fbbc04,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero h1{font-size:3.6em;margin-bottom:16px;position:relative}
+.hero-sub{font-size:1.25em;color:#595959;max-width:640px;margin:0 auto 36px;line-height:1.6;position:relative}
+.hero-buttons{display:flex;gap:12px;justify-content:center;position:relative;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-size:.95em;font-weight:500;transition:all .2s}
+.btn-primary{background:#1a73e8;color:#fff;box-shadow:0 1px 3px rgba(26,115,232,.3)}
+.btn-primary:hover{background:#1765cc;text-decoration:none;box-shadow:0 2px 8px rgba(26,115,232,.35)}
+.btn-outline{background:#fff;color:#1a73e8;border:1px solid #dadce0}
+.btn-outline:hover{background:#f8f9fa;border-color:#1a73e8;text-decoration:none}
+.section{padding:40px 0}
+.section-alt{background:#f8f9fa}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header p{max-width:640px;margin:0 auto;font-size:1.1em}
+.transform-visual{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin:40px 0}
+.transform-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(60,64,67,.15)}
+.transform-card h3{margin-bottom:12px}
+.transform-card pre{font-size:.8em;margin:0}
+.transform-arrow{font-size:2em;color:#1a73e8;font-weight:700;text-align:center}
+.transform-label{font-size:.75em;color:#595959;text-align:center;display:block;margin-top:4px}
+@media(max-width:768px){
+  .transform-visual{grid-template-columns:1fr;gap:16px}
+  .transform-arrow{transform:rotate(90deg)}
+}
+.position-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.position-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:20px;text-align:center}
+.position-card strong{display:block;color:#202124;margin-bottom:4px}
+.position-card span{font-size:.85em;color:#595959}
+@media(max-width:768px){.position-grid{grid-template-columns:1fr}}
+.usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.usecase-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(60,64,67,.15)}
+.usecase-card h3{margin-bottom:8px}
+.usecase-card p{font-size:.95em;margin:0}
+@media(max-width:768px){.usecase-grid{grid-template-columns:1fr}}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.tool-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(60,64,67,.15);position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.tool-card:first-child::before{background:linear-gradient(90deg,#4285f4,#34a853)}
+.tool-card:last-child::before{background:linear-gradient(90deg,#fbbc04,#ea4335)}
+.tool-name{font-size:1.05em;font-weight:600;font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace;color:#202124;margin-bottom:8px}
+.tool-desc{color:#595959;font-size:.95em;margin-bottom:16px}
+.tool-price{font-size:2em;font-weight:700;color:#1a73e8}
+.tool-price-unit{font-size:.4em;color:#595959;font-weight:400;vertical-align:middle}
+.tool-badge{display:inline-block;background:#e8f0fe;color:#1a73e8;padding:4px 12px;border-radius:20px;font-size:.8em;font-weight:500;margin-top:12px}
+@media(max-width:768px){.tools-grid{grid-template-columns:1fr}}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:32px}
+.step{text-align:center}
+.step-number{width:48px;height:48px;background:#e8f0fe;color:#1a73e8;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.2em;font-weight:700;margin-bottom:16px}
+.step h3{margin-bottom:8px}
+.step p{font-size:.95em}
+.step-connector{display:none}
+@media(max-width:768px){.steps-grid{grid-template-columns:1fr}}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;align-items:start}
+.data-json pre{margin:0;font-size:.82em}
+.data-fields-list{display:flex;flex-direction:column;gap:8px}
+.data-field-item{display:flex;align-items:baseline;gap:8px}
+.data-field-item .label{font-weight:600;color:#202124;font-size:.9em;font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace}
+.data-field-item .meta{font-size:.9em;color:#595959}
+@media(max-width:768px){.data-grid{grid-template-columns:1fr}}
+.integration-block{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(60,64,67,.15);max-width:720px;margin:0 auto}
+.integration-block pre{margin:20px 0 0}
+.cache-note{display:flex;align-items:flex-start;gap:12px;background:#e8f0fe;border-radius:12px;padding:20px 24px;margin-top:24px;max-width:720px;margin-left:auto;margin-right:auto}
+.cache-note p{margin:0;font-size:.95em;color:#202124}
+.works-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124}
+.works-pill svg{flex-shrink:0}
+.footer-section{border-top:1px solid #dadce0;padding:32px 0 32px;margin-top:0}
+.footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px}
+.footer-brand{max-width:300px}
+.footer-brand strong{color:#202124;font-size:1.05em;display:block;margin-bottom:8px}
+.footer-brand p{font-size:.85em;color:#595959;margin:0}
+.footer-links{display:flex;gap:48px}
+.footer-col h4{font-size:.85em;font-weight:600;color:#202124;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.footer-col a{display:block;color:#595959;font-size:.9em;margin-bottom:8px}
+.footer-col a:hover{color:#1a73e8}
+.footer-bottom{text-align:center;color:#595959;font-size:.8em;margin-top:32px;padding-top:24px;border-top:1px solid #dadce0}
+@media(max-width:768px){
+  .footer-inner{flex-direction:column;align-items:center;text-align:center}
+  .footer-links{flex-direction:column;gap:24px}
+}
+.gradient-line{height:3px;background:linear-gradient(90deg,#4285f4,#34a853,#fbbc04,#ea4335);border-radius:2px;margin:40px auto;max-width:200px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/icon.png" alt="ShopGraph" style="width:28px;height:28px;border-radius:6px;vertical-align:middle;margin-right:8px">ShopGraph <span>by Krishna Brown</span></a>
+    <div class="nav-links">
+      <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
+      <a href="/health">Status</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</nav>
+<main>
+<!-- About -->
+<section class="section" id="about">
+  <div class="container" style="max-width:800px">
+    <div class="section-header">
+      <h2>About ShopGraph</h2>
+    </div>
+
+    <p>The major agentic commerce platforms cover their own ecosystems. Google's Universal Commerce Protocol reaches Google Shopping merchants. Shopify's Catalog API reaches Shopify merchants. Amazon covers Amazon sellers. Together, these platforms represent a significant portion of e-commerce, but not all of it. Millions of retailers operate on the open web outside any platform catalog: DTC brands, independent shops, niche industrial suppliers, specialty wholesalers, B2B distributors. These merchants have product pages. They don't have structured APIs, and they haven't opted into any agent-readable data feed. When an agent needs to compare prices across fifty retailers and fifteen of them are independent sites, the agent is blind to those fifteen.</p>
+
+    <p>ShopGraph fills that gap. It's an MCP server that extracts structured product data from product URLs across the open web. An agent sends a URL and gets back structured JSON: product name, brand, price, availability, categories, images, colors, materials, dimensions, and a confidence score per field. The extraction follows a tiered path: schema.org/JSON-LD parsing first (0.95 confidence, near-instant, no AI cost), Gemini LLM fallback when structured markup doesn't exist, and a Playwright browser renderer for JavaScript-rendered and bot-protected pages. Agents pay per call via Stripe's Machine Payments Protocol. Every merchant ShopGraph structures is a merchant whose products can now enter the agent payments economy, discoverable, comparable, and purchasable through payment rails that didn't reach them before.</p>
+
+    <p>One thing that surprised me during development: far more product pages have schema.org structured data already embedded than I expected. These sites made their data machine-readable for SEO years ago. No agent tooling existed to consume it via MCP. The fast path covers more of the open web than I anticipated, and it runs at 0.95 confidence without touching an LLM.</p>
+
+    <p>The customer is an agent, or the developer building one. A shopping comparison agent calls ShopGraph to get structured data from a retailer's product page. A procurement agent calls it to catalog a supplier's inventory. ShopGraph doesn't do the shopping. It makes the open web readable so other agents can complete their tasks. This matters most for the merchants that platform catalogs miss: the long tail of e-commerce that has product pages but no API, no Shopify storefront, no Google Shopping feed.</p>
+
+    <p>Building agent-facing infrastructure taught me something less obvious: reliability monitoring is not an afterthought, it is the product. An agent that depends on this service cannot handle a silent failure. ShopGraph runs 111 automated tests against 117 verified URLs across 22 B2C and B2B verticals every 30 minutes, from fashion and electronics to healthcare supply, agricultural equipment, and industrial procurement. The pipeline includes a circuit breaker that auto-quarantines URLs after consecutive failures, a verification gate that validates URLs before they enter the test corpus, and a health check endpoint that flags degraded performance in real time. The monitoring infrastructure ended up being as much work as the extraction engine itself. For infrastructure that agents call programmatically, that's the right ratio. ShopGraph is deployed and operational, listed on six MCP directories including the Official MCP Registry and Glama, where it holds AAA quality scores.</p>
+
+    <p>The infrastructure is built. ShopGraph grew out of a larger project, an AI-native commerce platform called <a href="https://sceneinbloom.com">SceneInBloom</a>, where I first encountered the need for reliable, structured product data across diverse merchants. More on that soon.</p>
+
+    <p style="margin-top:24px">
+      <a href="https://github.com/laundromatic/shopgraph">GitHub</a> &nbsp;&middot;&nbsp;
+      <a href="/tos">Terms</a> &nbsp;&middot;&nbsp;
+      <a href="/privacy">Privacy</a>
+    </p>
+  </div>
+</section>
+
+
+</main>
+<footer class="footer-section">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>ShopGraph</strong>
+      <p>Structured product data for AI agents. Built by Krishna Brown.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
+        <a href="/mcp">MCP Endpoint</a>
+        <a href="/health">Health Check</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/tos">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hi@kb.computer">hi@kb.computer</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    Krishna Brown &middot; Los Angeles, CA &middot; Apache 2.0
+  </div>
+</footer>
+<script>
+// Counter animation (reuse from main page)
+</script>
+</body>
+</html>

@@ -125,7 +125,7 @@ ul,ol{padding-left:24px}
     <div class="nav-links">
       <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
       <a href="/health">Status</a>
-      <a href="#about">About</a>
+      <a href="/about">About</a>
     </div>
   </div>
 </nav>
@@ -416,33 +416,7 @@ ul,ol{padding-left:24px}
 <div class="gradient-line" style="display:none"></div>
 
 
-<!-- About -->
-<section class="section" id="about">
-  <div class="container" style="max-width:800px">
-    <div class="section-header">
-      <h2>About ShopGraph</h2>
-    </div>
-
-    <p>The major agentic commerce platforms cover their own ecosystems. Google's Universal Commerce Protocol reaches Google Shopping merchants. Shopify's Catalog API reaches Shopify merchants. Amazon covers Amazon sellers. Together, these platforms represent a significant portion of e-commerce, but not all of it. Millions of retailers operate on the open web outside any platform catalog: DTC brands, independent shops, niche industrial suppliers, specialty wholesalers, B2B distributors. These merchants have product pages. They don't have structured APIs, and they haven't opted into any agent-readable data feed. When an agent needs to compare prices across fifty retailers and fifteen of them are independent sites, the agent is blind to those fifteen.</p>
-
-    <p>ShopGraph fills that gap. It's an MCP server that extracts structured product data from product URLs across the open web. An agent sends a URL and gets back structured JSON: product name, brand, price, availability, categories, images, colors, materials, dimensions, and a confidence score per field. The extraction follows a tiered path: schema.org/JSON-LD parsing first (0.95 confidence, near-instant, no AI cost), Gemini LLM fallback when structured markup doesn't exist, and a Playwright browser renderer for JavaScript-rendered and bot-protected pages. Agents pay per call via Stripe's Machine Payments Protocol. Every merchant ShopGraph structures is a merchant whose products can now enter the agent payments economy, discoverable, comparable, and purchasable through payment rails that didn't reach them before.</p>
-
-    <p>One thing that surprised me during development: far more product pages have schema.org structured data already embedded than I expected. These sites made their data machine-readable for SEO years ago. No agent tooling existed to consume it via MCP. The fast path covers more of the open web than I anticipated, and it runs at 0.95 confidence without touching an LLM.</p>
-
-    <p>The customer is an agent, or the developer building one. A shopping comparison agent calls ShopGraph to get structured data from a retailer's product page. A procurement agent calls it to catalog a supplier's inventory. ShopGraph doesn't do the shopping. It makes the open web readable so other agents can complete their tasks. This matters most for the merchants that platform catalogs miss: the long tail of e-commerce that has product pages but no API, no Shopify storefront, no Google Shopping feed.</p>
-
-    <p>Building agent-facing infrastructure taught me something less obvious: reliability monitoring is not an afterthought, it is the product. An agent that depends on this service cannot handle a silent failure. ShopGraph runs 111 automated tests against 117 verified URLs across 22 B2C and B2B verticals every 30 minutes, from fashion and electronics to healthcare supply, agricultural equipment, and industrial procurement. The pipeline includes a circuit breaker that auto-quarantines URLs after consecutive failures, a verification gate that validates URLs before they enter the test corpus, and a health check endpoint that flags degraded performance in real time. The monitoring infrastructure ended up being as much work as the extraction engine itself. For infrastructure that agents call programmatically, that's the right ratio. ShopGraph is deployed and operational, listed on six MCP directories including the Official MCP Registry and Glama, where it holds AAA quality scores.</p>
-
-    <p>The infrastructure is built. ShopGraph grew out of a larger project, an AI-native commerce platform called <a href="https://sceneinbloom.com">SceneInBloom</a>, where I first encountered the need for reliable, structured product data across diverse merchants. More on that soon.</p>
-
-    <p style="margin-top:24px">
-      <a href="https://github.com/laundromatic/shopgraph">GitHub</a> &nbsp;&middot;&nbsp;
-      <a href="/tos">Terms</a> &nbsp;&middot;&nbsp;
-      <a href="/privacy">Privacy</a>
-    </p>
-  </div>
-</section>
-
+<div id="about"></div>
 <footer class="footer-section">
   <div class="footer-inner">
     <div class="footer-brand">
