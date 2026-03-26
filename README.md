@@ -1,6 +1,8 @@
 # @laundromatic/shopgraph
 
-MCP server for product data enrichment with Stripe MPP (Machine Payments Protocol) payment gating.
+Structured product data from the open web, where platform APIs don't reach. Schema.org + AI extraction. Pay per call via Stripe MPP.
+
+**Website:** https://shopgraph.dev | **MCP Endpoint:** https://shopgraph.dev/mcp
 
 ## What it does
 
@@ -9,11 +11,12 @@ Agents connect via Model Context Protocol and call enrichment tools to extract s
 ## Architecture
 
 ```
-Agent → MCP (stdio) → enrich_product / enrich_basic
+Agent → MCP (streamable-http) → enrich_product / enrich_basic
   → Cache hit? Return immediately (free)
   → No payment_method_id? Return 402 + MPP challenge
   → Payment confirmed → schema.org extraction (fast, 0.95 confidence)
-  → No structured data? → Gemini LLM fallback (0.6-0.8 confidence)
+  → No structured data? → Gemini LLM fallback (0.7+ confidence)
+  → Bot-blocked or JS-rendered? → Playwright browser fallback
   → Return ProductData + PaymentReceipt
 ```
 
@@ -36,7 +39,8 @@ Required environment variables in `.env`:
 
 ```bash
 npm run build          # Compile TypeScript
-npm start              # Run MCP server (stdio transport)
+npm start              # Run MCP server (stdio)
+npm run start:http     # Run HTTP server (for Vercel/remote)
 npm run dev            # Run with tsx (no build needed)
 ```
 
