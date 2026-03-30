@@ -55,6 +55,10 @@ const EXTRACTION_TIMEOUT_MS = 15_000;
  */
 const VERIFY_INTERVAL = BATCH_SIZE * 14;
 
+// Maintenance mode: reduce frequency after hitting target
+const MAINTENANCE_TARGET = 5000; // total pages tested before switching
+const MAINTENANCE_MODE_KEY = 'config:maintenance_mode';
+
 /**
  * Extract a single URL with a timeout.
  */
@@ -266,6 +270,25 @@ export async function runDailyTests(corpus: CorpusEntry[]): Promise<{
 }> {
   const redis = getRedis();
 
+  // Check maintenance mode: skip 3 out of 4 runs (effectively every 2 hours instead of every 30 min)
+  if (redis) {
+    const maintenanceMode = await redis.get(MAINTENANCE_MODE_KEY);
+    if (maintenanceMode === 'true') {
+      // In maintenance mode, only run every 4th cron invocation
+      const cronCount = await redis.incr('config:cron_counter');
+      if (cronCount % 4 !== 0) {
+        return {
+          status: 'skipped_maintenance_mode',
+          batch_offset: 0,
+          batch_size: 0,
+          results_summary: { tested: 0, successful: 0, success_rate: 0, avg_confidence: 0 },
+          kv_updated: false,
+          quarantined_this_batch: 0,
+        };
+      }
+    }
+  }
+
   // Determine batch offset
   let offset = 0;
   if (redis) {
@@ -365,6 +388,15 @@ export async function runDailyTests(corpus: CorpusEntry[]): Promise<{
 
       // Write updated stats
       await writeStats(redis, updatedStats);
+
+      // Auto-switch to maintenance mode at 5,000 pages
+      if (updatedStats.total_tested >= MAINTENANCE_TARGET) {
+        const alreadyMaintenance = await redis.get(MAINTENANCE_MODE_KEY);
+        if (alreadyMaintenance !== 'true') {
+          await redis.set(MAINTENANCE_MODE_KEY, 'true');
+          console.error(`[ShopGraph] Maintenance mode activated: ${updatedStats.total_tested} pages tested (target: ${MAINTENANCE_TARGET})`);
+        }
+      }
 
       // Health assessment: store alert + fire webhook if degraded
       await storeAlert(redis, updatedStats.overall_success_rate, offset);
