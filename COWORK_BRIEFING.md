@@ -2,7 +2,7 @@
 
 > **Purpose**: This file gives any fresh Claude instance (CoWork scheduled tasks, new sessions, new machines) the full context needed to work autonomously on Krishna's projects. Read this FIRST before doing any work.
 >
-> **Last updated**: 2026-03-30
+> **Last updated**: 2026-03-31
 > **Canonical location**: github.com/laundromatic/sceneinbloom-visual-builder/COWORK_BRIEFING.md
 
 ---
@@ -73,11 +73,11 @@ Krishna Brown is a **systems designer who architects the substrate between human
 
 ## What Is ShopGraph?
 
-**ShopGraph** (shopgraph.dev) is an **MCP server that gives AI agents structured product data from any URL on the open web** — the gap between Shopify Catalog (Shopify only) and Google UCP (Google only).
+**ShopGraph** (shopgraph.dev) is a **product data quality/structuring layer for agent commerce.** It turns messy HTML from any product page into clean, validated, confidence-scored product data. Complementary to scraping APIs (Bright Data, Firecrawl) — they handle the hard scraping, ShopGraph handles product intelligence.
 
 - **Live**: shopgraph.dev/mcp
 - **GitHub**: github.com/laundromatic/shopgraph
-- **Launched**: 2026-03-24 (6 days ago)
+- **Launched**: 2026-03-24
 - **Users**: 0 (pre-traction)
 - **Revenue**: $0
 
@@ -87,6 +87,26 @@ Krishna Brown is a **systems designer who architects the substrate between human
 - Self-healing pipeline: circuit breaker, health check, auto-quarantine
 - Browser fallback via @sparticuz/chromium on Vercel
 - Two extraction paths: Schema.org/JSON-LD (fast, free) + Gemini LLM fallback
+
+### Evolution Strategy (decided 2026-03-31)
+ShopGraph is NOT competing with Bright Data/Oxylabs on scraping. It's the structuring layer on top.
+
+**Build sequence** (LAU-262 epic):
+1. `enrich_html` tool — agent provides raw HTML, ShopGraph structures it (LAU-263)
+2. Wire PIA to consume ShopGraph — dogfooding, first real customer (LAU-264)
+3. Free tier — 200 calls/month (LAU-265)
+4. REST API + npm SDK — reach beyond MCP-only audience (LAU-266)
+5. `validate_feed` — Lighthouse for agent commerce, merchant-side play (LAU-267)
+
+### Competitive Landscape (researched 2026-03-31)
+- **Bright Data MCP**: 5K free/month, raw scraping. ShopGraph is complementary, not competing.
+- **Diffbot**: $299/mo, ML extraction from any URL. Established since 2012.
+- **Rye**: $0.02/fetch + checkout bundled. Developer-first product data API.
+- **Canopy**: Amazon-only, $0.01/req, has MCP.
+- **ReFiBuy**: Merchant-side catalog optimization for agent discovery. Q3 2026 launch.
+- **ACP/UCP**: Protocols moving toward merchants publishing structured feeds.
+
+ShopGraph's differentiation: MCP-native, Stripe MPP, open source, quality scoring (not just raw extraction), and the `enrich_html` path that makes it a structuring layer others pipe data through.
 - Daily cron: every 30 min → auto-switches to every 2h at 5,000 pages
 
 ### Competitive Position (Verified 2026-03-24)
@@ -144,9 +164,22 @@ This covers everything Krishna builds:
 ### Active / Viable Ideas (As of 2026-03-30)
 | Idea | Status | Score |
 |------|--------|-------|
-| **ShopGraph** | LIVE — needs growth/adoption | Highest viability (data moat) |
-| **VoiceForge** (voice evolution pipeline) | Idea stage | Strong (closed-loop pipeline unique) |
-| **Agent QA Harness** (browser + agent testing) | Idea stage | Medium (gap exists, market early) |
+| **ShopGraph** | LIVE — evolving from scraper to structuring layer | Highest viability (quality moat) |
+| **VoiceForge** (voice evolution pipeline) | Idea stage — needs market analysis | Unvalidated |
+
+### Killed Ideas (with evidence — DO NOT REVISIT)
+| Idea | Why Killed | Date |
+|------|-----------|------|
+| agent-guardrails skills pack | Incumbents (obra/superpowers 21K installs) | 2026-03-19 |
+| n8n workflow templates | Saturated (8,500+ free) | 2026-03-19 |
+| Pinterest Publishing MCP | 10+ existing solutions | 2026-03-31 |
+| TrustGate (graduated autonomy lib) | Too easy to DIY, low defensibility | 2026-03-31 |
+| Agent Manifest (orchestration format) | Standards war: Oracle Agent Spec, CrewAI YAML, Google ADK, A2A | 2026-03-31 |
+| Agent QA Harness | Saturated: 6+ MCP testing frameworks, MCPBench, MCP Scorecard | 2026-03-31 |
+| Static playbook ($29 PDF) | Fails "built" and "building AI" criteria | 2026-03-19 |
+| Google Sheets Backend MCP | Multiple exist | 2026-03-19 |
+| Atlas MCP Server | Unique but audience too small | 2026-03-19 |
+| ShopGraph developer pivot | Market already served: Bright Data 5K free, Diffbot 10K free | 2026-03-31 |
 
 ### Distribution — Not Just npm
 Build for whatever format reaches the audience:
