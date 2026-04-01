@@ -292,13 +292,29 @@ ul,ol{padding-left:24px}
       <p>Connect any MCP-compatible client. Pay per call via Stripe Machine Payments Protocol.</p>
     </div>
 
-    <div id="try-it" class="integration-block">
-      <p style="margin-bottom:4px;font-weight:500;color:#202124">REST API (try it now):</p>
-      <pre>curl -X POST https://shopgraph.dev/api/enrich/basic \
-  -H "Content-Type: application/json" \
-  -d '{"url": "https://www.allbirds.com/products/mens-tree-runners"}'</pre>
-      <p style="margin-top:16px;margin-bottom:4px;font-weight:500;color:#202124">MCP Client:</p>
-      <pre>{
+    <div id="try-it" class="integration-block" style="max-width:760px">
+      <p style="margin-bottom:12px;font-weight:600;color:#202124;font-size:1.1em">Try it now</p>
+      <p style="font-size:.9em;color:#595959;margin-bottom:16px">Paste any product URL. Uses <code>enrich_basic</code> (Schema.org only, free). For pages without structured markup, switch to Full to see LLM extraction.</p>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:.85em;color:#595959;cursor:pointer"><input type="radio" name="pg-mode" value="basic" checked onchange="updatePlaygroundMode()"> Basic (free)</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:.85em;color:#595959;cursor:pointer"><input type="radio" name="pg-mode" value="full" onchange="updatePlaygroundMode()"> Full ($0.02) </label>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input id="playground-url" type="url" placeholder="https://www.allbirds.com/products/mens-tree-runners" value="https://www.allbirds.com/products/mens-tree-runners" style="flex:1;padding:10px 14px;border:1px solid #dadce0;border-radius:8px;font-size:.95em;font-family:inherit;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='#1a73e8'" onblur="this.style.borderColor='#dadce0'">
+        <button id="playground-btn" onclick="runPlayground()" style="padding:10px 24px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:.95em;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .2s" onmouseover="this.style.background='#1765cc'" onmouseout="this.style.background='#1a73e8'">Extract</button>
+      </div>
+      <div id="playground-result" style="display:none">
+        <div id="playground-loading" style="display:none;text-align:center;padding:24px;color:#595959">
+          <div style="display:inline-block;width:20px;height:20px;border:2px solid #dadce0;border-top-color:#1a73e8;border-radius:50%;animation:spin 0.8s linear infinite"></div>
+          <span style="margin-left:8px">Extracting product data...</span>
+        </div>
+        <div id="playground-error" style="display:none;background:#fce8e6;border:1px solid #f5c6cb;border-radius:8px;padding:12px 16px;color:#611a15;font-size:.9em"></div>
+        <pre id="playground-json" style="display:none;margin:0;max-height:400px;overflow-y:auto"></pre>
+        <div id="playground-meta" style="display:none;margin-top:8px;font-size:.8em;color:#595959"></div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e8eaed">
+        <p style="margin-bottom:4px;font-weight:500;color:#202124;font-size:.9em">Or connect via MCP:</p>
+        <pre style="font-size:.8em;margin:0">{
   "mcpServers": {
     "shopgraph": {
       "type": "url",
@@ -306,6 +322,7 @@ ul,ol{padding-left:24px}
     }
   }
 }</pre>
+      </div>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:720px;margin:24px auto 0;text-align:center">
@@ -460,6 +477,63 @@ ul,ol{padding-left:24px}
   </div>
 </footer>
 
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<script>
+var pgMode='basic';
+function updatePlaygroundMode(){pgMode=document.querySelector('input[name="pg-mode"]:checked').value}
+function runPlayground(){
+  var url=document.getElementById('playground-url').value.trim();
+  if(!url){return;}
+  var result=document.getElementById('playground-result');
+  var loading=document.getElementById('playground-loading');
+  var error=document.getElementById('playground-error');
+  var json=document.getElementById('playground-json');
+  var meta=document.getElementById('playground-meta');
+  var btn=document.getElementById('playground-btn');
+  result.style.display='block';
+  loading.style.display='block';
+  error.style.display='none';
+  json.style.display='none';
+  meta.style.display='none';
+  btn.disabled=true;
+  btn.textContent='Extracting...';
+  btn.style.background='#9aa0a6';
+  var start=Date.now();
+  var endpoint=pgMode==='full'?'/api/enrich':'/api/enrich/basic';
+  fetch(endpoint,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({url:url})
+  }).then(function(r){return r.json().then(function(d){return{status:r.status,data:d}})})
+  .then(function(res){
+    loading.style.display='none';
+    var ms=Date.now()-start;
+    if(res.status>=400){
+      error.style.display='block';
+      error.textContent=res.data.message||res.data.error||'Request failed ('+res.status+')';
+    }else{
+      json.style.display='block';
+      json.textContent=JSON.stringify(res.data,null,2);
+      meta.style.display='block';
+      var parts=[ms+'ms'];
+      if(res.data.cached)parts.push('cached');
+      if(res.data.free_tier)parts.push(res.data.free_tier.used+'/'+res.data.free_tier.limit+' free calls used');
+      if(res.data.product&&!res.data.product.product_name)parts.push('No Schema.org data found — try enrich_product for LLM extraction');
+      if(res.data.upgrade_hint)parts.push(res.data.upgrade_hint);
+      meta.textContent=parts.join(' · ');
+    }
+  }).catch(function(e){
+    loading.style.display='none';
+    error.style.display='block';
+    error.textContent='Network error: '+e.message;
+  }).finally(function(){
+    btn.disabled=false;
+    btn.textContent='Extract';
+    btn.style.background='#1a73e8';
+  });
+}
+document.getElementById('playground-url').addEventListener('keydown',function(e){if(e.key==='Enter')runPlayground()});
+</script>
 <script>
 (function(){
   // Fetch live stats from API and populate dashboard
