@@ -78,6 +78,7 @@ ul,ol{padding-left:24px}
 .tool-price-unit{font-size:.4em;color:#595959;font-weight:400;vertical-align:middle}
 .tool-badge{display:inline-block;background:#e8f0fe;color:#1a73e8;padding:4px 12px;border-radius:20px;font-size:.8em;font-weight:500;margin-top:12px}
 @media(max-width:768px){.tools-grid{grid-template-columns:1fr}}
+@media(max-width:768px){[style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}}
 .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:32px}
 .step{text-align:center}
 .step-number{width:48px;height:48px;background:#e8f0fe;color:#1a73e8;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.2em;font-weight:700;margin-bottom:16px}
@@ -139,10 +140,10 @@ ul,ol{padding-left:24px}
   <div class="hero-blob hero-blob-3"></div>
   <div class="container">
     <h1>ShopGraph</h1>
-    <p class="hero-sub">Structured product data from the millions of retailers that aren't on Shopify, Google, or Amazon. The DTC brands, independent shops, and niche suppliers that platform catalogs miss.</p>
+    <p class="hero-sub">Clean product data from any URL. 200 free calls/month. Bring your own HTML or let ShopGraph fetch it. The structuring layer for agent commerce.</p>
     <div class="hero-buttons">
+      <a class="btn btn-primary" href="#try-it">Try It Free</a>
       <a class="btn btn-outline" href="https://github.com/laundromatic/shopgraph">View on GitHub</a>
-      <a class="btn btn-primary" href="/mcp">MCP Endpoint</a>
     </div>
   </div>
 </section>
@@ -157,18 +158,18 @@ ul,ol{padding-left:24px}
     <div class="steps-grid">
       <div class="step">
         <div class="step-number">1</div>
-        <h3>Send a URL</h3>
-        <p>Your agent sends any product URL to ShopGraph via MCP.</p>
+        <h3>Send a URL or HTML</h3>
+        <p>POST to the REST API or connect via MCP. Send a product URL, or pipe raw HTML from your own scraper.</p>
       </div>
       <div class="step">
         <div class="step-number">2</div>
-        <h3>Extract Data</h3>
-        <p>Schema.org parsing first. If markup is missing, Gemini LLM extracts from raw page content.</p>
+        <h3>Extract &amp; Structure</h3>
+        <p>Schema.org parsing first (fast, free). LLM extraction when markup is missing (paid). Confidence-scored.</p>
       </div>
       <div class="step">
         <div class="step-number">3</div>
         <h3>Get Structured JSON</h3>
-        <p>Clean data with confidence scores. Cached for 24 hours for free repeat access.</p>
+        <p>Clean product data with per-field confidence scores. Cached 24h. 200 free calls/month.</p>
       </div>
     </div>
   </div>
@@ -291,8 +292,12 @@ ul,ol{padding-left:24px}
       <p>Connect any MCP-compatible client. Pay per call via Stripe Machine Payments Protocol.</p>
     </div>
 
-    <div class="integration-block">
-      <p style="margin-bottom:4px;font-weight:500;color:#202124">Connect your MCP client:</p>
+    <div id="try-it" class="integration-block">
+      <p style="margin-bottom:4px;font-weight:500;color:#202124">REST API (try it now):</p>
+      <pre>curl -X POST https://shopgraph.dev/api/enrich/basic \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://www.allbirds.com/products/mens-tree-runners"}'</pre>
+      <p style="margin-top:16px;margin-bottom:4px;font-weight:500;color:#202124">MCP Client:</p>
       <pre>{
   "mcpServers": {
     "shopgraph": {
@@ -303,8 +308,23 @@ ul,ol{padding-left:24px}
 }</pre>
     </div>
 
-    <div class="cache-note" style="margin-top:32px">
-      <p>No API keys needed for discovery. Payment handled via <strong>Stripe MPP</strong>. Your agent pays per call using a Stripe-issued token. No subscriptions, no minimums.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:720px;margin:24px auto 0;text-align:center">
+      <div style="padding:12px;background:#fff;border:1px solid #dadce0;border-radius:8px">
+        <code style="font-size:.85em">POST /api/enrich/basic</code>
+        <div style="font-size:.8em;color:#34a853;margin-top:4px;font-weight:500">Free (200/mo)</div>
+      </div>
+      <div style="padding:12px;background:#fff;border:1px solid #dadce0;border-radius:8px">
+        <code style="font-size:.85em">POST /api/enrich</code>
+        <div style="font-size:.8em;color:#1a73e8;margin-top:4px;font-weight:500">$0.02/call</div>
+      </div>
+      <div style="padding:12px;background:#fff;border:1px solid #dadce0;border-radius:8px">
+        <code style="font-size:.85em">POST /api/enrich/html</code>
+        <div style="font-size:.8em;color:#1a73e8;margin-top:4px;font-weight:500">$0.02/call</div>
+      </div>
+    </div>
+
+    <div class="cache-note" style="margin-top:24px">
+      <p>No API keys needed for the free tier. Paid calls use <strong>Stripe MPP</strong>. No subscriptions, no minimums.</p>
     </div>
   </div>
 </section>
@@ -390,23 +410,29 @@ ul,ol{padding-left:24px}
 <section class="section">
   <div class="container">
 
-    <div class="tools-grid">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="tool-card">
+        <div class="tool-name">enrich_basic</div>
+        <p class="tool-desc">Schema.org extraction only. Fast, zero LLM cost. Best for pages with structured markup.</p>
+        <div class="tool-price" style="color:#34a853">FREE <span class="tool-price-unit" style="color:#595959">200/month</span></div>
+        <div class="tool-badge" style="background:#e6f4ea;color:#137333">Free tier</div>
+      </div>
       <div class="tool-card">
         <div class="tool-name">enrich_product</div>
-        <p class="tool-desc">Full extraction with LLM fallback. Schema.org first, Gemini when markup is missing. All attributes, confidence scores, and images.</p>
+        <p class="tool-desc">Full extraction with LLM fallback. Schema.org first, Gemini when markup is missing. All attributes, images, and confidence scores.</p>
         <div class="tool-price">$0.02 <span class="tool-price-unit">/ call</span></div>
         <div class="tool-badge">Full extraction</div>
       </div>
       <div class="tool-card">
-        <div class="tool-name">enrich_basic</div>
-        <p class="tool-desc">Schema.org and meta-tag extraction only. Fast, no LLM. Best for pages with good structured markup.</p>
-        <div class="tool-price">$0.01 <span class="tool-price-unit">/ call</span></div>
-        <div class="tool-badge">Markup only</div>
+        <div class="tool-name">enrich_html</div>
+        <p class="tool-desc">Bring your own HTML. Already using Bright Data or Firecrawl? Pipe the HTML through ShopGraph for structured product data.</p>
+        <div class="tool-price">$0.02 <span class="tool-price-unit">/ call</span></div>
+        <div class="tool-badge" style="background:#fef7e0;color:#594300">New</div>
       </div>
     </div>
 
     <div class="cache-note">
-      <p><strong>Cached results (within 24 hours) are free.</strong> Failed extractions are not charged.</p>
+      <p><strong>Cached results (24h) are free.</strong> Failed extractions are not charged. No API key needed for the free tier.</p>
     </div>
   </div>
 </section>
