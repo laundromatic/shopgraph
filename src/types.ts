@@ -67,13 +67,24 @@ export interface EnrichmentResult {
 
 /**
  * Tool pricing configuration in cents.
+ * Free-tier tools have a price of 0 but are rate-limited.
  */
 export interface ToolPricing {
   enrich_product: number;
   enrich_basic: number;
+  enrich_html: number;
 }
 
 export const TOOL_PRICING: ToolPricing = {
   enrich_product: 2,  // $0.02
   enrich_basic: 1,    // $0.01 (Stripe minimum)
+  enrich_html: 2,     // $0.02 (same as enrich_product — full extraction)
+};
+
+/**
+ * Free tier configuration.
+ */
+export const FREE_TIER = {
+  MONTHLY_LIMIT: 200,
+  TOOLS: ['enrich_basic'] as const,  // Only enrich_basic is free-tier eligible
 };

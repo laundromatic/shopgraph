@@ -45,7 +45,8 @@ app.get('/health', (_req, res) => {
     service: 'shopgraph',
     version: '1.0.0',
     runtime: 'vercel-serverless',
-    tools: ['enrich_product', 'enrich_basic'],
+    tools: ['enrich_product', 'enrich_basic', 'enrich_html'],
+    free_tier: '200 enrich_basic calls/month — no payment required',
   });
 });
 

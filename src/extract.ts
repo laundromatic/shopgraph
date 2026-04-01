@@ -66,11 +66,26 @@ export async function extractProduct(url: string): Promise<ProductData> {
 }
 
 /**
+ * Extract product data from pre-provided HTML (no HTTP fetch).
+ * Used by the enrich_html tool when agents bring their own scraped HTML.
+ */
+export async function extractFromRawHtml(html: string, url: string): Promise<ProductData> {
+  return extractFromHtmlContent(html, url);
+}
+
+/**
  * Extract product data from HTML fetched via fetch().
  * This is the original extraction path (schema.org → LLM).
  */
 async function extractFromHtml(url: string): Promise<ProductData> {
   const html = await fetchPage(url);
+  return extractFromHtmlContent(html, url);
+}
+
+/**
+ * Core extraction logic shared by both URL-fetched and pre-provided HTML paths.
+ */
+async function extractFromHtmlContent(html: string, url: string): Promise<ProductData> {
   const now = new Date().toISOString();
 
   // Try schema.org first (fast, high confidence)
