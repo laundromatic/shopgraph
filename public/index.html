@@ -148,67 +148,9 @@ ul,ol{padding-left:24px}
   </div>
 </section>
 
-<!-- How It Works -->
+<!-- Market Coverage -->
 <section class="section">
   <div class="container">
-    <div class="section-header">
-      <h2>How It Works</h2>
-    </div>
-
-    <div class="steps-grid">
-      <div class="step">
-        <div class="step-number">1</div>
-        <h3>Send a URL or HTML</h3>
-        <p>POST to the REST API or connect via MCP. Send a product URL, or pipe raw HTML from your own scraper.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <h3>Extract &amp; Structure</h3>
-        <p>Schema.org parsing first (fast, free). LLM extraction when markup is missing (paid). Confidence-scored.</p>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <h3>Get Structured JSON</h3>
-        <p>Clean product data with per-field confidence scores. Cached 24h. 200 free calls/month.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- What It Does -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-header">
-      <h2>What It Does</h2>
-      <p>AI shopping agents need structured product data. ShopGraph extracts it from any page on the web.</p>
-    </div>
-
-    <div class="transform-visual">
-      <div class="transform-card">
-        <h3>Raw HTML</h3>
-        <pre>&lt;div class="product"&gt;
-  &lt;span&gt;Sony WH-1000XM5&lt;/span&gt;
-  &lt;span class="price"&gt;$348&lt;/span&gt;
-  ...hundreds more lines...
-&lt;/div&gt;</pre>
-      </div>
-      <div class="transform-arrow">
-        &rarr;
-        <span class="transform-label">ShopGraph</span>
-      </div>
-      <div class="transform-card">
-        <h3>Structured JSON</h3>
-        <pre>{
-  "name": "Sony WH-1000XM5",
-  "brand": "Sony",
-  "price": 348.00,
-  "currency": "USD",
-  "availability": "InStock",
-  "confidence": { "overall": 0.95 }
-}</pre>
-      </div>
-    </div>
-
     <div class="position-grid">
       <div class="position-card">
         <strong>Shopify Catalog</strong>
@@ -218,46 +160,9 @@ ul,ol{padding-left:24px}
         <strong>Google UCP</strong>
         <span>Covers Google-indexed merchants</span>
       </div>
-      <div class="position-card">
-        <strong>ShopGraph</strong>
+      <div class="position-card" style="border-color:#1a73e8;background:#f0f6ff">
+        <strong style="color:#1a73e8">ShopGraph</strong>
         <span>Covers the open web</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Extracted Data -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Extracted Data</h2>
-      <p style="white-space:nowrap">Every field includes a confidence score so agents know how much to trust it.</p>
-    </div>
-
-    <div class="data-grid">
-      <div class="data-json">
-        <pre>{
-  "product_name": "Men's Tree Runners",
-  "brand": "Allbirds",
-  "price": { "amount": 100, "currency": "USD" },
-  "availability": "in_stock",
-  "categories": ["Shoes", "Running"],
-  "image_urls": ["https://..."],
-  "color": ["Thunder"],
-  "material": ["Eucalyptus fiber"],
-  "confidence": { "overall": 0.95 }
-}</pre>
-      </div>
-      <div class="data-fields-list">
-        <div class="data-field-item"><span class="label">product_name</span><span class="meta">Product title</span></div>
-        <div class="data-field-item"><span class="label">brand</span><span class="meta">Manufacturer or brand name</span></div>
-        <div class="data-field-item"><span class="label">price</span><span class="meta">Current price with currency</span></div>
-        <div class="data-field-item"><span class="label">availability</span><span class="meta">In stock or out of stock</span></div>
-        <div class="data-field-item"><span class="label">categories</span><span class="meta">Product taxonomy</span></div>
-        <div class="data-field-item"><span class="label">image_urls</span><span class="meta">Product image URLs</span></div>
-        <div class="data-field-item"><span class="label">color</span><span class="meta">Available colors</span></div>
-        <div class="data-field-item"><span class="label">material</span><span class="meta">Fabric, metal, etc.</span></div>
-        <div class="data-field-item"><span class="label">confidence</span><span class="meta">Per-field and overall scores</span></div>
       </div>
     </div>
   </div>
@@ -312,9 +217,16 @@ ul,ol{padding-left:24px}
         <pre id="playground-json" style="display:none;margin:0;max-height:400px;overflow-y:auto"></pre>
         <div id="playground-meta" style="display:none;margin-top:8px;font-size:.8em;color:#595959"></div>
       </div>
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e8eaed">
-        <p style="margin-bottom:4px;font-weight:500;color:#202124;font-size:.9em">Or connect via MCP:</p>
-        <pre style="font-size:.8em;margin:0">{
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e8eaed;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <p style="margin-bottom:4px;font-weight:500;color:#202124;font-size:.9em">npm SDK:</p>
+          <pre style="font-size:.8em;margin:0">import { ShopGraph } from 'shopgraph';
+const sg = new ShopGraph();
+const data = await sg.enrichBasic(url);</pre>
+        </div>
+        <div>
+          <p style="margin-bottom:4px;font-weight:500;color:#202124;font-size:.9em">MCP Client:</p>
+          <pre style="font-size:.8em;margin:0">{
   "mcpServers": {
     "shopgraph": {
       "type": "url",
@@ -322,6 +234,7 @@ ul,ol{padding-left:24px}
     }
   }
 }</pre>
+        </div>
       </div>
     </div>
 
