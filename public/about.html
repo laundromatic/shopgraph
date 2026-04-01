@@ -112,22 +112,22 @@ ul{padding-left:24px}
 
 <p>REST API at <code>shopgraph.dev/api</code>. MCP protocol at <code>shopgraph.dev/mcp</code>. 200 free calls per month, no signup. Paid calls via <a href="https://docs.stripe.com/payments/machine/mpp">Stripe Machine Payments Protocol</a>. <a href="https://github.com/laundromatic/shopgraph">Apache 2.0 on GitHub</a>.</p>
 
-<!-- Section 1b: Use Cases -->
-<h2>Use Cases</h2>
+<!-- Section 1b: When You Need It -->
+<h2>When You Need It</h2>
 
 <div class="use-case">
-  <h3>Shopping agents</h3>
-  <p>An agent comparing products across the open web sends URLs or scraped HTML to ShopGraph and gets back structured, confidence-scored data it can reason about. Bright Data or Firecrawl handles the scraping. ShopGraph handles the structuring.</p>
+  <h3>The URL has no API</h3>
+  <p>Millions of merchants have product pages but no Shopify storefront, no Google Shopping feed, no structured data endpoint. ShopGraph makes those pages machine-readable. Send the URL or pipe raw HTML from your own scraper.</p>
 </div>
 
 <div class="use-case">
-  <h3>Product intelligence and affiliate content</h3>
-  <p>An agent building product recommendations or affiliate content needs structured attributes from source pages: price, availability, brand, category. ShopGraph is the structuring step in that content pipeline.</p>
+  <h3>The HTML is messy</h3>
+  <p>Your scraper got the HTML. Now what? Every merchant structures their page differently. ShopGraph turns inconsistent markup into clean, typed product JSON with confidence scores. One schema, any merchant. Works with Bright Data, Firecrawl, or any scraping tool.</p>
 </div>
 
 <div class="use-case">
-  <h3>Catalog ingestion</h3>
-  <p>An agent building or maintaining a product catalog from multiple supplier websites sends pages to ShopGraph for consistent structuring. Every supplier page is different. ShopGraph normalizes them into one schema.</p>
+  <h3>The data needs to be trusted</h3>
+  <p>LLMs can extract product data but do it inconsistently and expensively &mdash; you're paying per-token for the entire HTML page. ShopGraph's three-tier pipeline (Schema.org parsing, LLM extraction, browser rendering) produces reliable output at a fraction of the cost, with confidence scores so you know what to trust.</p>
 </div>
 
 <!-- Section 2: How ShopGraph Evolved -->
