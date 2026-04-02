@@ -1,187 +1,180 @@
 # Design System: ShopGraph
 
 ## 1. Visual Theme & Atmosphere
-Clean, functional, developer-tool aesthetic. Light theme with white backgrounds, soft gray surfaces, and blue accents. Inspired by Google's Material Design but lighter — no elevation hierarchy, minimal shadows, generous whitespace. The site should feel like documentation that happens to be beautiful: clear, scannable, trustworthy. Not flashy, not dark-mode, not glassmorphism. The playground and data should be the visual focus, not the chrome around it.
+Warm, branded, physical. A pink-toned vintage laundromat photograph serves as the full-page background — connecting to the "Laundromatic" brand identity. The design layers content cards, organic MD3 shapes, and frosted glass overlays on top of the photo. The mood is confident, distinctive, and portfolio-grade — not sterile developer documentation. The checkered floor pattern in the photo provides natural visual rhythm in the lower sections.
 
 ## 2. Color Palette & Roles
 
 ### Primary
-- **Blue** `#1a73e8` — Primary actions, links, interactive elements, ShopGraph brand accent
-- **Blue hover** `#1765cc` — Hover state for primary buttons/links
+- **Brown** `#74362d` — Primary brand color. CTAs, hero card, Extract button, radio active state, headings on dark surfaces
+- **Brown hover** — Slightly darker for interactive states
 
-### Status & Pricing
-- **Green** `#34a853` — Success, free tier, positive metrics
-- **Green badge bg** `#e6f4ea` — Free tier badge background
-- **Green badge text** `#137333` — Free tier badge text
-- **Yellow** `#fbbc04` — Warning, degraded status, caution
-- **Yellow badge bg** `#fef7e0` — New/highlight badge background
-- **Yellow badge text** `#594300` — New/highlight badge text
-- **Red** `#ea4335` — Error, critical status
+### Surface & Overlays
+- **White** `#ffffff` — Playground card, input fields
+- **White 75%** `rgba(255,255,255,0.75)` — Frosted glass overlay on lower sections
+- **Pink** `#f7cccd` — Code text on dark shape backgrounds (npm SDK, MCP Client)
+- **Pink accent** — Integration pill background (soft pink, semi-transparent)
 
-### Neutral Scale
-- **Text primary** `#202124` — Headlines, primary body text
-- **Text secondary** `#595959` — Body paragraphs, descriptions, metadata
-- **Text muted** `#9aa0a6` — Footer text, timestamps, de-emphasized content
-- **Border** `#dadce0` — Card borders, section dividers, input borders
-- **Surface** `#f8f9fa` — Alternate section backgrounds, card backgrounds
-- **Surface alt** `#f1f3f4` — Code inline background, subtle fills
-- **Background** `#ffffff` — Page background
+### Text
+- **Black** `#000000` — Body text on white/frosted surfaces
+- **White** `#ffffff` — Text on brown surfaces, nav links on photo background
+- **Brown** `#74362d` — Accented text (radio labels, section keywords)
 
-### Code Blocks
-- **Code bg** `#1e1e2e` — Pre/code block background (dark for contrast)
-- **Code text** `#cdd6f4` — Code block text
+### Shapes
+- **Dark brown shapes** — MD3 blobs behind npm SDK and MCP Client (opaque, dark brown matching the washing machines)
+- **Pink pill** — Integration center shape (soft pink/salmon)
+- **Blue bubble** — "Works with" circle (teal-blue, stands out against warm palette)
 
-### Decorative (Hero blobs only)
-- **Blob blue** `#4285f4` — Hero gradient blob
-- **Blob green** `#34a853` — Hero gradient blob
-- **Blob yellow** `#fbbc04` — Hero gradient blob
+### Stats
+- **Black** `#000000` — Stat numbers (bold/black weight)
+- **Black** — Stat labels and descriptions
 
 ## 3. Typography Rules
 
 ### Font Families
-- **Primary**: `'Google Sans Flex', 'Google Sans', 'Segoe UI', system-ui, -apple-system, sans-serif`
-- **Mono**: `'Google Sans Code', 'Google Sans Mono', 'SF Mono', monospace`
-- Loaded via Google Fonts: `Google+Sans+Flex:opsz,wght@6..144,1..1000` and `Google+Sans+Code`
+- **Primary**: `'Google Sans Flex'` — All UI text, headings, body (variable font, weights 400-900)
+- **Script**: `'Meow Script'` — "Try it" headline only. Playful accent.
+- **Mono**: `'Google Sans Code'` — Code blocks, API endpoints, technical references
+
+### Font Loading
+```html
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Meow+Script&family=Google+Sans+Code&display=swap" rel="stylesheet">
+```
 
 ### Hierarchy
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| Hero title | Sans Flex | 3.6em | 700 | 1.1 | -0.03em | Single word "ShopGraph" |
-| Section heading (h2) | Sans Flex | 1.6em | 600 | default | default | Section titles |
-| Card heading (h3) | Sans Flex | 1.1em | 600 | default | default | Tool names, use case titles |
-| Hero subtitle | Sans Flex | 1.25em | 400 | 1.6 | default | #595959 color |
-| Body paragraph | Sans Flex | 1.05em | 400 | 1.7 | default | #595959 color |
-| Small text | Sans Flex | 0.85-0.9em | 400-500 | default | default | Nav links, badges, metadata |
-| Code inline | Code | 0.85em | 400 | default | default | #f1f3f4 bg, #202124 text |
-| Code block | Code | 0.85em | 400 | 1.6 | default | Dark bg (#1e1e2e) |
-| Tool name | Code | 1.05em | 600 | default | default | Monospace for API names |
-| Price display | Sans Flex | 2em | 700 | default | default | #1a73e8 for paid, #34a853 for free |
+| Role | Font | Size | Weight | Color | Notes |
+|------|------|------|--------|-------|-------|
+| Nav logo | Sans Flex | 16px | 900 (Black) | White | All caps "SHOPGRAPH" |
+| Nav links | Sans Flex | 16px | 900 (Black) | White | All caps |
+| Hero tagline "SHOPGRAPH" | Sans Flex | 24px | 900 (Black) | White | On brown card |
+| Hero subtitle | Sans Flex | 28px | 500 (Medium) | White | Line-height 42px, on brown card |
+| "Try it" | Meow Script | 86px | 400 | `#74362d` | Script accent on playground card |
+| Playground body | Sans Flex | 20px | 500 | Black | |
+| Radio labels | Sans Flex | 16px | 500 | `#74362d` | |
+| Input text | Sans Flex | 16px | 400 | Black | |
+| Button text | Sans Flex | 16px | 500 | White | On brown button |
+| Section heading | Sans Flex | 48px | 400 | Black | "Where does SHOPGRAPH..." with SHOPGRAPH in 900 weight |
+| Entry point titles | Sans Flex | ~18px | 700 (Bold) | Black | "From a URL: POST /api/enrich" |
+| Entry point body | Sans Flex | ~16px | 500 | Black | |
+| Integration title | Sans Flex | 20px | 700 | `#f7cccd` | On dark shape |
+| Code text | Google Sans Code | 14px | 500 | `#f7cccd` | On dark shape backgrounds |
+| Stats headline | Sans Flex | 48px | 400+900 | Black | "Tested **3,628** Product Pages" |
+| Stats numbers | Sans Flex | 48px | 900 (Black) | Black | 97%, 22 |
+| Stats labels | Sans Flex | 24px | 400 | Black | |
+| Footer text | Sans Flex | 16px | 400-500 | Black | |
 
 ## 4. Component Stylings
 
-### Buttons
-| Variant | Background | Text | Padding | Radius | Hover | Use |
-|---------|-----------|------|---------|--------|-------|-----|
-| Primary | `#1a73e8` | `#fff` | 12px 28px | 8px | `#1765cc` + deeper shadow | Main CTA (Try It Free, Extract) |
-| Outline | `#fff` | `#1a73e8` | 12px 28px | 8px | `#f8f9fa` bg, blue border | Secondary actions (View on GitHub) |
+### Hero Brown Card (left)
+- Background: `#74362d` with 75% opacity
+- Border radius: 40px
+- Padding: 56px top, 44px left, 36px right, 53px bottom
+- Width: ~390px, Height: ~309px
 
-### Cards
-- **Border**: 1px solid `#dadce0`
-- **Radius**: 12px
-- **Padding**: 28px (large cards), 20px (position cards), 12px (endpoint pills)
-- **Shadow**: `0 1px 4px rgba(60,64,67,.15)` — subtle, not prominent
-- **Accent stripe**: 3px gradient top border on tool cards (blue-green for first, yellow-red for second)
+### Playground Card (center-right)
+- Background: white with 75% opacity
+- Border radius: 40px
+- Padding: generous internal spacing
+- Contains: "Try it" script heading, description, radio buttons, URL input + Extract button
 
-### Integration Block
-- **Background**: `#fff`
-- **Border**: 1px solid `#dadce0`
-- **Radius**: 12px
-- **Padding**: 24-32px
-- **Shadow**: `0 1px 4px rgba(60,64,67,.15)`
-- **Max width**: 720-760px, centered
+### Extract Button
+- Background: `#74362d`
+- Text: white, 16px, medium weight
+- Border radius: 16px (MD3 rounded)
+- Padding: 16px 24px
 
-### Badges
-- **Free tier**: bg `#e6f4ea`, text `#137333`, padding 4px 12px, radius 20px (pill)
-- **New**: bg `#fef7e0`, text `#594300`, same padding/radius
-- **Default**: bg `#e8f0fe`, text `#1a73e8`, same padding/radius
+### Input Field
+- Background: white
+- Border: 1px solid white (subtle on white card)
+- Border radius: 24px (pill-shaped, MD3)
+- Padding: ~16px
+- Full width minus button
 
-### Input Fields
-- **Border**: 1px solid `#dadce0`
-- **Radius**: 8px
-- **Padding**: 10px 14px
-- **Focus**: border-color `#1a73e8`
-- **Font**: inherit (Sans Flex)
+### Radio Buttons
+- MD3 style radio buttons
+- Active color: `#74362d`
+- Labels: `#74362d`, 16px, medium
 
-### Navigation
-- **Height**: padding 16px 0
-- **Border**: bottom 1px solid `#dadce0`
-- **Logo**: 1.2em weight 600, icon 28x28 with 6px radius
-- **Links**: `#595959`, 0.9em, weight 500, hover `#202124`
+### MD3 Shape Blobs (Integration section)
+- Organic blob shapes from Material Design 3 shape library
+- Left and right: dark brown background, contain white/pink text
+- Center: pink/salmon background, contains dark text
+- All shapes are SVG files positioned absolutely
+
+### "Works With" Bubble
+- Blue/teal circular shape
+- White text, small (centered)
+- Positioned top-right of hero area
+
+### Frosted Overlay (Lower sections)
+- `background: rgba(255,255,255,0.75)`
+- Covers from "Where does SHOPGRAPH fit" section through footer
+- Content sits on top of the frosted glass
+
+### Dotted Separator
+- Decorative dashed/dotted border line
+- Green and brown dots alternating
+- Full width, between "Where it fits" and Stats sections
 
 ## 5. Layout Principles
 
+### Page Structure (top to bottom)
+1. **Nav**: Fixed, transparent over photo. Logo left, links right.
+2. **Hero zone** (over photo): Brown card (left) + Playground card (right) + Works With bubble (top right)
+3. **Integration zone** (over photo): Three MD3 shapes — npm SDK (left), Integration pill (center), MCP Client (right)
+4. **Frosted overlay begins**
+5. **"Where does SHOPGRAPH fit"**: 3-column entry points with detailed descriptions
+6. **Dotted separator**
+7. **Stats**: Headline + two stat columns
+8. **Footer**: Simplified, two-column
+
 ### Spacing
-- **Base unit**: 4px
-- **Common gaps**: 8px, 12px, 16px, 24px, 32px, 48px
-- **Section padding**: 40-50px vertical
-- **Container max-width**: 1200px (full width), 720-760px (content blocks)
+- Full bleed background image (1792x1917, positioned top: -568px)
+- Content container: centered, max-width ~1200-1400px
+- Section vertical gaps: generous (the photo provides visual breathing room)
 
-### Grid
-- **Position cards**: 3-column grid, 16px gap
-- **Tool cards**: 3-column grid, 24px gap
-- **Use case cards**: 3-column grid, 24px gap
-- **Integration code**: 2-column grid (npm + MCP side by side)
-- **Stats cards**: flex row with 16px gap
-- **All grids collapse to 1-column on mobile (768px)**
-
-### Whitespace
-- Sections breathe with 40-50px padding
-- Section headers centered with 48px bottom margin
-- Cards have internal padding (20-28px) creating consistent rhythm
-
-### Border Radius Scale
-- **Micro**: 4px (inline code)
-- **Small**: 8px (buttons, inputs, endpoint pills)
-- **Medium**: 12px (cards, integration blocks, pre blocks)
-- **Pill**: 20px (badges)
-- **Full**: 40px (works-with pills)
+### Responsive
+- Hero cards stack vertically on mobile
+- Integration shapes stack vertically
+- 3-column entry points become single column
+- Stats stack vertically
 
 ## 6. Depth & Elevation
-
-| Level | Treatment | Use |
-|-------|-----------|-----|
-| Flat | No shadow, 1px border only | Position cards, endpoint pills |
-| Subtle | `0 1px 4px rgba(60,64,67,.15)` | Content cards, integration block |
-| None on hover | No elevation change on hover | Cards are not interactive surfaces |
-
-Shadow philosophy: Minimal. Shadows indicate containment, not interactivity. The site uses borders (`#dadce0`) as the primary separation mechanism. Shadows are reserved for content cards that contain actionable information.
+- No traditional shadows
+- Depth created through opacity layers: photo → semi-transparent cards → content
+- Frosted glass effect via `rgba(255,255,255,0.75)` over photo background
 
 ## 7. Do's and Don'ts
 
 ### Do
-- Use `#1a73e8` blue for all interactive elements and CTAs
-- Use `#595959` for body text (not pure black, not too light)
-- Use monospace (`Google Sans Code`) for API names, endpoints, and code
-- Use 12px border-radius for cards and containers
-- Use `#f8f9fa` for alternating section backgrounds
-- Use centered section headers with subtitle text
-- Keep the hero blobs subtle (opacity 0.35, blur 120px)
+- Use `#74362d` brown as the primary interactive color
+- Use Meow Script ONLY for the "Try it" heading
+- Use organic MD3 shapes for the integration section
+- Let the laundromat photo breathe — don't cover it with too many elements
+- Use frosted white overlay for text-heavy sections (readability)
+- Use all-caps for "SHOPGRAPH" wherever it appears as a brand name
 
 ### Don't
-- Don't use dark mode or dark backgrounds (except code blocks)
-- Don't use gradients on surfaces (only on decorative hero blobs and tool card accent stripes)
-- Don't use shadows heavier than `0 1px 4px rgba(60,64,67,.15)`
-- Don't use border-radius larger than 12px on cards (pills/badges are the exception)
-- Don't use colors outside the defined palette — no purple, no teal, no orange
-- Don't use font weights above 700 or below 400
-- Don't center body paragraph text (section headers are centered; body text is left-aligned)
-- Don't add hover elevation effects to cards
+- Don't use the old blue (`#1a73e8`) anywhere
+- Don't use rectangular cards with borders in the hero/integration area (use organic shapes)
+- Don't add drop shadows — depth comes from photo layering
+- Don't use Google Sans Code for body text (only for API endpoints and code)
+- Don't use Meow Script for anything other than "Try it"
+- Don't cover the washing machines in the hero area
 
-## 8. Responsive Behavior
-
-| Breakpoint | Width | Key Changes |
-|------------|-------|-------------|
-| Desktop | >768px | 3-column grids, side-by-side code blocks, full hero blobs |
-| Mobile | <=768px | 1-column grids, stacked code blocks, scaled-down typography |
-
-- **Touch targets**: Buttons minimum 44px height
-- **Collapsing**: All grids go to single column. Integration code blocks stack vertically.
-- **Images**: No content images (text-driven site)
-- **Hero blobs**: Scale down but remain decorative
-
-## 9. Agent Prompt Guide
+## 8. Agent Prompt Guide
 
 ### Quick Color Reference
-- Primary blue: `#1a73e8`
-- Text: `#202124` (headings), `#595959` (body)
-- Border: `#dadce0`
-- Surface: `#f8f9fa`
-- Free/success green: `#34a853`
-- Code bg: `#1e1e2e`
+- Brown: `#74362d`
+- White overlay: `rgba(255,255,255,0.75)`
+- Pink text on dark: `#f7cccd`
+- Body text: `#000000`
+- Nav text: `#ffffff`
 
-### Example Component Prompts
-- "Build a card with 1px #dadce0 border, 12px radius, 28px padding, subtle shadow, white background"
-- "Build a CTA button: #1a73e8 bg, white text, 12px 28px padding, 8px radius, hover #1765cc"
-- "Build a badge: #e8f0fe bg, #1a73e8 text, 4px 12px padding, 20px pill radius"
-- "Build a code block: #1e1e2e bg, #cdd6f4 text, 20px 24px padding, 12px radius, Google Sans Code font"
+### Key Implementation Notes
+- Background image: `/bg-laundromat.jpg` (1792x1917), positioned `top: -568px`
+- Fonts: Google Sans Flex (variable), Meow Script, Google Sans Code
+- MD3 shapes: SVG files in `/public/` (shape-left.svg, shape-center.svg, shape-right.svg, shape-bubble.svg)
+- Frosted overlay starts at ~y=904 in the design (after integration section)
+- All interactive elements use `#74362d` brown

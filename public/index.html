@@ -2,450 +2,434 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code&display=swap" rel="stylesheet"><link rel="icon" type="image/png" href="/icon.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Structured product data extraction for AI agents. Product data where platform APIs don't reach. MCP server with Schema.org and LLM extraction.">
-<title>ShopGraph — Structured Product Data for AI Agents</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Clean product data from any URL. The structuring layer for agentic commerce. REST API + MCP server. 200 free calls/month.">
+<title>ShopGraph — Clean Product Data from Any URL</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Meow+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:#ffffff;color:#202124;font-family:'Google Sans Flex','Google Sans','Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
-a{color:#1a73e8;text-decoration:none}
+body{background:#fff;color:#000;font-family:'Google Sans Flex',system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
 a:hover{text-decoration:underline}
-code,pre{font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace}
-code{background:#f1f3f4;padding:2px 8px;border-radius:4px;font-size:.85em;color:#202124}
-pre{background:#1e1e2e;color:#cdd6f4;padding:20px 24px;border-radius:12px;overflow-x:auto;font-size:.85em;line-height:1.6;border:1px solid #dadce0}
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
-h1{font-size:3.2em;font-weight:700;letter-spacing:-.03em;color:#202124;line-height:1.1}
-h2{font-size:1.6em;font-weight:600;color:#202124;margin-bottom:16px}
-h3{font-size:1.1em;font-weight:600;color:#202124;margin-bottom:8px}
-p{color:#595959;margin-bottom:12px;font-size:1.05em}
-li{color:#595959;margin-bottom:6px}
-ul,ol{padding-left:24px}
-.nav{padding:16px 0;border-bottom:1px solid #dadce0}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 24px}
-.nav-logo{font-size:1.2em;font-weight:600;color:#202124;display:flex;align-items:center;gap:8px}
-.nav-logo span{color:#595959;font-weight:400;font-size:.85em}
-.nav-links{display:flex;gap:24px;align-items:center}
-.nav-links a{color:#595959;font-size:.9em;font-weight:500}
-.nav-links a:hover{color:#202124;text-decoration:none}
-.hero{position:relative;overflow:hidden;padding:50px 0;text-align:center}
-.hero-blob{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:.35;pointer-events:none}
-.hero-blob-1{background:radial-gradient(circle,#4285f4,transparent 70%);top:-200px;right:-100px}
-.hero-blob-2{background:radial-gradient(circle,#34a853,transparent 70%);bottom:-200px;left:-100px}
-.hero-blob-3{background:radial-gradient(circle,#fbbc04,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
-.hero h1{font-size:3.6em;margin-bottom:16px;position:relative}
-.hero-sub{font-size:1.25em;color:#595959;max-width:640px;margin:0 auto 36px;line-height:1.6;position:relative}
-.hero-buttons{display:flex;gap:12px;justify-content:center;position:relative;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-size:.95em;font-weight:500;transition:all .2s}
-.btn-primary{background:#1a73e8;color:#fff;box-shadow:0 1px 3px rgba(26,115,232,.3)}
-.btn-primary:hover{background:#1765cc;text-decoration:none;box-shadow:0 2px 8px rgba(26,115,232,.35)}
-.btn-outline{background:#fff;color:#1a73e8;border:1px solid #dadce0}
-.btn-outline:hover{background:#f8f9fa;border-color:#1a73e8;text-decoration:none}
-.section{padding:40px 0}
-.section-alt{background:#f8f9fa}
-.section-header{text-align:center;margin-bottom:48px}
-.section-header p{max-width:640px;margin:0 auto;font-size:1.1em}
-.transform-visual{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin:40px 0}
-.transform-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(60,64,67,.15)}
-.transform-card h3{margin-bottom:12px}
-.transform-card pre{font-size:.8em;margin:0}
-.transform-arrow{font-size:2em;color:#1a73e8;font-weight:700;text-align:center}
-.transform-label{font-size:.75em;color:#595959;text-align:center;display:block;margin-top:4px}
-@media(max-width:768px){
-  .transform-visual{grid-template-columns:1fr;gap:16px}
-  .transform-arrow{transform:rotate(90deg)}
+code{font-family:'Google Sans Code',monospace;font-size:.9em}
+
+/* === PAGE WRAPPER WITH BACKGROUND === */
+.page-bg{position:relative;min-height:100vh}
+.page-bg::before{
+  content:'';position:fixed;top:-568px;left:0;width:100%;height:2485px;
+  background:url('/bg-laundromat.jpg') center top / cover no-repeat;
+  z-index:-2;
 }
-.position-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
-.position-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:20px;text-align:center}
-.position-card strong{display:block;color:#202124;margin-bottom:4px}
-.position-card span{font-size:.85em;color:#595959}
-@media(max-width:768px){.position-grid{grid-template-columns:1fr}}
-.usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.usecase-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(60,64,67,.15)}
-.usecase-card h3{margin-bottom:8px}
-.usecase-card p{font-size:.95em;margin:0}
-@media(max-width:768px){.usecase-grid{grid-template-columns:1fr}}
-.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.tool-card{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(60,64,67,.15);position:relative;overflow:hidden}
-.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.tool-card:first-child::before{background:linear-gradient(90deg,#4285f4,#34a853)}
-.tool-card:last-child::before{background:linear-gradient(90deg,#fbbc04,#ea4335)}
-.tool-name{font-size:1.05em;font-weight:600;font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace;color:#202124;margin-bottom:8px}
-.tool-desc{color:#595959;font-size:.95em;margin-bottom:16px}
-.tool-price{font-size:2em;font-weight:700;color:#1a73e8}
-.tool-price-unit{font-size:.4em;color:#595959;font-weight:400;vertical-align:middle}
-.tool-badge{display:inline-block;background:#e8f0fe;color:#1a73e8;padding:4px 12px;border-radius:20px;font-size:.8em;font-weight:500;margin-top:12px}
-@media(max-width:768px){.tools-grid{grid-template-columns:1fr}}
-@media(max-width:768px){[style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}}
-.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:32px}
-.step{text-align:center}
-.step-number{width:48px;height:48px;background:#e8f0fe;color:#1a73e8;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.2em;font-weight:700;margin-bottom:16px}
-.step h3{margin-bottom:8px}
-.step p{font-size:.95em}
-.step-connector{display:none}
-@media(max-width:768px){.steps-grid{grid-template-columns:1fr}}
-.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;align-items:start}
-.data-json pre{margin:0;font-size:.82em}
-.data-fields-list{display:flex;flex-direction:column;gap:8px}
-.data-field-item{display:flex;align-items:baseline;gap:8px}
-.data-field-item .label{font-weight:600;color:#202124;font-size:.9em;font-family:'Google Sans Code','Google Sans Mono','SF Mono',monospace}
-.data-field-item .meta{font-size:.9em;color:#595959}
-@media(max-width:768px){.data-grid{grid-template-columns:1fr}}
-.integration-block{background:#fff;border:1px solid #dadce0;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(60,64,67,.15);max-width:720px;margin:0 auto}
-.integration-block pre{margin:20px 0 0}
-.cache-note{display:flex;align-items:flex-start;gap:12px;background:#e8f0fe;border-radius:12px;padding:20px 24px;margin-top:24px;max-width:720px;margin-left:auto;margin-right:auto}
-.cache-note p{margin:0;font-size:.95em;color:#202124}
-.works-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#fff;border:1px solid #dadce0;border-radius:40px;font-size:0.95em;font-weight:500;color:#202124}
-.works-pill svg{flex-shrink:0}
-.footer-section{border-top:1px solid #dadce0;padding:32px 0 32px;margin-top:0}
-.footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px}
-.footer-brand{max-width:300px}
-.footer-brand strong{color:#202124;font-size:1.05em;display:block;margin-bottom:8px}
-.footer-brand p{font-size:.85em;color:#595959;margin:0}
-.footer-links{display:flex;gap:48px}
-.footer-col h4{font-size:.85em;font-weight:600;color:#202124;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
-.footer-col a{display:block;color:#595959;font-size:.9em;margin-bottom:8px}
-.footer-col a:hover{color:#1a73e8}
-.footer-bottom{text-align:center;color:#595959;font-size:.8em;margin-top:32px;padding-top:24px;border-top:1px solid #dadce0}
-@media(max-width:768px){
-  .footer-inner{flex-direction:column;align-items:center;text-align:center}
-  .footer-links{flex-direction:column;gap:24px}
+
+/* === NAV === */
+.nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:14px 40px}
+.nav-logo{font-size:16px;font-weight:900;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;gap:20px}
+.nav-links a{font-size:16px;font-weight:900;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.nav-links a:hover{text-decoration:none;opacity:.8}
+
+/* === HERO === */
+.hero{position:relative;z-index:1;padding:60px 40px 0;display:flex;gap:28px;max-width:1400px;margin:0 auto;align-items:flex-start}
+.hero-brand{
+  background:rgba(116,54,45,0.75);border-radius:40px;
+  padding:56px 36px 53px 44px;width:390px;flex-shrink:0;
+  color:#fff;
 }
-.gradient-line{height:3px;background:linear-gradient(90deg,#4285f4,#34a853,#fbbc04,#ea4335);border-radius:2px;margin:40px auto;max-width:200px}
+.hero-brand-name{font-size:24px;font-weight:900;letter-spacing:.5px;margin-bottom:2px}
+.hero-brand-sub{font-size:28px;font-weight:500;line-height:42px}
+.hero-playground{
+  background:rgba(255,255,255,0.75);border-radius:40px;
+  padding:32px 40px 36px;flex:1;max-width:560px;position:relative;
+}
+.hero-try{font-family:'Meow Script',cursive;font-size:86px;color:#74362d;line-height:1;margin-bottom:4px}
+.hero-desc{font-size:20px;font-weight:500;color:#000;margin-bottom:16px}
+.hero-radios{display:flex;gap:34px;margin-bottom:16px;align-items:center}
+.hero-radio{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:500;color:#74362d;cursor:pointer}
+.hero-radio input[type="radio"]{accent-color:#74362d;width:20px;height:20px}
+.hero-input-row{display:flex;gap:8px}
+.hero-input{
+  flex:1;padding:14px 16px;border:1px solid #fff;border-radius:24px;
+  font-size:16px;font-family:inherit;outline:none;background:#fff;
+}
+.hero-input:focus{border-color:#74362d}
+.hero-btn{
+  padding:16px 24px;background:#74362d;color:#fff;border:none;border-radius:16px;
+  font-size:16px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;
+}
+.hero-btn:hover{opacity:.9}
+.hero-btn:disabled{opacity:.6;cursor:not-allowed}
+
+/* Works With Bubble */
+.works-bubble{
+  position:absolute;top:40px;right:-80px;
+  width:160px;height:160px;border-radius:50%;
+  background:#2d8a9e;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  color:#fff;font-size:14px;font-weight:400;padding:20px;line-height:1.3;
+}
+
+/* === INTEGRATION SECTION (over photo) === */
+.integration-zone{
+  position:relative;z-index:1;padding:40px 40px 60px;
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:0;
+}
+.int-shape{
+  position:relative;width:320px;height:280px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:24px;
+}
+.int-shape img.shape-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:0}
+.int-shape .int-content{position:relative;z-index:1}
+.int-title{font-size:20px;font-weight:700;margin-bottom:12px}
+.int-code{font-family:'Google Sans Code',monospace;font-size:14px;line-height:1.5}
+.int-shape-dark .int-title,.int-shape-dark .int-code{color:#f7cccd}
+.int-center{width:380px;height:300px}
+.int-center .int-title{color:#000;font-size:20px;font-weight:700}
+.int-center .int-body{font-size:14px;font-weight:500;color:#000;margin-top:8px;line-height:1.5}
+.int-center .int-body strong{font-weight:700}
+
+/* === FROSTED OVERLAY === */
+.frosted{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,0.75);
+}
+
+/* === WHERE IT FITS === */
+.where-section{padding:60px 40px 40px;max-width:1200px;margin:0 auto}
+.where-heading{font-size:48px;font-weight:400;text-align:center;margin-bottom:48px;color:#000}
+.where-heading strong{font-weight:900}
+.where-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.where-item h3{font-size:18px;font-weight:700;color:#000;margin-bottom:8px}
+.where-item p{font-size:16px;font-weight:500;color:#000;line-height:1.6}
+
+/* === DOTTED SEPARATOR === */
+.dot-separator{
+  display:flex;justify-content:center;gap:12px;padding:40px 0;flex-wrap:wrap;
+}
+.dot-separator span{
+  width:12px;height:12px;border-radius:50%;display:inline-block;
+}
+.dot-green{background:#4a7c59}
+.dot-brown{background:#74362d}
+
+/* === STATS === */
+.stats-section{padding:20px 40px 60px;max-width:1200px;margin:0 auto;text-align:center}
+.stats-headline{font-size:48px;font-weight:400;color:#000;margin-bottom:32px}
+.stats-headline strong{font-weight:900}
+.stats-row{display:flex;justify-content:center;gap:120px}
+.stat-item{text-align:center;cursor:pointer}
+.stat-item:hover{opacity:.8}
+.stat-number{font-size:48px;font-weight:900;color:#000}
+.stat-label{font-size:24px;font-weight:400;color:#000;margin-top:4px}
+.stat-desc{font-size:16px;font-weight:400;color:#000;margin-top:2px;max-width:280px}
+
+/* === FOOTER === */
+.footer{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,0.75);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;
+  max-width:100%;
+}
+.footer-left{font-size:16px;color:#000}
+.footer-left a{text-decoration:underline}
+.footer-right{text-align:right;font-size:16px;font-weight:500;color:#000}
+.footer-right a{color:#000}
+.footer-right a:hover{text-decoration:underline}
+
+/* === PLAYGROUND RESULT === */
+#playground-result{margin-top:16px}
+#playground-loading{text-align:center;padding:20px;color:#74362d}
+#playground-error{background:#fce8e6;border:1px solid #f5c6cb;border-radius:12px;padding:12px;color:#611a15;font-size:.9em}
+#playground-json{background:#1e1e2e;color:#cdd6f4;padding:16px;border-radius:12px;overflow-x:auto;font-size:.85em;font-family:'Google Sans Code',monospace;max-height:300px;overflow-y:auto;line-height:1.5}
+#playground-meta{font-size:.8em;color:#74362d;margin-top:8px}
+
+/* === STATS MODAL === */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal-content{background:#fff;border-radius:16px;padding:32px;max-width:720px;width:90%;max-height:80vh;overflow-y:auto}
+.modal-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;color:#74362d;font-weight:700}
+.modal-content table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.95em}
+.modal-content th{text-align:left;padding:10px 12px;border-bottom:2px solid #dadce0;font-weight:600;font-size:.85em;color:#595959}
+.modal-content td{padding:10px 12px;border-bottom:1px solid #f1f3f4}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid #f7cccd;border-top-color:#74362d;border-radius:50%;animation:spin .8s linear infinite}
+
+/* === RESPONSIVE === */
+@media(max-width:900px){
+  .hero{flex-direction:column;padding:40px 20px 0}
+  .hero-brand{width:100%}
+  .hero-playground{max-width:100%}
+  .works-bubble{position:static;margin:16px auto;width:140px;height:140px}
+  .integration-zone{flex-direction:column;gap:20px;padding:40px 20px}
+  .int-shape,.int-center{width:100%;max-width:360px}
+  .where-grid{grid-template-columns:1fr}
+  .stats-row{flex-direction:column;gap:40px}
+  .footer{flex-direction:column;text-align:center}
+  .footer-right{text-align:center}
+  .where-heading{font-size:32px}
+  .stats-headline{font-size:32px}
+}
 </style>
 </head>
 <body>
-<div id="health-banner" style="display:none;background:#fef7e0;border-bottom:1px solid #f9ab00;padding:10px 24px;text-align:center;font-size:.9em;color:#594300">
+<div class="page-bg">
+
+<!-- Health Banner (hidden by default) -->
+<div id="health-banner" style="display:none;background:#fef7e0;border-bottom:1px solid #f9ab00;padding:10px 24px;text-align:center;font-size:.9em;color:#594300;position:relative;z-index:20">
   <span id="health-banner-text"></span>
 </div>
+
+<!-- Nav -->
 <nav class="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/icon.png" alt="ShopGraph" style="width:28px;height:28px;border-radius:6px;vertical-align:middle;margin-right:8px">ShopGraph <span>by Krishna Brown</span></a>
-    <div class="nav-links">
-      <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
-      <a href="/health">Status</a>
-      <a href="/about">About</a>
-    </div>
+  <a href="/" class="nav-logo">ShopGraph</a>
+  <div class="nav-links">
+    <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
+    <a href="/health">Status</a>
+    <a href="/about">About</a>
   </div>
 </nav>
 
-<main>
+<!-- Hero: Brand Card + Playground -->
+<section class="hero">
+  <div class="hero-brand">
+    <div class="hero-brand-name">SHOPGRAPH</div>
+    <div class="hero-brand-sub">Clean product data from any URL. The structuring layer for agentic commerce.</div>
+  </div>
 
-<!-- Hero + Playground -->
-<section class="hero" style="padding-bottom:24px">
-  <div class="hero-blob hero-blob-1"></div>
-  <div class="hero-blob hero-blob-2"></div>
-  <div class="hero-blob hero-blob-3"></div>
-  <div class="container">
-    <h1>ShopGraph</h1>
-    <p class="hero-sub">Clean product data from any URL. The structuring layer for agent commerce.</p>
-
-    <div id="try-it" class="integration-block" style="max-width:720px;margin:0 auto;text-align:left;position:relative">
-      <p style="font-size:.9em;color:#595959;margin-bottom:12px">Paste any product URL. 200 free calls/month, no signup.</p>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:.85em;color:#595959;cursor:pointer"><input type="radio" name="pg-mode" value="basic" checked onchange="updatePlaygroundMode()"> Basic (free)</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:.85em;color:#595959;cursor:pointer"><input type="radio" name="pg-mode" value="full" onchange="updatePlaygroundMode()"> Full ($0.02)</label>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <input id="playground-url" type="url" placeholder="https://www.allbirds.com/products/mens-tree-runners" value="https://www.allbirds.com/products/mens-tree-runners" style="flex:1;padding:10px 14px;border:1px solid #dadce0;border-radius:8px;font-size:.95em;font-family:inherit;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='#1a73e8'" onblur="this.style.borderColor='#dadce0'">
-        <button id="playground-btn" onclick="runPlayground()" style="padding:10px 24px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:.95em;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .2s" onmouseover="this.style.background='#1765cc'" onmouseout="this.style.background='#1a73e8'">Extract</button>
-      </div>
-      <div id="playground-result" style="display:none">
-        <div id="playground-loading" style="display:none;text-align:center;padding:24px;color:#595959">
-          <div style="display:inline-block;width:20px;height:20px;border:2px solid #dadce0;border-top-color:#1a73e8;border-radius:50%;animation:spin 0.8s linear infinite"></div>
-          <span style="margin-left:8px">Extracting product data...</span>
-        </div>
-        <div id="playground-error" style="display:none;background:#fce8e6;border:1px solid #f5c6cb;border-radius:8px;padding:12px 16px;color:#611a15;font-size:.9em"></div>
-        <pre id="playground-json" style="display:none;margin:0;max-height:400px;overflow-y:auto"></pre>
-        <div id="playground-meta" style="display:none;margin-top:8px;font-size:.8em;color:#595959"></div>
-      </div>
+  <div class="hero-playground" id="try-it">
+    <div class="hero-try">Try it</div>
+    <p class="hero-desc">Paste any product URL. 200 free calls/month, no signup.</p>
+    <div class="hero-radios">
+      <label class="hero-radio"><input type="radio" name="pg-mode" value="basic" checked onchange="updatePlaygroundMode()"> Basic (free)</label>
+      <label class="hero-radio"><input type="radio" name="pg-mode" value="full" onchange="updatePlaygroundMode()"> Full ($0.02)</label>
+    </div>
+    <div class="hero-input-row">
+      <input id="playground-url" class="hero-input" type="url" placeholder="https://www.allbirds.com/products/mens-tree-runners" value="https://www.allbirds.com/products/mens-tree-runners">
+      <button id="playground-btn" class="hero-btn" onclick="runPlayground()">Extract</button>
+    </div>
+    <div id="playground-result" style="display:none">
+      <div id="playground-loading" style="display:none"><span class="spinner"></span> Extracting product data...</div>
+      <div id="playground-error" style="display:none"></div>
+      <pre id="playground-json" style="display:none"></pre>
+      <div id="playground-meta" style="display:none"></div>
     </div>
 
-    <div class="position-grid" style="margin-top:24px">
-      <div class="position-card">
-        <strong>Shopify Catalog</strong>
-        <span>Covers Shopify merchants</span>
+    <!-- Works With Bubble -->
+    <div class="works-bubble">Works with Claude, Cursor, CrewAI, LangGraph, AutoGen, and any MCP client</div>
+  </div>
+</section>
+
+<!-- Integration Zone (over photo) -->
+<section class="integration-zone">
+  <!-- npm SDK (left blob) -->
+  <div class="int-shape int-shape-dark">
+    <img class="shape-bg" src="/shape-blob.svg" alt="" aria-hidden="true">
+    <div class="int-content">
+      <div class="int-title">npm SDK</div>
+      <div class="int-code">
+        import { ShopGraph } from<br>'shopgraph'; const sg = new<br>ShopGraph(); const data =<br>await sg.enrichBasic(url);
       </div>
-      <div class="position-card">
-        <strong>Google UCP</strong>
-        <span>Covers Google-indexed merchants</span>
+    </div>
+  </div>
+
+  <!-- Integration (center pill) -->
+  <div class="int-shape int-center">
+    <img class="shape-bg" src="/shape-center.svg" alt="" aria-hidden="true">
+    <div class="int-content">
+      <div class="int-title">INTEGRATION</div>
+      <div class="int-body">
+        REST API: POST /api/enrich/basic (free)<br>
+        POST /api/enrich ($0.02)<br>
+        POST /api/enrich/html ($0.02)<br><br>
+        No API keys needed for the free tier.<br>
+        Paid calls use <strong>Stripe MPP</strong>.<br>
+        No subscriptions, no minimums
       </div>
-      <div class="position-card" style="border-color:#1a73e8;background:#f0f6ff">
-        <strong style="color:#1a73e8">ShopGraph</strong>
-        <span>Covers the open web</span>
+    </div>
+  </div>
+
+  <!-- MCP Client (right blob) -->
+  <div class="int-shape int-shape-dark">
+    <img class="shape-bg" src="/shape-blob.svg" alt="" aria-hidden="true">
+    <div class="int-content">
+      <div class="int-title">MCP Client</div>
+      <div class="int-code">
+        {<br>
+        &nbsp;&nbsp;"mcpServers": { "shopgraph": {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"type": "url",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;"url": "https://shopgraph.dev/<br>&nbsp;&nbsp;&nbsp;&nbsp;mcp"<br>
+        &nbsp;&nbsp;} }<br>
+        }
       </div>
     </div>
   </div>
 </section>
 
-<!-- Integration -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Integration</h2>
-      <p>Works with Claude, Cursor, CrewAI, LangGraph, AutoGen, and any MCP client.</p>
-    </div>
+<!-- Frosted Overlay Sections -->
+<div class="frosted">
 
-    <div class="integration-block" style="max-width:720px;margin:0 auto">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div>
-          <p style="margin-bottom:4px;font-weight:500;color:#202124;font-size:.9em">npm SDK:</p>
-          <pre style="font-size:.8em;margin:0">import { ShopGraph } from 'shopgraph';
-const sg = new ShopGraph();
-const data = await sg.enrichBasic(url);</pre>
-        </div>
-        <div>
-          <p style="margin-bottom:4px;font-weight:500;color:#202124;font-size:.9em">MCP Client:</p>
-          <pre style="font-size:.8em;margin:0">{
-  "mcpServers": {
-    "shopgraph": {
-      "type": "url",
-      "url": "https://shopgraph.dev/mcp"
-    }
-  }
-}</pre>
-        </div>
+  <!-- Where Does ShopGraph Fit -->
+  <section class="where-section">
+    <h2 class="where-heading">Where does <strong>SHOPGRAPH</strong> fit in my stack?</h2>
+    <div class="where-grid">
+      <div class="where-item">
+        <h3>From a URL: POST /api/enrich</h3>
+        <p>You have a product URL and want structured data back. ShopGraph handles fetching, rendering JavaScript-heavy pages, and extracting product attributes into a single consistent schema. Free tier: 200 calls/month, no signup.</p>
       </div>
-      <div style="margin-top:12px;font-size:.85em;color:#595959">
-        REST API: <code>POST /api/enrich/basic</code> (free) &middot; <code>POST /api/enrich</code> ($0.02) &middot; <code>POST /api/enrich/html</code> ($0.02)
+      <div class="where-item">
+        <h3>From HTML: POST /api/enrich/html</h3>
+        <p>You already have the HTML from your own scraping infrastructure. ShopGraph skips the fetch and goes straight to structuring &mdash; so you keep your proxy setup and ShopGraph handles the product data extraction. Same output, no redundant network calls.</p>
+      </div>
+      <div class="where-item">
+        <h3>From any agent: connect via MCP</h3>
+        <p>You're building in the MCP ecosystem. One line of config connects your agent to ShopGraph's full extraction pipeline. Paid calls settle through Stripe Machine Payments &mdash; no API keys, no subscriptions.</p>
       </div>
     </div>
+  </section>
 
-    <div class="cache-note" style="margin-top:24px;max-width:720px;margin-left:auto;margin-right:auto">
-      <p>No API keys needed for the free tier. Paid calls use <strong>Stripe MPP</strong>. No subscriptions, no minimums.</p>
-    </div>
+  <!-- Dotted Separator -->
+  <div class="dot-separator" aria-hidden="true">
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
+    <span class="dot-green"></span><span class="dot-brown"></span><span class="dot-green"></span><span class="dot-brown"></span>
   </div>
-</section>
 
-<!-- Entry Points -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-header">
-      <h2>Where It Fits</h2>
-      <p>You send messy input. You get clean structured product data back.</p>
-    </div>
-
-    <div class="usecase-grid" style="grid-template-columns:repeat(3,1fr)">
-      <div class="usecase-card">
-        <h3>From a URL</h3>
-        <p><code>POST /api/enrich</code> with a product URL. ShopGraph fetches, parses, and structures. For when you don't have the HTML yet.</p>
+  <!-- Stats -->
+  <section class="stats-section">
+    <h2 class="stats-headline">Tested <strong id="pages-tested">3,628</strong> Product Pages</h2>
+    <div class="stats-row">
+      <div class="stat-item" onclick="openStatsModal()">
+        <div class="stat-number" id="success-rate">97%</div>
+        <div class="stat-label">Extraction Success</div>
+        <div class="stat-desc">Percentage of product pages that return structured data</div>
       </div>
-      <div class="usecase-card">
-        <h3>From HTML</h3>
-        <p><code>POST /api/enrich/html</code> with raw markup. ShopGraph structures it without re-fetching. For when your scraper already handled the page.</p>
-      </div>
-      <div class="usecase-card">
-        <h3>From any agent</h3>
-        <p>Connect via MCP protocol at <code>shopgraph.dev/mcp</code>. Same engine, native agent integration. For when you're building in the MCP ecosystem.</p>
+      <div class="stat-item" onclick="openStatsModal()">
+        <div class="stat-number" id="verticals-total">22</div>
+        <div class="stat-label">Verticals</div>
+        <div class="stat-desc">B2C and B2B shopping categories tested</div>
       </div>
     </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-left">
+      <strong>Clean product data from any URL.</strong><br>
+      Built by Krishna Brown &middot; <a href="mailto:hi@kb.computer">hi@kb.computer</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://github.com/laundromatic/shopgraph">Github</a> &middot;
+      <a href="/mcp">MCP EndPoint</a> &middot;
+      <a href="/health">Health Check</a><br>
+      <a href="/tos">Terms of Service</a> &middot;
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+  </footer>
+
+</div><!-- /frosted -->
+
+</div><!-- /page-bg -->
+
+<!-- Stats Modal -->
+<div class="modal-overlay" id="stats-modal" onclick="if(event.target===this)closeStatsModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeStatsModal()">&times;</button>
+    <h3 style="font-size:24px;font-weight:700;margin-bottom:8px">Extraction Results by Vertical</h3>
+    <p style="font-size:14px;color:#595959;margin-bottom:16px">Across <span id="modal-verticals-count">-</span> shopping verticals &middot; Last updated: <span id="modal-last-updated">-</span></p>
+    <table>
+      <thead>
+        <tr><th>Vertical</th><th style="text-align:right">Pages</th><th style="text-align:right">Success</th></tr>
+      </thead>
+      <tbody id="modal-verticals-table">
+        <tr><td colspan="3" style="padding:20px;text-align:center;color:#595959">Loading...</td></tr>
+      </tbody>
+    </table>
   </div>
-</section>
+</div>
 
-<!-- Product Pages Tested (Quality Dashboard) -->
-<section class="section section-alt" id="quality">
-  <div class="container">
-    <div class="section-header">
-      <div id="counter" style="font-size:4em;font-weight:800;color:#1a73e8;letter-spacing:-.03em" data-target="0">...</div>
-      <h2 style="margin-top:8px;margin-bottom:4px">Product Pages Tested</h2>
-      <p>Across <strong id="verticals-count">-</strong> shopping verticals &middot; Last updated: <span id="last-updated">-</span></p>
-    </div>
-
-    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:24px 0 40px">
-      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:180px">
-        <div style="font-size:2em;font-weight:700;color:#34a853" id="success-rate">-</div>
-        <div style="font-size:0.85em;color:#595959;margin-top:4px">Extraction Success</div>
-        <div style="font-size:0.8em;color:#595959;margin-top:2px">Percentage of product pages that return structured data</div>
-      </div>
-      <div style="text-align:center;padding:20px 28px;background:#fff;border:1px solid #dadce0;border-radius:12px;min-width:180px">
-        <div style="font-size:2em;font-weight:700;color:#1a73e8" id="verticals-total">-</div>
-        <div style="font-size:0.85em;color:#595959;margin-top:4px">Verticals</div>
-        <div style="font-size:0.8em;color:#595959;margin-top:2px">B2C and B2B shopping categories tested</div>
-      </div>
-    </div>
-
-    <div style="max-width:720px;margin:0 auto">
-      <table style="width:100%;border-collapse:collapse;font-size:.95em">
-        <thead>
-          <tr style="border-bottom:2px solid #dadce0">
-            <th style="text-align:left;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Vertical</th>
-            <th style="text-align:right;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Pages</th>
-            <th style="text-align:right;padding:10px 12px;color:#595959;font-weight:600;font-size:.85em">Success</th>
-          </tr>
-        </thead>
-        <tbody id="verticals-table">
-          <tr><td colspan="3" style="padding:20px;text-align:center;color:#595959">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<div class="gradient-line" style="display:none"></div>
-
-
-<div id="about"></div>
-<footer class="footer-section">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <strong>ShopGraph</strong>
-      <p>Clean product data from any URL. Built by Krishna Brown.</p>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <h4>Product</h4>
-        <a href="https://github.com/laundromatic/shopgraph">GitHub</a>
-        <a href="/mcp">MCP Endpoint</a>
-        <a href="/health">Health Check</a>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="/tos">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <a href="mailto:hi@kb.computer">hi@kb.computer</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    Krishna Brown &middot; <a href="mailto:hi@kb.computer" style="color:#595959">hi@kb.computer</a> &middot; Apache 2.0
-  </div>
-</footer>
-
-<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script>
+// === PLAYGROUND ===
 var pgMode='basic';
 function updatePlaygroundMode(){pgMode=document.querySelector('input[name="pg-mode"]:checked').value}
 function runPlayground(){
   var url=document.getElementById('playground-url').value.trim();
-  if(!url){return;}
+  if(!url)return;
   var result=document.getElementById('playground-result');
   var loading=document.getElementById('playground-loading');
   var error=document.getElementById('playground-error');
   var json=document.getElementById('playground-json');
   var meta=document.getElementById('playground-meta');
   var btn=document.getElementById('playground-btn');
-  result.style.display='block';
-  loading.style.display='block';
-  error.style.display='none';
-  json.style.display='none';
-  meta.style.display='none';
-  btn.disabled=true;
-  btn.textContent='Extracting...';
-  btn.style.background='#9aa0a6';
+  result.style.display='block';loading.style.display='block';
+  error.style.display='none';json.style.display='none';meta.style.display='none';
+  btn.disabled=true;btn.textContent='Extracting...';
   var start=Date.now();
   var endpoint=pgMode==='full'?'/api/enrich':'/api/enrich/basic';
-  fetch(endpoint,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({url:url})
-  }).then(function(r){return r.json().then(function(d){return{status:r.status,data:d}})})
+  fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})})
+  .then(function(r){return r.json().then(function(d){return{status:r.status,data:d}})})
   .then(function(res){
-    loading.style.display='none';
-    var ms=Date.now()-start;
-    if(res.status>=400){
-      error.style.display='block';
-      error.textContent=res.data.message||res.data.error||'Request failed ('+res.status+')';
-    }else{
-      json.style.display='block';
-      json.textContent=JSON.stringify(res.data,null,2);
+    loading.style.display='none';var ms=Date.now()-start;
+    if(res.status>=400){error.style.display='block';error.textContent=res.data.message||res.data.error||'Request failed';}
+    else{
+      json.style.display='block';json.textContent=JSON.stringify(res.data,null,2);
       meta.style.display='block';
       var parts=[ms+'ms'];
       if(res.data.cached)parts.push('cached');
       if(res.data.free_tier)parts.push(res.data.free_tier.used+'/'+res.data.free_tier.limit+' free calls used');
-      if(res.data.product&&!res.data.product.product_name)parts.push('No Schema.org data found — try enrich_product for LLM extraction');
       if(res.data.upgrade_hint)parts.push(res.data.upgrade_hint);
       meta.textContent=parts.join(' · ');
     }
-  }).catch(function(e){
-    loading.style.display='none';
-    error.style.display='block';
-    error.textContent='Network error: '+e.message;
-  }).finally(function(){
-    btn.disabled=false;
-    btn.textContent='Extract';
-    btn.style.background='#1a73e8';
-  });
+  }).catch(function(e){loading.style.display='none';error.style.display='block';error.textContent='Network error: '+e.message;})
+  .finally(function(){btn.disabled=false;btn.textContent='Extract';});
 }
 document.getElementById('playground-url').addEventListener('keydown',function(e){if(e.key==='Enter')runPlayground()});
-</script>
-<script>
-(function(){
-  // Fetch live stats from API and populate dashboard
-  fetch('/api/stats')
-    .then(function(r){ return r.json(); })
-    .then(function(stats){
-      // Set counter target and animate
-      var el = document.getElementById('counter');
-      var target = stats.total_tested || 0;
-      el.dataset.target = target;
-      var current = 0;
-      var duration = 1500;
-      var step = Math.max(1, Math.floor(target / 60));
-      var interval = duration / (target / step);
-      el.textContent = '0';
-      var timer = setInterval(function(){
-        current += step;
-        if (current >= target) { current = target; clearInterval(timer); }
-        el.textContent = current.toLocaleString();
-      }, interval);
 
-      // Populate summary stats
-      document.getElementById('verticals-count').textContent = stats.verticals.length;
-      document.getElementById('last-updated').textContent = stats.last_updated;
-      document.getElementById('success-rate').textContent = stats.overall_success_rate + '%';
-      document.getElementById('verticals-total').textContent = stats.verticals.length;
+// === STATS ===
+var statsData=null;
+fetch('/api/stats').then(function(r){return r.json()}).then(function(s){
+  statsData=s;
+  if(s.total_tested)document.getElementById('pages-tested').textContent=s.total_tested.toLocaleString();
+  if(s.overall_success_rate)document.getElementById('success-rate').textContent=s.overall_success_rate+'%';
+  if(s.verticals)document.getElementById('verticals-total').textContent=s.verticals.length;
+}).catch(function(){});
 
-      // Populate verticals table
-      var tbody = document.getElementById('verticals-table');
-      tbody.innerHTML = stats.verticals.map(function(v){
-        var color = v.success_rate >= 90 ? '#34a853' : v.success_rate >= 70 ? '#fbbc04' : '#595959';
-        return '<tr style="border-bottom:1px solid #f1f3f4">' +
-          '<td style="padding:10px 12px;color:#202124;font-weight:500">' + v.name + '</td>' +
-          '<td style="padding:10px 12px;text-align:right;color:#595959">' + v.tested + '</td>' +
-          '<td style="padding:10px 12px;text-align:right"><span style="color:' + color + ';font-weight:600">' + v.success_rate + '%</span></td>' +
-          '</tr>';
-      }).join('');
+function openStatsModal(){
+  document.getElementById('stats-modal').classList.add('active');
+  if(statsData&&statsData.verticals){
+    document.getElementById('modal-verticals-count').textContent=statsData.verticals.length;
+    document.getElementById('modal-last-updated').textContent=statsData.last_updated||'-';
+    var tbody=document.getElementById('modal-verticals-table');
+    tbody.innerHTML=statsData.verticals.map(function(v){
+      var color=v.success_rate>=90?'#34a853':v.success_rate>=70?'#fbbc04':'#595959';
+      return '<tr><td style="font-weight:500">'+v.name+'</td><td style="text-align:right;color:#595959">'+v.tested+'</td><td style="text-align:right"><span style="color:'+color+';font-weight:600">'+v.success_rate+'%</span></td></tr>';
+    }).join('');
+  }
+}
+function closeStatsModal(){document.getElementById('stats-modal').classList.remove('active')}
 
-      // Refresh stats every 5 minutes
-      setInterval(function(){
-        fetch('/api/stats').then(function(r){ return r.json(); }).then(function(data){
-          if (data.total_tested > target) {
-            el.dataset.target = data.total_tested;
-            el.textContent = data.total_tested.toLocaleString();
-          }
-        }).catch(function(){});
-      }, 300000);
-    })
-    .catch(function(){
-      // If stats fetch fails, show fallback
-      document.getElementById('counter').textContent = '-';
-    });
-
-  // Fetch health check and show banner if degraded/critical
-  fetch('/api/health-check')
-    .then(function(r){ return r.json(); })
-    .then(function(health){
-      if (health.status === 'degraded' || health.status === 'critical') {
-        var banner = document.getElementById('health-banner');
-        var text = document.getElementById('health-banner-text');
-        if (health.status === 'critical') {
-          banner.style.background = '#fce8e6';
-          banner.style.borderColor = '#d93025';
-          banner.style.color = '#611a15';
-        }
-        text.textContent = 'System maintenance in progress. Some product pages may return limited results. (Success rate: ' + health.success_rate + '%)';
-        banner.style.display = 'block';
-      }
-    })
-    .catch(function(){});
-})();
+// === HEALTH BANNER ===
+fetch('/api/health-check').then(function(r){return r.json()}).then(function(h){
+  if(h.status==='degraded'||h.status==='critical'){
+    var b=document.getElementById('health-banner'),t=document.getElementById('health-banner-text');
+    if(h.status==='critical'){b.style.background='#fce8e6';b.style.borderColor='#d93025';b.style.color='#611a15'}
+    t.textContent='System maintenance in progress. Some pages may return limited results. (Success rate: '+h.success_rate+'%)';
+    b.style.display='block';
+  }
+}).catch(function(){});
 </script>
 </body>
 </html>
