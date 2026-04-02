@@ -70,7 +70,7 @@ a:hover{opacity:.8}
 }
 .pg-btn:hover{opacity:.9}
 .pg-btn:disabled{opacity:.6}
-.pg-result{position:absolute;left:2.4vw;top:15.07vw;width:39vw;z-index:5}
+.pg-result{position:absolute;left:2.4vw;top:15.07vw;width:39vw;z-index:50}
 
 /* === WORKS WITH BUBBLE === */
 .works-bubble{position:absolute;z-index:3;left:74.78vw;top:6.98vw;width:10.94vw;height:10.94vw}
@@ -125,10 +125,10 @@ a:hover{opacity:.8}
 .footer-right a{color:#000}
 
 /* === RESULT / MODAL === */
-#playground-result{background:rgba(255,255,255,0.95);border-radius:12px;padding:12px;max-height:200px;overflow-y:auto}
+#playground-result{background:rgba(255,255,255,0.97);border-radius:.67vw;padding:.67vw;max-height:16vw;overflow-y:auto;box-shadow:0 .22vw 1.12vw rgba(0,0,0,0.15);border:1px solid rgba(0,0,0,0.1)}
 #playground-loading{text-align:center;padding:12px;color:#74362d}
 #playground-error{background:#fce8e6;border-radius:8px;padding:10px;color:#611a15;font-size:.85em}
-#playground-json{background:#1e1e2e;color:#cdd6f4;padding:12px;border-radius:8px;font-size:.8em;font-family:'Google Sans Code',monospace;max-height:180px;overflow-y:auto;line-height:1.4;white-space:pre-wrap;word-break:break-all}
+#playground-json{background:#1e1e2e;color:#cdd6f4;padding:.67vw;border-radius:.45vw;font-size:.7vw;font-family:'Google Sans Code',monospace;max-height:12vw;overflow-y:auto;line-height:1.4;white-space:pre-wrap;word-break:break-all}
 #playground-meta{font-size:.75em;color:#74362d;margin-top:4px}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
@@ -304,7 +304,8 @@ function runPlayground(){
   fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})})
   .then(function(r){return r.json().then(function(d){return{status:r.status,data:d}})})
   .then(function(res){l.style.display='none';var ms=Date.now()-s;
-    if(res.status>=400){e.style.display='block';e.textContent=res.data.message||res.data.error||'Failed';}
+    if(res.status===402){e.style.display='block';e.textContent='Full extraction requires Stripe MPP payment. Try Basic (free) to see Schema.org extraction, or use the REST API with a payment_method_id for full LLM-powered results.';}
+    else if(res.status>=400){e.style.display='block';e.textContent=res.data.message||res.data.error||'Failed';}
     else{j.style.display='block';j.textContent=JSON.stringify(res.data,null,2);m.style.display='block';
       var p=[ms+'ms'];if(res.data.cached)p.push('cached');if(res.data.free_tier)p.push(res.data.free_tier.used+'/'+res.data.free_tier.limit+' used');if(res.data.upgrade_hint)p.push(res.data.upgrade_hint);m.textContent=p.join(' · ');}
   }).catch(function(x){l.style.display='none';e.style.display='block';e.textContent='Error: '+x.message;})
