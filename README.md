@@ -1,5 +1,7 @@
 # ShopGraph
 
+[![SafeSkill 50/100](https://img.shields.io/badge/SafeSkill-50%2F100_Use%20with%20Caution-orange)](https://safeskill.dev/scan/laundromatic-shopgraph)
+
 Product data structuring layer for AI agents. Send a URL or raw HTML, get clean structured JSON back. 200 free calls/month.
 
 **Website:** https://shopgraph.dev | **API:** https://shopgraph.dev/api/enrich/basic | **MCP:** https://shopgraph.dev/mcp
