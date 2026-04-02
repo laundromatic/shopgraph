@@ -80,10 +80,10 @@ a:hover{opacity:.8}
 /* === INTEGRATION SHAPES === */
 .int-left{position:absolute;z-index:2;left:14.23vw;top:32.31vw}
 .int-left img.shape{width:20.76vw;height:14.17vw}
-.int-left .content{position:absolute;top:0;left:0;width:20.76vw;height:14.17vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.89vw;padding:2.46vw 1.34vw 1.34vw}
+.int-left .content{position:absolute;top:0;left:0;width:20.76vw;height:14.17vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.89vw;padding:2.46vw 1.34vw 1.34vw;overflow:hidden}
 .int-right{position:absolute;z-index:2;left:65.01vw;top:32.31vw}
 .int-right img.shape{width:20.76vw;height:14.17vw}
-.int-right .content{position:absolute;top:0;left:0;width:20.76vw;height:14.17vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.89vw;padding:2.46vw 1.34vw 1.34vw}
+.int-right .content{position:absolute;top:0;left:0;width:20.76vw;height:14.17vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.89vw;padding:2.46vw 1.34vw 1.34vw;overflow:hidden}
 .int-center-shape{position:absolute;z-index:2;left:36.66vw;top:32.31vw}
 .int-center-shape img.shape{width:26.67vw;height:14.17vw}
 .int-center-shape .content{position:absolute;top:0;left:0;width:26.67vw;height:14.17vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2.46vw 1.34vw 1.34vw;text-align:center}
@@ -230,7 +230,7 @@ body{overflow-x:hidden;margin:0}
     <img class="shape" src="/shape-blob.svg" alt="">
     <div class="content">
       <div class="int-title">MCP Client</div>
-      <div class="int-code">{<br>"mcpServers": { "shopgraph": {<br>"type": "url",<br>"url": "https://shopgraph.dev/mcp"<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;}<br>}</div>
+      <div class="int-code">{<br>"mcpServers": { "shopgraph": {<br>&nbsp;&nbsp;"type": "url",<br>&nbsp;&nbsp;"url": "https://shopgraph.dev/mcp"<br>&nbsp;&nbsp;} }<br>}</div>
     </div>
   </div>
 
