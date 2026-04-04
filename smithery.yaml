@@ -1,8 +1,9 @@
 name: shopgraph
-description: Structured product data from the open web — where platform APIs don't reach. Schema.org + AI extraction. Pay per call via Stripe MPP.
-icon: https://shopgraph.dev/icon.svg
+description: Clean product data from any URL. One structured schema, any merchant. Schema.org + AI extraction. REST API, MCP server, npm SDK. 200 free calls/month.
+icon: https://shopgraph.dev/icon.png
+serverUrl: https://shopgraph.dev/mcp
 configSchema:
   type: object
   properties: {}
   additionalProperties: false
-  description: No configuration required. Payment is handled inline via Stripe MPP when tools are called.
+  description: No configuration required. Connect to https://shopgraph.dev/mcp. 200 free calls/month, no signup. Paid calls via Stripe MPP.

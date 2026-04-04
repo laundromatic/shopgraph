@@ -7,3 +7,4 @@ dist/
 .vercel
 scripts/screenshots/
 .env*.local
+.npmrc
