@@ -87,7 +87,7 @@ export const TOOL_PRICING: ToolPricing = {
  * Free tier configuration.
  */
 export const FREE_TIER = {
-  MONTHLY_LIMIT: 200,
+  MONTHLY_LIMIT: 500,
   TOOLS: ['enrich_basic'] as const,  // Only enrich_basic is free-tier eligible
 };
 
@@ -161,4 +161,30 @@ export interface UcpLineItem {
   _extraction_status?: Record<string, ExtractionStatus>;
   /** Extended product attributes not in UCP core spec. */
   _extensions?: Record<string, unknown>;
+}
+
+// ── Subscription tiers ──────────────────────────────────────────────
+export type SubscriptionTier = 'free' | 'starter' | 'growth' | 'enterprise';
+
+export interface TierConfig {
+  name: string;
+  monthlyLimit: number;
+  rateLimit: number; // requests per second
+  priceMonthly: number; // cents (0 = free)
+}
+
+export const TIER_CONFIGS: Record<SubscriptionTier, TierConfig> = {
+  free:       { name: 'Free',       monthlyLimit: 500,    rateLimit: 2,   priceMonthly: 0 },
+  starter:    { name: 'Starter',    monthlyLimit: 10_000, rateLimit: 10,  priceMonthly: 9_900 },
+  growth:     { name: 'Growth',     monthlyLimit: 50_000, rateLimit: 50,  priceMonthly: 29_900 },
+  enterprise: { name: 'Enterprise', monthlyLimit: Infinity, rateLimit: 100, priceMonthly: 0 },
+};
+
+export interface Customer {
+  id: string;
+  email: string;
+  stripeCustomerId?: string;
+  tier: SubscriptionTier;
+  apiKeyHash: string;
+  createdAt: string;
 }

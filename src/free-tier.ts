@@ -6,7 +6,7 @@ import { FREE_TIER } from './types.js';
  *
  * For persistent tracking across cold starts, upgrade to Upstash KV.
  * Current approach: generous — cold starts reset the counter, giving
- * users slightly more than 200/month. This is fine for launch.
+ * users slightly more than 500/month. This is fine for launch.
  */
 export class FreeTierTracker {
   private usage: Map<string, { count: number; month: string }> = new Map();

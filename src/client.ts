@@ -10,7 +10,7 @@
  *
  * const sg = new ShopGraph();
  *
- * // Free tier: 200 calls/month, Schema.org only
+ * // Free tier: 500 calls/month, Schema.org only
  * const basic = await sg.enrichBasic('https://example.com/product');
  *
  * // Full extraction with LLM fallback ($0.02/call)

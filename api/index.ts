@@ -10,19 +10,23 @@
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import express from 'express';
+import { randomUUID } from 'node:crypto';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createServer } from '../src/server.js';
 import { EnrichmentCache } from '../src/cache.js';
 import { PaymentManager } from '../src/payments.js';
 import { FreeTierTracker } from '../src/free-tier.js';
 import { extractProduct, extractFromRawHtml, extractBasicFromUrl } from '../src/extract.js';
-import { TOOL_PRICING, FREE_TIER } from '../src/types.js';
-import type { EnrichmentOptions } from '../src/types.js';
+import { TOOL_PRICING, FREE_TIER, TIER_CONFIGS } from '../src/types.js';
+import type { EnrichmentOptions, Customer, SubscriptionTier } from '../src/types.js';
 import { mapToUcp } from '../src/ucp-mapper.js';
 import { getDashboardStats, getDashboardStatsAsync } from '../src/stats.js';
 import { runDailyTests } from '../src/test-runner.js';
 import { runHealthCheck } from '../src/health.js';
 import { verifyUrl } from '../src/verify-url.js';
+import { getRedis } from '../src/redis.js';
+import { createAuthMiddleware } from '../src/auth-middleware.js';
+import { checkLimit, incrementUsage, getUsageSummary } from '../src/subscriptions.js';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -30,6 +34,9 @@ const testCorpus = require('../data/test-corpus.json') as Array<{ url: string; v
 
 const app = express();
 app.use(express.json());
+
+const redis = getRedis();
+app.use(createAuthMiddleware(redis));
 
 const cache = new EnrichmentCache();
 const freeTier = new FreeTierTracker();
@@ -59,12 +66,12 @@ app.get('/health', (_req, res) => {
     runtime: 'vercel-serverless',
     tools: ['enrich_product', 'enrich_basic', 'enrich_html'],
     api: {
-      'POST /api/enrich/basic': 'Schema.org only — 200 free calls/month',
+      'POST /api/enrich/basic': 'Schema.org only — 500 free calls/month',
       'POST /api/enrich': 'Full extraction (Schema.org → LLM) — $0.02/call',
       'POST /api/enrich/html': 'Extract from raw HTML — $0.02/call',
     },
     mcp: 'POST /mcp',
-    free_tier: '200 enrich_basic calls/month — no payment required',
+    free_tier: '500 enrich_basic calls/month — no payment required',
   });
 });
 
@@ -168,7 +175,41 @@ app.post('/api/enrich/basic', async (req, res) => {
     return res.json({ product: { ...cached, image_urls: [], primary_image_url: null }, cached: true });
   }
 
-  // Free tier: track by IP
+  // ── API key auth path ──
+  if (req.customer && redis) {
+    const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
+    if (!limit.allowed) {
+      return res.status(429).json({
+        error: 'tier_limit_exhausted',
+        used: limit.used,
+        limit: limit.limit,
+        tier: req.customer.tier,
+        message: `Monthly limit reached (${limit.limit}/month on ${req.customer.tier} tier).`,
+      });
+    }
+
+    try {
+      const product = await extractBasicFromUrl(url);
+      await incrementUsage(redis, req.customer.id);
+      cache.set(url, product);
+
+      const usage = await getUsageSummary(redis, req.customer.id, req.customer.tier);
+      const hasData = product.product_name !== null;
+      return res.json({
+        product,
+        cached: false,
+        usage,
+        ...(hasData ? {} : {
+          upgrade_hint: 'No Schema.org data found. Use /api/enrich for LLM-powered extraction.',
+        }),
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Extraction failed';
+      return res.status(500).json({ error: 'extraction_failed', message });
+    }
+  }
+
+  // ── IP-based free tier path (unchanged) ──
   const clientId = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.ip || 'anonymous';
   const usage = freeTier.getUsage(clientId);
 
@@ -236,7 +277,38 @@ app.post('/api/enrich', async (req, res) => {
     return res.status(400).json({ error: 'Invalid URL format' });
   }
 
-  // Payment check BEFORE cache — cached basic results must not bypass payment gate
+  // ── API key auth path (paid tiers skip MPP) ──
+  if (req.customer && redis && req.customer.tier !== 'free') {
+    const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
+    if (!limit.allowed) {
+      return res.status(429).json({
+        error: 'tier_limit_exhausted',
+        used: limit.used,
+        limit: limit.limit,
+        tier: req.customer.tier,
+        message: `Monthly limit reached (${limit.limit}/month on ${req.customer.tier} tier).`,
+      });
+    }
+
+    const cached = cache.get(url);
+    if (cached) {
+      return res.json({ product: cached, cached: true });
+    }
+
+    try {
+      const product = await extractProduct(url);
+      await incrementUsage(redis, req.customer.id);
+      cache.set(url, product);
+
+      const usage = await getUsageSummary(redis, req.customer.id, req.customer.tier);
+      return res.json({ product, cached: false, usage });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Extraction failed';
+      return res.status(500).json({ error: 'extraction_failed', message });
+    }
+  }
+
+  // ── MPP payment path (unchanged) ──
   if (!payment_method_id) {
     const payments = getPayments();
     return res.status(402).json({
@@ -244,7 +316,7 @@ app.post('/api/enrich', async (req, res) => {
       status: 402,
       challenge: payments.createChallenge('enrich_product'),
       message: 'Payment required. Include payment_method_id in request body. Cost: $0.02',
-      free_alternative: { endpoint: '/api/enrich/basic', description: 'Schema.org only, 200 free calls/month' },
+      free_alternative: { endpoint: '/api/enrich/basic', description: 'Schema.org only, 500 free calls/month' },
     });
   }
 
@@ -299,7 +371,38 @@ app.post('/api/enrich/html', async (req, res) => {
     return res.status(400).json({ error: 'Missing required field: url (original page URL for context)' });
   }
 
-  // Payment check BEFORE cache — cached basic results must not bypass payment gate
+  // ── API key auth path (paid tiers skip MPP) ──
+  if (req.customer && redis && req.customer.tier !== 'free') {
+    const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
+    if (!limit.allowed) {
+      return res.status(429).json({
+        error: 'tier_limit_exhausted',
+        used: limit.used,
+        limit: limit.limit,
+        tier: req.customer.tier,
+        message: `Monthly limit reached (${limit.limit}/month on ${req.customer.tier} tier).`,
+      });
+    }
+
+    const cached = cache.get(url);
+    if (cached) {
+      return res.json({ product: cached, cached: true });
+    }
+
+    try {
+      const product = await extractFromRawHtml(html, url);
+      await incrementUsage(redis, req.customer.id);
+      cache.set(url, product);
+
+      const usage = await getUsageSummary(redis, req.customer.id, req.customer.tier);
+      return res.json({ product, cached: false, usage });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Extraction failed';
+      return res.status(500).json({ error: 'extraction_failed', message });
+    }
+  }
+
+  // ── MPP payment path (unchanged) ──
   if (!payment_method_id) {
     const payments = getPayments();
     return res.status(402).json({
@@ -349,6 +452,36 @@ app.post('/api/enrich/html', async (req, res) => {
     const message = err instanceof Error ? err.message : 'Extraction failed';
     res.status(500).json({ error: 'extraction_failed', message, receipt });
   }
+});
+
+// Admin: create API key (gated behind CRON_SECRET)
+app.post('/api/admin/create-key', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
+  const { email, tier = 'free' } = req.body ?? {};
+  if (!email) return res.status(400).json({ error: 'email required' });
+
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  const { generateApiKey, hashApiKey, storeApiKey } = await import('../src/api-keys.js');
+  const apiKey = generateApiKey();
+  const customer: Customer = {
+    id: randomUUID(),
+    email,
+    tier: tier as SubscriptionTier,
+    apiKeyHash: hashApiKey(apiKey),
+    createdAt: new Date().toISOString(),
+  };
+
+  await storeApiKey(redisClient, customer.apiKeyHash, customer);
+  await redisClient.set(`customer:${customer.id}`, JSON.stringify(customer));
+  await redisClient.set(`customer:email:${email}`, customer.id);
+
+  res.json({ apiKey, customerId: customer.id, tier, message: 'Store this API key — it cannot be retrieved later.' });
 });
 
 // MCP endpoint

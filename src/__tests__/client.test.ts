@@ -22,7 +22,7 @@ describe('ShopGraph Client', () => {
     const mockResponse = {
       product: { product_name: 'Test', brand: 'Brand', price: null, availability: 'unknown' },
       cached: false,
-      free_tier: { used: 1, limit: 200 },
+      free_tier: { used: 1, limit: 500 },
     };
 
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({

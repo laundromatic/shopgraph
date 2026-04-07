@@ -59,7 +59,7 @@ export function createServer(
     },
   );
 
-  // Basic enrichment tool (free tier eligible: 200 calls/month without payment)
+  // Basic enrichment tool (free tier eligible: 500 calls/month without payment)
   server.tool(
     'enrich_basic',
     `Extract basic product attributes from a URL (name, price, brand, availability). Faster and cheaper than enrich_product. ${FREE_TIER.MONTHLY_LIMIT} free calls/month — no payment needed. Paid: $0.01 per call after free tier.`,
@@ -126,7 +126,7 @@ export function createServer(
         text: JSON.stringify({
           tools: {
             enrich_product: { price_usd: 0.02, description: 'Full extraction with all attributes and images' },
-            enrich_basic: { price_usd: 0.01, description: 'Schema.org extraction only (fast, zero LLM cost). Free: 200 calls/month.' },
+            enrich_basic: { price_usd: 0.01, description: 'Schema.org extraction only (fast, zero LLM cost). Free: 500 calls/month.' },
             enrich_html: { price_usd: 0.02, description: 'Extract from raw HTML (bring your own scraper). Full extraction.' },
           },
           free_tier: {

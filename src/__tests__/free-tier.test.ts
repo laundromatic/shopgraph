@@ -33,7 +33,7 @@ describe('FreeTierTracker', () => {
     expect(tracker.hasRemaining('client-1')).toBe(true);
 
     // Simulate exhausting the free tier
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 500; i++) {
       tracker.increment('client-1');
     }
     expect(tracker.hasRemaining('client-1')).toBe(false);
@@ -47,8 +47,8 @@ describe('FreeTierTracker', () => {
     const summary = tracker.getSummary('client-1');
     expect(summary).toEqual({
       used: 3,
-      limit: 200,
-      remaining: 197,
+      limit: 500,
+      remaining: 497,
     });
   });
 
@@ -77,11 +77,11 @@ describe('FreeTierTracker', () => {
   });
 
   it('returns 0 remaining when over limit', () => {
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 550; i++) {
       tracker.increment('client-1');
     }
     const summary = tracker.getSummary('client-1');
     expect(summary.remaining).toBe(0);
-    expect(summary.used).toBe(250);
+    expect(summary.used).toBe(550);
   });
 });

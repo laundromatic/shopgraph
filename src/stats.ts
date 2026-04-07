@@ -6,6 +6,7 @@
  */
 
 import { Redis } from '@upstash/redis';
+import { getRedis } from './redis.js';
 
 export interface VerticalStats {
   name: string;
@@ -78,16 +79,8 @@ export const BASELINE_STATS: DashboardStats = {
   ],
 };
 
-/**
- * Create Redis client if env vars are configured.
- * Returns null if not available.
- */
-export function getRedis(): Redis | null {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
-}
+// Re-export getRedis from shared module for backward compatibility
+export { getRedis } from './redis.js';
 
 /**
  * Returns current dashboard stats (sync — baseline only).
