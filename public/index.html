@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Clean product data from any URL. One structured schema, any merchant. REST API + MCP server. 500 free calls/month.">
+<meta name="description" content="Clean product data from any URL. Per-field confidence scores. One structured schema, any merchant. REST API + MCP server. 500 free calls/month.">
 <title>ShopGraph — Clean Product Data from Any URL</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -171,7 +171,7 @@ body{overflow-x:hidden;margin:0}
   <!-- Hero Brand Card -->
   <div class="hero-brand">
     <div class="hero-brand-name">SHOPGRAPH</div>
-    <div class="hero-brand-sub">Clean product data from any URL. One structured schema, any merchant.</div>
+    <div class="hero-brand-sub">Clean product data from any URL. Per-field confidence scores. The extraction API that tells you when it's guessing.</div>
   </div>
 
   <!-- Playground Card -->
@@ -198,9 +198,11 @@ body{overflow-x:hidden;margin:0}
     <img class="shape" src="/shape-blob.svg" alt="">
     <div class="int-title">npm SDK</div>
     <pre class="int-code">import { ShopGraph } from
-'shopgraph'; const sg = new
-ShopGraph(); const data =
-await sg.enrichBasic(url);</pre>
+'shopgraph';
+const sg = new ShopGraph({
+  apiKey: 'sg_live_...' });
+const data = await sg.enrich(
+  url, { threshold: 0.8 });</pre>
   </div>
 
   <!-- Integration: Center (pink dome) -->
@@ -210,13 +212,13 @@ await sg.enrichBasic(url);</pre>
       <div class="int-center-title">Integration</div>
       <div class="int-center-body">
         REST API: POST /api/enrich/basic (free)<br>
-        POST /api/enrich ($0.02)<br>
-        POST /api/enrich/html ($0.02)
+        POST /api/enrich &middot; POST /api/enrich/html<br>
+        <code style="font-size:.7vw">format=ucp</code> for UCP-compatible output
       </div>
       <div class="int-center-detail">
-        No API keys needed for the free tier.<br>
-        Paid calls use <strong>Stripe MPP</strong>.<br>
-        No subscriptions, no minimums
+        Free: 500 calls/month. <strong>Starter $99</strong> (10K),
+        <strong>Growth $299</strong> (50K), Enterprise.<br>
+        API key auth (<code style="font-size:.7vw">sg_live_</code>) or <strong>Stripe MPP</strong> for agents.
       </div>
     </div>
   </div>
@@ -240,7 +242,7 @@ await sg.enrichBasic(url);</pre>
 
   <div class="where-col1">
     <div class="where-title">From a URL: POST /api/enrich</div>
-    <p class="where-body">You have a product URL and want structured data back. ShopGraph handles fetching, rendering JavaScript-heavy pages, and extracting product attributes into a single consistent schema. Free tier: 500 calls/month, no signup.</p>
+    <p class="where-body">You have a product URL and want structured data back. ShopGraph handles fetching, rendering JavaScript-heavy pages, and extracting product attributes into a single consistent schema. Every field includes a confidence score. Set <code style="font-size:.8vw">strict_confidence_threshold</code> to enforce data quality. Free tier: 500 calls/month, no signup.</p>
   </div>
   <div class="where-col2">
     <div class="where-title">From HTML: POST /api/enrich/html</div>
@@ -248,7 +250,7 @@ await sg.enrichBasic(url);</pre>
   </div>
   <div class="where-col3">
     <div class="where-title">From any agent: connect via MCP</div>
-    <p class="where-body">You&rsquo;re building in the MCP ecosystem. One line of config connects your agent to ShopGraph&rsquo;s full extraction pipeline. Paid calls settle through Stripe Machine Payments &mdash; no API keys, no subscriptions.</p>
+    <p class="where-body">You&rsquo;re building in the MCP ecosystem. One line of config connects your agent to ShopGraph&rsquo;s full extraction pipeline. Paid calls settle through Stripe MPP or API key subscriptions. Add <code style="font-size:.8vw">format=ucp</code> for Universal Commerce Protocol output.</p>
   </div>
 
   <!-- Stats -->

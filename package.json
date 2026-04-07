@@ -1,7 +1,7 @@
 {
   "name": "shopgraph",
   "version": "1.0.1",
-  "description": "Product data structuring layer for AI agents. REST API + MCP server. Send a URL or raw HTML, get structured product data with confidence scores.",
+  "description": "Product data structuring layer for AI agents. REST API + MCP server. Per-field confidence scoring and UCP-compatible output from any URL.",
   "type": "module",
   "main": "dist/client.js",
   "types": "dist/client.d.ts",

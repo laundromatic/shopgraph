@@ -1,5 +1,5 @@
 name: shopgraph
-description: Clean product data from any URL. One structured schema, any merchant. Schema.org + AI extraction. REST API, MCP server, npm SDK. 200 free calls/month.
+description: Structured product data from any URL with per-field confidence scoring and UCP-compatible output (format=ucp). API key or Stripe MPP auth. Free 500/mo, Starter $99, Growth $299.
 icon: https://shopgraph.dev/icon.png
 serverUrl: https://shopgraph.dev/mcp
 configSchema:
@@ -8,6 +8,15 @@ configSchema:
   properties:
     payment_method_id:
       type: string
-      description: "Stripe payment method ID for paid calls ($0.02/call). Optional — free tier (200 calls/month) works without this."
+      description: "Stripe payment method ID for paid calls. Optional — free tier (500 calls/month) works without this."
+    strict_confidence_threshold:
+      type: number
+      description: "Minimum confidence score (0-1) for returned fields. Fields below this threshold are omitted."
+    format:
+      type: string
+      enum:
+        - default
+        - ucp
+      description: "Output format. 'ucp' returns UCP-compatible structured output."
   additionalProperties: false
-  description: "No configuration required for the free tier. Add payment_method_id for paid LLM-powered extraction."
+  description: "No configuration required for the free tier. Add payment_method_id for paid extraction, or set format/confidence options."

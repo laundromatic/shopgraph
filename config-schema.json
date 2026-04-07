@@ -5,6 +5,17 @@
     "payment_method_id": {
       "type": "string",
       "description": "Stripe payment method ID for paid calls. Optional for free tier."
+    },
+    "strict_confidence_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Minimum confidence score (0-1) for returned fields. Fields below this threshold are omitted."
+    },
+    "format": {
+      "type": "string",
+      "enum": ["default", "ucp"],
+      "description": "Output format. 'ucp' returns UCP-compatible structured output."
     }
   },
   "additionalProperties": false
