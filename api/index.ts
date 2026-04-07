@@ -169,10 +169,25 @@ app.post('/api/enrich/basic', async (req, res) => {
     return res.status(400).json({ error: 'Invalid URL format' });
   }
 
+  // Parse options early — needed for both cached and fresh results
+  const rawThresholdEarly = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
+  const thresholdEarly = rawThresholdEarly != null ? parseFloat(String(rawThresholdEarly)) : undefined;
+  const formatEarly = parseFormat(req);
+  const optionsEarly: EnrichmentOptions = {
+    strict_confidence_threshold: (thresholdEarly != null && !isNaN(thresholdEarly)) ? thresholdEarly : undefined,
+    format: formatEarly,
+  };
+
   // Check cache first
   const cached = cache.get(url);
   if (cached) {
-    return res.json({ product: { ...cached, image_urls: [], primary_image_url: null }, cached: true });
+    // Re-apply threshold and format to cached results
+    const product = { ...cached, image_urls: [], primary_image_url: null };
+    if (formatEarly === 'ucp') {
+      const ucpResult = mapToUcp(product, optionsEarly);
+      return res.json({ ...ucpResult, cached: true });
+    }
+    return res.json({ product, cached: true });
   }
 
   // ── API key auth path ──
@@ -189,12 +204,18 @@ app.post('/api/enrich/basic', async (req, res) => {
     }
 
     try {
-      const product = await extractBasicFromUrl(url);
+      const product = await extractBasicFromUrl(url, optionsEarly);
       await incrementUsage(redis, req.customer.id);
       cache.set(url, product);
 
       const usage = await getUsageSummary(redis, req.customer.id, req.customer.tier);
       const hasData = product.product_name !== null;
+
+      if (formatEarly === 'ucp') {
+        const ucpResult = mapToUcp(product, optionsEarly);
+        return res.json({ ...ucpResult, cached: false, usage });
+      }
+
       return res.json({
         product,
         cached: false,
@@ -209,7 +230,7 @@ app.post('/api/enrich/basic', async (req, res) => {
     }
   }
 
-  // ── IP-based free tier path (unchanged) ──
+  // ── IP-based free tier path ──
   const clientId = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.ip || 'anonymous';
   const usage = freeTier.getUsage(clientId);
 
@@ -277,6 +298,15 @@ app.post('/api/enrich', async (req, res) => {
     return res.status(400).json({ error: 'Invalid URL format' });
   }
 
+  // Parse options early for all paths
+  const rawThresholdEnrich = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
+  const thresholdEnrich = rawThresholdEnrich != null ? parseFloat(String(rawThresholdEnrich)) : undefined;
+  const formatEnrich = parseFormat(req);
+  const optionsEnrich: EnrichmentOptions = {
+    strict_confidence_threshold: (thresholdEnrich != null && !isNaN(thresholdEnrich)) ? thresholdEnrich : undefined,
+    format: formatEnrich,
+  };
+
   // ── API key auth path (paid tiers skip MPP) ──
   if (req.customer && redis && req.customer.tier !== 'free') {
     const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
@@ -292,15 +322,23 @@ app.post('/api/enrich', async (req, res) => {
 
     const cached = cache.get(url);
     if (cached) {
+      if (formatEnrich === 'ucp') {
+        const ucpResult = mapToUcp(cached, optionsEnrich);
+        return res.json({ ...ucpResult, cached: true });
+      }
       return res.json({ product: cached, cached: true });
     }
 
     try {
-      const product = await extractProduct(url);
+      const product = await extractProduct(url, optionsEnrich);
       await incrementUsage(redis, req.customer.id);
       cache.set(url, product);
 
       const usage = await getUsageSummary(redis, req.customer.id, req.customer.tier);
+      if (formatEnrich === 'ucp') {
+        const ucpResult = mapToUcp(product, optionsEnrich);
+        return res.json({ ...ucpResult, cached: false, usage });
+      }
       return res.json({ product, cached: false, usage });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Extraction failed';
@@ -308,7 +346,7 @@ app.post('/api/enrich', async (req, res) => {
     }
   }
 
-  // ── MPP payment path (unchanged) ──
+  // ── MPP payment path ──
   if (!payment_method_id) {
     const payments = getPayments();
     return res.status(402).json({
@@ -331,16 +369,12 @@ app.post('/api/enrich', async (req, res) => {
 
   const cached = cache.get(url);
   if (cached) {
+    if (formatEnrich === 'ucp') {
+      const ucpResult = mapToUcp(cached, optionsEnrich);
+      return res.json({ ...ucpResult, receipt, cached: true });
+    }
     return res.json({ product: cached, cached: true, receipt });
   }
-
-  const rawThresholdEnrich = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
-  const thresholdEnrich = rawThresholdEnrich != null ? parseFloat(String(rawThresholdEnrich)) : undefined;
-  const formatEnrich = parseFormat(req);
-  const optionsEnrich: EnrichmentOptions = {
-    strict_confidence_threshold: (thresholdEnrich != null && !isNaN(thresholdEnrich)) ? thresholdEnrich : undefined,
-    format: formatEnrich,
-  };
 
   try {
     const product = await extractProduct(url, optionsEnrich);
@@ -371,6 +405,15 @@ app.post('/api/enrich/html', async (req, res) => {
     return res.status(400).json({ error: 'Missing required field: url (original page URL for context)' });
   }
 
+  // Parse options early for all paths
+  const rawThresholdHtml = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
+  const thresholdHtml = rawThresholdHtml != null ? parseFloat(String(rawThresholdHtml)) : undefined;
+  const formatHtml = parseFormat(req);
+  const optionsHtml: EnrichmentOptions = {
+    strict_confidence_threshold: (thresholdHtml != null && !isNaN(thresholdHtml)) ? thresholdHtml : undefined,
+    format: formatHtml,
+  };
+
   // ── API key auth path (paid tiers skip MPP) ──
   if (req.customer && redis && req.customer.tier !== 'free') {
     const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
@@ -386,15 +429,23 @@ app.post('/api/enrich/html', async (req, res) => {
 
     const cached = cache.get(url);
     if (cached) {
+      if (formatHtml === 'ucp') {
+        const ucpResult = mapToUcp(cached, optionsHtml);
+        return res.json({ ...ucpResult, cached: true });
+      }
       return res.json({ product: cached, cached: true });
     }
 
     try {
-      const product = await extractFromRawHtml(html, url);
+      const product = await extractFromRawHtml(html, url, optionsHtml);
       await incrementUsage(redis, req.customer.id);
       cache.set(url, product);
 
       const usage = await getUsageSummary(redis, req.customer.id, req.customer.tier);
+      if (formatHtml === 'ucp') {
+        const ucpResult = mapToUcp(product, optionsHtml);
+        return res.json({ ...ucpResult, cached: false, usage });
+      }
       return res.json({ product, cached: false, usage });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Extraction failed';
@@ -402,7 +453,7 @@ app.post('/api/enrich/html', async (req, res) => {
     }
   }
 
-  // ── MPP payment path (unchanged) ──
+  // ── MPP payment path ──
   if (!payment_method_id) {
     const payments = getPayments();
     return res.status(402).json({
@@ -424,16 +475,12 @@ app.post('/api/enrich/html', async (req, res) => {
 
   const cached = cache.get(url);
   if (cached) {
+    if (formatHtml === 'ucp') {
+      const ucpResult = mapToUcp(cached, optionsHtml);
+      return res.json({ ...ucpResult, receipt, cached: true });
+    }
     return res.json({ product: cached, cached: true, receipt });
   }
-
-  const rawThresholdHtml = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
-  const thresholdHtml = rawThresholdHtml != null ? parseFloat(String(rawThresholdHtml)) : undefined;
-  const formatHtml = parseFormat(req);
-  const optionsHtml: EnrichmentOptions = {
-    strict_confidence_threshold: (thresholdHtml != null && !isNaN(thresholdHtml)) ? thresholdHtml : undefined,
-    format: formatHtml,
-  };
 
   try {
     const product = await extractFromRawHtml(html, url, optionsHtml);
