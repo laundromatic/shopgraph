@@ -17,6 +17,7 @@ import { PaymentManager } from '../src/payments.js';
 import { FreeTierTracker } from '../src/free-tier.js';
 import { extractProduct, extractFromRawHtml, extractBasicFromUrl } from '../src/extract.js';
 import { TOOL_PRICING, FREE_TIER } from '../src/types.js';
+import type { EnrichmentOptions } from '../src/types.js';
 import { getDashboardStats, getDashboardStatsAsync } from '../src/stats.js';
 import { runDailyTests } from '../src/test-runner.js';
 import { runHealthCheck } from '../src/health.js';
@@ -174,8 +175,14 @@ app.post('/api/enrich/basic', async (req, res) => {
     });
   }
 
+  const rawThresholdBasic = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
+  const thresholdBasic = rawThresholdBasic != null ? parseFloat(String(rawThresholdBasic)) : undefined;
+  const optionsBasic: EnrichmentOptions = {
+    strict_confidence_threshold: (thresholdBasic != null && !isNaN(thresholdBasic)) ? thresholdBasic : undefined,
+  };
+
   try {
-    const product = await extractBasicFromUrl(url);
+    const product = await extractBasicFromUrl(url, optionsBasic);
     freeTier.increment(clientId);
     cache.set(url, product);
 
@@ -233,8 +240,14 @@ app.post('/api/enrich', async (req, res) => {
     return res.json({ product: cached, cached: true, receipt });
   }
 
+  const rawThresholdEnrich = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
+  const thresholdEnrich = rawThresholdEnrich != null ? parseFloat(String(rawThresholdEnrich)) : undefined;
+  const optionsEnrich: EnrichmentOptions = {
+    strict_confidence_threshold: (thresholdEnrich != null && !isNaN(thresholdEnrich)) ? thresholdEnrich : undefined,
+  };
+
   try {
-    const product = await extractProduct(url);
+    const product = await extractProduct(url, optionsEnrich);
     cache.set(url, product);
     res.json({ product, receipt, cached: false });
   } catch (err) {
@@ -278,8 +291,14 @@ app.post('/api/enrich/html', async (req, res) => {
     return res.json({ product: cached, cached: true, receipt });
   }
 
+  const rawThresholdHtml = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
+  const thresholdHtml = rawThresholdHtml != null ? parseFloat(String(rawThresholdHtml)) : undefined;
+  const optionsHtml: EnrichmentOptions = {
+    strict_confidence_threshold: (thresholdHtml != null && !isNaN(thresholdHtml)) ? thresholdHtml : undefined,
+  };
+
   try {
-    const product = await extractFromRawHtml(html, url);
+    const product = await extractFromRawHtml(html, url, optionsHtml);
     cache.set(url, product);
     res.json({ product, receipt, cached: false });
   } catch (err) {

@@ -140,11 +140,15 @@ describe('extractSchemaOrg', () => {
     expect(result!.categories).toEqual(['Electronics', 'Headphones', 'Wireless Audio']);
   });
 
-  it('has high confidence for schema.org fields', () => {
+  it('has high confidence for schema.org fields with per-field modifiers', () => {
     const result = extractSchemaOrg(shopifyHtml);
-    expect(result!.confidence.overall).toBeGreaterThan(0.9);
-    expect(result!.confidence.per_field.product_name).toBe(0.95);
-    expect(result!.confidence.per_field.price).toBe(0.95);
+    expect(result!.confidence.overall).toBeGreaterThan(0.85);
+    // SCHEMA_ORG_BASELINE=0.93 + per-field modifiers
+    expect(result!.confidence.per_field.product_name).toBeCloseTo(0.98, 10); // 0.93 + 0.05
+    expect(result!.confidence.per_field.price).toBeCloseTo(0.93, 10);        // 0.93 + 0.00
+    expect(result!.confidence.per_field.description).toBeCloseTo(0.88, 10);  // 0.93 - 0.05
+    expect(result!.confidence.per_field.availability).toBeCloseTo(0.83, 10); // 0.93 - 0.10
+    expect(result!.confidence.per_field.brand).toBeCloseTo(0.93, 10);        // 0.93 + 0.00
   });
 
   it('handles string brand (not object)', () => {

@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import type { ProductData, EnrichmentResult, MppChallenge } from './types.js';
+import type { ProductData, EnrichmentResult, MppChallenge, EnrichmentOptions } from './types.js';
 import { TOOL_PRICING, FREE_TIER } from './types.js';
 import { extractProduct, extractFromRawHtml, extractBasicFromUrl } from './extract.js';
 import { EnrichmentCache } from './cache.js';
@@ -32,6 +32,8 @@ export function createServer(
   const enrichParams = {
     url: z.string().url().describe('Product page URL to extract data from'),
     payment_method_id: z.string().optional().describe('Stripe payment method ID for MPP payment'),
+    strict_confidence_threshold: z.number().min(0).max(1).optional()
+      .describe('Fields below this confidence will be nulled with explanation. Default: off.'),
   };
 
   const toolAnnotations = {
@@ -45,8 +47,11 @@ export function createServer(
     'Extract comprehensive product data from a URL including name, price, brand, images, availability, and more. Uses schema.org structured data when available, with LLM fallback. Costs $0.02 per call (cached results are free).',
     enrichParams,
     toolAnnotations,
-    async ({ url, payment_method_id }) => {
-      return handleEnrichment('enrich_product', url, payment_method_id, cache, payments, tracker);
+    async ({ url, payment_method_id, strict_confidence_threshold }) => {
+      const options: EnrichmentOptions = {
+        strict_confidence_threshold: strict_confidence_threshold ?? undefined,
+      };
+      return handleEnrichment('enrich_product', url, payment_method_id, cache, payments, tracker, options);
     },
   );
 
@@ -56,8 +61,11 @@ export function createServer(
     `Extract basic product attributes from a URL (name, price, brand, availability). Faster and cheaper than enrich_product. ${FREE_TIER.MONTHLY_LIMIT} free calls/month — no payment needed. Paid: $0.01 per call after free tier.`,
     enrichParams,
     toolAnnotations,
-    async ({ url, payment_method_id }) => {
-      return handleEnrichment('enrich_basic', url, payment_method_id, cache, payments, tracker);
+    async ({ url, payment_method_id, strict_confidence_threshold }) => {
+      const options: EnrichmentOptions = {
+        strict_confidence_threshold: strict_confidence_threshold ?? undefined,
+      };
+      return handleEnrichment('enrich_basic', url, payment_method_id, cache, payments, tracker, options);
     },
   );
 
@@ -69,10 +77,15 @@ export function createServer(
       html: z.string().describe('Raw HTML content of the product page'),
       url: z.string().url().describe('Original URL of the page (used for context and caching)'),
       payment_method_id: z.string().optional().describe('Stripe payment method ID for MPP payment'),
+      strict_confidence_threshold: z.number().min(0).max(1).optional()
+        .describe('Fields below this confidence will be nulled with explanation. Default: off.'),
     },
     toolAnnotations,
-    async ({ html, url, payment_method_id }) => {
-      return handleHtmlEnrichment(url, html, payment_method_id, cache, payments, tracker);
+    async ({ html, url, payment_method_id, strict_confidence_threshold }) => {
+      const options: EnrichmentOptions = {
+        strict_confidence_threshold: strict_confidence_threshold ?? undefined,
+      };
+      return handleHtmlEnrichment(url, html, payment_method_id, cache, payments, tracker, options);
     },
   );
 
@@ -137,6 +150,7 @@ async function handleEnrichment(
   cache: EnrichmentCache,
   payments: PaymentManager,
   tracker: FreeTierTracker,
+  options?: EnrichmentOptions,
 ): Promise<ToolResponse> {
   const cached = cache.get(url);
   if (cached) {
@@ -154,7 +168,7 @@ async function handleEnrichment(
       // Free tier: Schema.org only (zero API cost)
       let product: ProductData;
       try {
-        product = await extractBasicFromUrl(url);
+        product = await extractBasicFromUrl(url, options);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Extraction failed';
         return {
@@ -213,8 +227,8 @@ async function handleEnrichment(
     // enrich_basic uses Schema.org only (even when paid — consistent behavior)
     // enrich_product uses full pipeline (Schema.org → LLM → browser fallback)
     product = toolName === 'enrich_basic'
-      ? await extractBasicFromUrl(url)
-      : await extractProduct(url);
+      ? await extractBasicFromUrl(url, options)
+      : await extractProduct(url, options);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Extraction failed';
     return {
@@ -238,6 +252,7 @@ async function handleHtmlEnrichment(
   cache: EnrichmentCache,
   payments: PaymentManager,
   tracker: FreeTierTracker,
+  options?: EnrichmentOptions,
 ): Promise<ToolResponse> {
   const cached = cache.get(url);
   if (cached) {
@@ -274,7 +289,7 @@ async function handleHtmlEnrichment(
 
   let product: ProductData;
   try {
-    product = await extractFromRawHtml(html, url);
+    product = await extractFromRawHtml(html, url, options);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Extraction failed';
     return {

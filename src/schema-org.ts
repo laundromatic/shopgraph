@@ -1,6 +1,5 @@
 import type { ProductData, PriceData } from './types.js';
-
-const SCHEMA_ORG_CONFIDENCE = 0.95;
+import { SCHEMA_ORG_BASELINE, getFieldConfidence } from './types.js';
 
 /**
  * Extract Product data from JSON-LD blocks in HTML.
@@ -15,7 +14,7 @@ export function extractSchemaOrg(html: string): Partial<ProductData> | null {
   const perField: Record<string, number> = {};
   const setField = (name: string, value: unknown): boolean => {
     if (value !== null && value !== undefined && value !== '') {
-      perField[name] = SCHEMA_ORG_CONFIDENCE;
+      perField[name] = getFieldConfidence(SCHEMA_ORG_BASELINE, name);
       return true;
     }
     return false;

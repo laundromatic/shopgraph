@@ -1,10 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { ProductData } from './types.js';
+import { LLM_BASE_BASELINE, LLM_LOW_BASELINE, LLM_BOOSTED_BASELINE, getFieldConfidence } from './types.js';
 import { cleanHtml, type PriceHints } from './html-cleaner.js';
-
-const LLM_BASE_CONFIDENCE = 0.7;
-const LLM_LOW_CONFIDENCE = 0.6;
-const LLM_BOOSTED_CONFIDENCE = 0.85;
 
 const EXTRACTION_PROMPT = `You are a product data extraction expert. Given the text content of a product page, extract structured product information.
 
@@ -125,10 +122,11 @@ export async function extractWithLlm(
 
   const setField = (name: string, value: unknown, boosted = false): boolean => {
     if (value !== null && value !== undefined && value !== '') {
-      perField[name] = boosted ? LLM_BOOSTED_CONFIDENCE : LLM_BASE_CONFIDENCE;
+      const base = boosted ? LLM_BOOSTED_BASELINE : LLM_BASE_BASELINE;
+      perField[name] = getFieldConfidence(base, name);
       return true;
     }
-    perField[name] = LLM_LOW_CONFIDENCE;
+    perField[name] = getFieldConfidence(LLM_LOW_BASELINE, name);
     return false;
   };
 

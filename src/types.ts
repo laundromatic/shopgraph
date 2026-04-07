@@ -18,6 +18,8 @@ export interface ProductData {
   dimensions: Record<string, string> | null;
   schema_org_raw: Record<string, unknown> | null;
   confidence: ConfidenceData;
+  _shopgraph?: ShopGraphMetadata;
+  _extraction_status?: Record<string, ExtractionStatus>;
 }
 
 export interface PriceData {
@@ -88,3 +90,50 @@ export const FREE_TIER = {
   MONTHLY_LIMIT: 200,
   TOOLS: ['enrich_basic'] as const,  // Only enrich_basic is free-tier eligible
 };
+
+// ── Confidence scoring ──────────────────────────────────────────────
+export const SCHEMA_ORG_BASELINE = 0.93;
+export const LLM_BASE_BASELINE = 0.70;
+export const LLM_LOW_BASELINE = 0.60;
+export const LLM_BOOSTED_BASELINE = 0.85;
+
+/** Per-field confidence modifiers applied on top of tier baselines */
+export const FIELD_CONFIDENCE_MODIFIERS: Record<string, number> = {
+  product_name: 0.05,
+  brand: 0.00,
+  description: -0.05,
+  price: 0.00,
+  availability: -0.10,
+  categories: 0.00,
+  image_urls: 0.00,
+  primary_image_url: 0.00,
+  color: -0.05,
+  material: -0.05,
+  dimensions: -0.05,
+};
+
+/** Get confidence for a specific field, clamped to [0, 1] */
+export function getFieldConfidence(baseline: number, fieldName: string): number {
+  const modifier = FIELD_CONFIDENCE_MODIFIERS[fieldName] ?? 0;
+  return Math.max(0, Math.min(1, baseline + modifier));
+}
+
+export interface EnrichmentOptions {
+  strict_confidence_threshold?: number | null;
+  format?: 'default' | 'ucp';
+}
+
+export interface ShopGraphMetadata {
+  source_url: string;
+  extraction_timestamp: string;
+  extraction_method: string;
+  field_confidence: Record<string, number>;
+  confidence_method: string;
+}
+
+export interface ExtractionStatus {
+  status: 'below_threshold' | 'not_available';
+  confidence?: number;
+  threshold?: number;
+  message: string;
+}

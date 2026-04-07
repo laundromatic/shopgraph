@@ -1,4 +1,4 @@
-import type { ProductData } from './types.js';
+import type { ProductData, EnrichmentOptions, ShopGraphMetadata, ExtractionStatus } from './types.js';
 import { extractSchemaOrg } from './schema-org.js';
 import { extractWithLlm } from './llm-extract.js';
 
@@ -22,16 +22,70 @@ function needsBrowserFallback(result: ProductData): boolean {
 }
 
 /**
+ * Apply _shopgraph metadata and optional threshold scrubbing to a product result.
+ */
+function applyThresholdAndMetadata(
+  product: ProductData,
+  options?: EnrichmentOptions,
+): ProductData {
+  // Always attach _shopgraph metadata
+  const metadata: ShopGraphMetadata = {
+    source_url: product.url,
+    extraction_timestamp: product.extracted_at,
+    extraction_method: product.extraction_method,
+    field_confidence: { ...product.confidence.per_field },
+    confidence_method: 'tier_baseline',
+  };
+  product._shopgraph = metadata;
+
+  // Apply threshold scrubbing if requested
+  const threshold = options?.strict_confidence_threshold;
+  if (threshold != null && threshold > 0) {
+    const status: Record<string, ExtractionStatus> = {};
+    const scrubFields: Record<string, { nullValue: unknown; property: keyof ProductData }> = {
+      product_name: { nullValue: null, property: 'product_name' },
+      brand: { nullValue: null, property: 'brand' },
+      description: { nullValue: null, property: 'description' },
+      price: { nullValue: null, property: 'price' },
+      availability: { nullValue: 'unknown', property: 'availability' },
+      categories: { nullValue: [], property: 'categories' },
+      color: { nullValue: [], property: 'color' },
+      material: { nullValue: [], property: 'material' },
+      dimensions: { nullValue: null, property: 'dimensions' },
+    };
+
+    for (const [fieldName, conf] of Object.entries(product.confidence.per_field)) {
+      if (conf < threshold && scrubFields[fieldName]) {
+        status[fieldName] = {
+          status: 'below_threshold',
+          confidence: conf,
+          threshold,
+          message: `Extracted value below confidence threshold. Confidence: ${conf.toFixed(2)}, threshold: ${threshold.toFixed(2)}.`,
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (product as any)[scrubFields[fieldName].property] = scrubFields[fieldName].nullValue;
+      }
+    }
+
+    if (Object.keys(status).length > 0) {
+      product._extraction_status = status;
+    }
+  }
+
+  return product;
+}
+
+/**
  * Main extraction orchestrator.
  * Fetches URL, tries schema.org first, falls back to LLM.
  * If result is missing price AND availability, tries browser fallback (when enabled).
  */
-export async function extractProduct(url: string): Promise<ProductData> {
+export async function extractProduct(url: string, options?: EnrichmentOptions): Promise<ProductData> {
   let fetchResult: ProductData;
   let fetchFailed403 = false;
 
   try {
-    fetchResult = await extractFromHtml(url);
+    fetchResult = await extractFromHtml(url, options);
   } catch (error: unknown) {
     // If fetch returns 403 (bot blocked), try browser fallback
     if (error instanceof Error && error.message.includes('HTTP 403') && isBrowserFallbackEnabled()) {
@@ -51,35 +105,35 @@ export async function extractProduct(url: string): Promise<ProductData> {
     try {
       const { extractWithBrowser } = await import('./browser-extract.js');
       const browserResult = await extractWithBrowser(url);
-      return browserResult;
+      return applyThresholdAndMetadata(browserResult, options);
     } catch {
       // Browser fallback failed — return original fetch result if we have it
       if (fetchFailed403) {
         // Re-throw original error since we have no result at all
         throw new Error(`HTTP 403: Forbidden`);
       }
-      return fetchResult;
+      return applyThresholdAndMetadata(fetchResult, options);
     }
   }
 
-  return fetchResult;
+  return applyThresholdAndMetadata(fetchResult, options);
 }
 
 /**
  * Extract product data from pre-provided HTML (no HTTP fetch).
  * Used by the enrich_html tool when agents bring their own scraped HTML.
  */
-export async function extractFromRawHtml(html: string, url: string): Promise<ProductData> {
-  return extractFromHtmlContent(html, url);
+export async function extractFromRawHtml(html: string, url: string, options?: EnrichmentOptions): Promise<ProductData> {
+  return extractFromHtmlContent(html, url, options);
 }
 
 /**
  * Schema.org-only extraction (no LLM fallback). Used by enrich_basic free tier.
  * Fast, zero API cost. Returns empty fields if no Schema.org data found.
  */
-export async function extractBasicFromUrl(url: string): Promise<ProductData> {
+export async function extractBasicFromUrl(url: string, options?: EnrichmentOptions): Promise<ProductData> {
   const html = await fetchPage(url);
-  return extractSchemaOnly(html, url);
+  return applyThresholdAndMetadata(extractSchemaOnly(html, url), options);
 }
 
 /**
@@ -135,21 +189,21 @@ export function extractSchemaOnly(html: string, url: string): ProductData {
  * Extract product data from HTML fetched via fetch().
  * This is the original extraction path (schema.org → LLM).
  */
-async function extractFromHtml(url: string): Promise<ProductData> {
+async function extractFromHtml(url: string, options?: EnrichmentOptions): Promise<ProductData> {
   const html = await fetchPage(url);
-  return extractFromHtmlContent(html, url);
+  return extractFromHtmlContent(html, url, options);
 }
 
 /**
  * Core extraction logic shared by both URL-fetched and pre-provided HTML paths.
  */
-async function extractFromHtmlContent(html: string, url: string): Promise<ProductData> {
+async function extractFromHtmlContent(html: string, url: string, options?: EnrichmentOptions): Promise<ProductData> {
   const now = new Date().toISOString();
 
   // Try schema.org first (fast, high confidence)
   const schemaResult = extractSchemaOrg(html);
   if (schemaResult && schemaResult.product_name) {
-    return {
+    return applyThresholdAndMetadata({
       url,
       extracted_at: now,
       extraction_method: 'schema_org',
@@ -166,13 +220,13 @@ async function extractFromHtmlContent(html: string, url: string): Promise<Produc
       dimensions: schemaResult.dimensions ?? null,
       schema_org_raw: schemaResult.schema_org_raw ?? null,
       confidence: schemaResult.confidence ?? { overall: 0, per_field: {} },
-    };
+    }, options);
   }
 
   // Fall back to LLM extraction
   const llmResult = await extractWithLlm(html, url);
   if (llmResult && llmResult.product_name) {
-    return {
+    return applyThresholdAndMetadata({
       url,
       extracted_at: now,
       extraction_method: 'llm',
@@ -189,11 +243,11 @@ async function extractFromHtmlContent(html: string, url: string): Promise<Produc
       dimensions: llmResult.dimensions ?? null,
       schema_org_raw: null,
       confidence: llmResult.confidence ?? { overall: 0, per_field: {} },
-    };
+    }, options);
   }
 
   // Neither method produced data
-  return {
+  return applyThresholdAndMetadata({
     url,
     extracted_at: now,
     extraction_method: 'schema_org',
@@ -210,7 +264,7 @@ async function extractFromHtmlContent(html: string, url: string): Promise<Produc
     dimensions: null,
     schema_org_raw: null,
     confidence: { overall: 0, per_field: {} },
-  };
+  }, options);
 }
 
 /**

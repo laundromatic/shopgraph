@@ -16,7 +16,7 @@ vi.mock('../browser-extract.js', () => ({
   extractWithBrowser: vi.fn(),
 }));
 
-import { extractProduct } from '../extract.js';
+import { extractProduct, extractFromRawHtml } from '../extract.js';
 import { extractWithLlm } from '../llm-extract.js';
 import { extractWithBrowser } from '../browser-extract.js';
 
@@ -351,5 +351,73 @@ describe('browser fallback', () => {
     const result = await extractProduct('https://example.com/in-stock');
     // Has availability, so no fallback needed even though price is null
     expect(extractWithBrowser).not.toHaveBeenCalled();
+  });
+});
+
+describe('_shopgraph metadata', () => {
+  it('is always present on extraction results', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
+
+    const result = await extractProduct('https://example.com/product');
+    expect(result._shopgraph).toBeDefined();
+    expect(result._shopgraph!.source_url).toBe('https://example.com/product');
+    expect(result._shopgraph!.extraction_method).toBe('schema_org');
+    expect(result._shopgraph!.confidence_method).toBe('tier_baseline');
+    expect(result._shopgraph!.extraction_timestamp).toBeTruthy();
+    expect(Object.keys(result._shopgraph!.field_confidence).length).toBeGreaterThan(0);
+  });
+
+  it('is present even when no data extracted', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce(null);
+
+    const result = await extractProduct('https://example.com/empty');
+    expect(result._shopgraph).toBeDefined();
+    expect(result._shopgraph!.confidence_method).toBe('tier_baseline');
+  });
+});
+
+describe('strict_confidence_threshold', () => {
+  it('scrubs fields below threshold and adds _extraction_status', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
+
+    // Schema.org extraction: availability gets 0.83 confidence (0.93 - 0.10)
+    // Setting threshold to 0.90 should scrub availability but keep product_name (0.98)
+    const result = await extractProduct('https://example.com/product', {
+      strict_confidence_threshold: 0.90,
+    });
+
+    // product_name (0.98) should survive
+    expect(result.product_name).toBe('Vintage Rose Gold Ring');
+    // availability (0.83) should be scrubbed
+    expect(result.availability).toBe('unknown');
+    // description (0.88) should be scrubbed
+    expect(result.description).toBeNull();
+
+    expect(result._extraction_status).toBeDefined();
+    expect(result._extraction_status!.availability).toBeDefined();
+    expect(result._extraction_status!.availability.status).toBe('below_threshold');
+    expect(result._extraction_status!.availability.confidence).toBeCloseTo(0.83, 1);
+    expect(result._extraction_status!.availability.threshold).toBe(0.90);
+  });
+
+  it('does not scrub when threshold is not provided', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
+
+    const result = await extractProduct('https://example.com/product');
+    expect(result._extraction_status).toBeUndefined();
+    expect(result.availability).toBe('in_stock');
+  });
+
+  it('does not scrub when all fields are above threshold', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
+
+    const result = await extractProduct('https://example.com/product', {
+      strict_confidence_threshold: 0.50,
+    });
+
+    expect(result._extraction_status).toBeUndefined();
+    expect(result.product_name).toBe('Vintage Rose Gold Ring');
+    expect(result.availability).toBe('in_stock');
   });
 });
