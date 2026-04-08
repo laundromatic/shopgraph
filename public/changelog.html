@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ShopGraph changelog: release history and feature updates.">
+<title>Changelog — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <h1>Changelog</h1>
+      <p class="subtitle">Release history for ShopGraph. Newest releases first.</p>
+
+      <h2>April 8, 2026</h2>
+      <span class="badge badge-blue">v1.0.1</span>
+      <ul style="margin:12px 0 32px;padding-left:24px;line-height:2">
+        <li><strong>AgentReady scoring</strong> — New 5-dimension scoring system for evaluating product data readiness for AI agents. Includes completeness, confidence, structure, actionability, and freshness dimensions.</li>
+        <li><strong>POST /api/score endpoint</strong> — Score existing product data without extraction.</li>
+        <li><strong>include_score parameter</strong> — Add AgentReady scoring inline with any extraction request.</li>
+        <li><strong>B2B scoring awareness</strong> — MOQ, lead time, and bulk pricing detection enhance scoring for B2B products.</li>
+        <li><strong>Methodology documentation</strong> — Published versioned scoring methodology (2026-04-08-v1).</li>
+      </ul>
+
+      <h2>April 7, 2026</h2>
+      <span class="badge badge-green">v1.0.0</span>
+      <ul style="margin:12px 0 32px;padding-left:24px;line-height:2">
+        <li><strong>Per-field confidence scoring</strong> — Every field in the response now includes a confidence score (0-1). Tier baselines: Schema.org 0.93, LLM 0.70, Hybrid 0.85.</li>
+        <li><strong>strict_confidence_threshold parameter</strong> — Filter low-confidence fields from responses.</li>
+        <li><strong>UCP output format</strong> — Add <code>format=ucp</code> to get Universal Commerce Protocol compatible output. Validated against ucp-schema v1.1.0.</li>
+        <li><strong>Subscription billing</strong> — Starter ($99/mo, 10K calls) and Growth ($299/mo, 50K calls) tiers with API key authentication.</li>
+        <li><strong>Auto-heal merge</strong> — Schema.org partial results automatically merged with LLM extraction for hybrid results.</li>
+        <li><strong>Stripe MPP support</strong> — Agents can pay per-call via Stripe Machine-to-Machine Payments.</li>
+        <li><strong>Field modifiers</strong> — Cross-validation, format checks, and provenance signals adjust per-field confidence.</li>
+      </ul>
+
+      <h2>March 24, 2026</h2>
+      <span class="badge badge-gray">v0.9.0</span>
+      <ul style="margin:12px 0 32px;padding-left:24px;line-height:2">
+        <li><strong>Initial launch</strong> — ShopGraph API and MCP server.</li>
+        <li><strong>Schema.org extraction</strong> — JSON-LD and Microdata parsing for structured product data.</li>
+        <li><strong>LLM extraction</strong> — GPT-powered extraction from raw HTML.</li>
+        <li><strong>Playwright rendering</strong> — Headless browser for JS-heavy pages.</li>
+        <li><strong>Free tier</strong> — 500 calls/month, no signup required.</li>
+        <li><strong>MCP server</strong> — Remote and local MCP server for Claude, Cursor, and other clients.</li>
+        <li><strong>npm package</strong> — <code>npm install shopgraph</code> for programmatic access.</li>
+        <li><strong>Test corpus</strong> — 208-URL test suite across 22 verticals (44% B2B / 56% B2C).</li>
+      </ul>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ShopGraph AgentReady scoring methodology: dimensions, weights, calibration, and versioning.">
+<title>Methodology — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <h1>Scoring Methodology</h1>
+      <p class="subtitle">Versioned methodology for AgentReady scoring. Current version: 2026-04-08-v1.</p>
+
+      <div class="alert alert-success">
+        <strong>UCP Schema Compatible</strong> — AgentReady scoring is validated against ucp-schema v1.1.0 field requirements.
+      </div>
+
+      <h2>Version</h2>
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Scoring version</td><td><code>2026-04-08-v1</code></td></tr>
+          <tr><td>Methodology URL</td><td><code>https://shopgraph.dev/methodology</code></td></tr>
+          <tr><td>UCP schema version</td><td>v1.1.0</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Composite Score Formula</h2>
+      <p>The overall AgentReady score is a weighted sum of five dimension scores:</p>
+      <div class="code-header"><span>Formula</span><button class="copy-btn">Copy</button></div>
+      <pre><code>overall = (completeness * 0.30)
+        + (confidence  * 0.25)
+        + (structure    * 0.20)
+        + (actionability* 0.15)
+        + (freshness    * 0.10)</code></pre>
+
+      <h2>Dimension Details</h2>
+
+      <h3>1. Completeness (weight: 0.30)</h3>
+      <p>Measures how many expected fields are present in the extracted data.</p>
+      <h4>Core fields (weighted 2x)</h4>
+      <ul style="margin:8px 0 16px;padding-left:24px;line-height:1.8">
+        <li><code>title</code> — Product name</li>
+        <li><code>price</code> — Numeric price</li>
+        <li><code>currency</code> — ISO 4217 code</li>
+        <li><code>brand</code> — Brand or manufacturer</li>
+        <li><code>image</code> — Primary product image</li>
+        <li><code>availability</code> — Stock status</li>
+        <li><code>url</code> — Canonical product URL</li>
+      </ul>
+      <h4>Optional fields (weighted 1x)</h4>
+      <ul style="margin:8px 0 16px;padding-left:24px;line-height:1.8">
+        <li><code>description</code>, <code>sku</code>, <code>gtin</code>, <code>mpn</code>, <code>category</code>, <code>rating</code>, <code>review_count</code>, <code>variants</code></li>
+      </ul>
+      <p>Score = (core_present * 2 + optional_present) / (core_expected * 2 + optional_total)</p>
+
+      <h3>2. Confidence (weight: 0.25)</h3>
+      <p>Based on per-field confidence scores from the extraction pipeline.</p>
+      <p>Score = mean(field_confidences). Penalized if any field falls below 0.5 (floor penalty of -0.1).</p>
+
+      <h3>3. Structure (weight: 0.20)</h3>
+      <p>Validates that extracted data conforms to expected formats:</p>
+      <ul style="margin:8px 0 16px;padding-left:24px;line-height:1.8">
+        <li>Price is a valid positive number</li>
+        <li>Currency is a valid ISO 4217 code</li>
+        <li>URL is well-formed (starts with http/https)</li>
+        <li>Availability matches Schema.org ItemAvailability enum</li>
+        <li>Image URLs are valid and accessible</li>
+      </ul>
+      <p>Score = valid_checks / total_checks</p>
+
+      <h3>4. Actionability (weight: 0.15)</h3>
+      <p>Can an AI agent take action (e.g. purchase, compare, recommend) with this data?</p>
+      <ul style="margin:8px 0 16px;padding-left:24px;line-height:1.8">
+        <li><strong>has_price</strong> (0.35) — Price is present and valid</li>
+        <li><strong>has_availability</strong> (0.30) — Stock status is known</li>
+        <li><strong>has_product_url</strong> (0.20) — Product URL for linking/visiting</li>
+        <li><strong>has_add_to_cart</strong> (0.15) — Add-to-cart mechanism detected</li>
+      </ul>
+      <p>Score = weighted sum of boolean checks</p>
+
+      <h3>5. Freshness (weight: 0.10)</h3>
+      <p>Penalizes stale or cached data:</p>
+      <table>
+        <thead><tr><th>Data Age</th><th>Score</th></tr></thead>
+        <tbody>
+          <tr><td>&lt; 1 hour</td><td>1.0</td></tr>
+          <tr><td>1-6 hours</td><td>0.9</td></tr>
+          <tr><td>6-24 hours</td><td>0.7</td></tr>
+          <tr><td>1-7 days</td><td>0.4</td></tr>
+          <tr><td>&gt; 7 days</td><td>0.1</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Calibration Approach</h2>
+      <p>Scores are calibrated against a 208-URL ground-truth dataset:</p>
+      <ol style="margin:16px 0;padding-left:24px;line-height:2">
+        <li><strong>Ground truth collection</strong> — Human-verified product data for 208 URLs across 22 verticals.</li>
+        <li><strong>Automated testing</strong> — Extraction tests run every 30 minutes via cron.</li>
+        <li><strong>Accuracy measurement</strong> — Extracted values compared against ground truth field-by-field.</li>
+        <li><strong>Baseline adjustment</strong> — Extraction method baselines updated when measured accuracy diverges from predicted confidence by more than 5%.</li>
+        <li><strong>Version bumping</strong> — When baselines change, the scoring version is incremented.</li>
+      </ol>
+
+      <div class="alert alert-info">
+        This methodology is versioned. The <code>scoring_version</code> field in every AgentReady score response references a specific revision of this document.
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+<script src="/components/code-highlight.js"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ShopGraph FAQ: frequently asked questions about product data extraction, pricing, and enterprise use.">
+<title>FAQ — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <h1>FAQ</h1>
+      <p class="subtitle">Frequently asked questions about ShopGraph.</p>
+
+      <!-- Basics -->
+      <h2>Basics</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What is ShopGraph?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>ShopGraph is a product data extraction API that takes any product URL and returns structured, confidence-scored product data. It works with both B2C (e-commerce) and B2B (industrial supply) websites. Available as a REST API and MCP server.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What data does ShopGraph extract?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>ShopGraph extracts: product title, price, currency, brand, description, images, availability, SKU, GTIN/UPC, manufacturer part number, category, ratings, reviews, variants, and B2B fields (MOQ, lead time, bulk pricing). See the full <a href="/output/schema">ProductData schema</a>.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            How does confidence scoring work?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Every field includes a confidence score from 0 to 1. The score starts with a baseline from the extraction method (Schema.org: 0.93, LLM: 0.70), then gets adjusted by field-level modifiers (cross-validation, format checks, etc.). You can set a <code>strict_confidence_threshold</code> to filter out low-confidence fields. See <a href="/features/confidence">Confidence Scoring</a> for details.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What is UCP?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>UCP (Universal Commerce Protocol) is a standard schema for commerce data interchange. When you add <code>format=ucp</code> to your request, ShopGraph returns data in UCP <code>line_item</code> format, validated against ucp-schema v1.1.0. See <a href="/features/ucp">UCP Output</a>.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What is AgentReady scoring?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>AgentReady scoring evaluates extracted product data across 5 dimensions (completeness, confidence, structure, actionability, freshness) to produce a single score indicating how suitable the data is for autonomous agent workflows. See <a href="/features/agentready">AgentReady Scoring</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usage -->
+      <h2>Usage</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            How do I get started?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>The easiest way is to call the free API directly — no signup required. Send a POST request to <code>https://shopgraph.dev/api/enrich/basic</code> with a product URL. See the <a href="/install">installation guide</a> for all integration options.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Which websites does ShopGraph work with?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>ShopGraph works with any product page on the public web. It has been tested across 22 verticals covering both B2C (Shopify, Amazon, Best Buy, etc.) and B2B (Grainger, McMaster-Carr, MSC Industrial, etc.) with a 97% extraction success rate.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Can I use ShopGraph with my existing scraping infrastructure?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Yes. Use <code>POST /api/enrich/html</code> to send raw HTML directly. ShopGraph skips the fetch step and goes straight to extraction. This lets you keep your proxy setup while using ShopGraph for structuring.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            How do I connect ShopGraph to my AI agent?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Add the MCP server config to your agent's MCP configuration file. One line: <code>"url": "https://shopgraph.dev/mcp"</code>. Works with Claude, Cursor, CrewAI, LangGraph, AutoGen, and any MCP-compatible client. See <a href="/tools/mcp">MCP Server</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <h2>Pricing</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            How is pricing structured?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Four tiers: Free (500/mo, $0), Starter (10K/mo, $99), Growth (50K/mo, $299), Enterprise (custom). Agents can also pay per-call via Stripe MPP without a subscription. See <a href="/pricing">Pricing</a>.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What is Stripe MPP?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Stripe Machine-to-Machine Payments (MPP) lets AI agents pay per API call without a pre-purchased subscription. The agent passes a <code>payment_method_id</code> with each request and is charged $0.02 per full extraction.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What counts as an extraction call?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Each POST to <code>/api/enrich</code>, <code>/api/enrich/basic</code>, or <code>/api/enrich/html</code> counts as one call. Cached responses (within TTL) do not count against your quota. Scoring-only requests (<code>/api/score</code>) are counted separately.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enterprise -->
+      <h2>Enterprise</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Do you offer SLAs?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Enterprise plans include custom SLAs with guaranteed uptime, latency targets, and dedicated support. Contact <a href="mailto:hi@kb.computer">hi@kb.computer</a> for details.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Can I self-host ShopGraph?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>The npm package can be used to run a local MCP server. Full self-hosting of the extraction API (including LLM and Playwright workers) is available on Enterprise plans.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What data do you store?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>ShopGraph caches extraction results for performance (configurable TTL). We do not store or sell extracted product data. API keys and usage metrics are stored for billing. See our <a href="/privacy">Privacy Policy</a> for full details.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+</body>
+</html>

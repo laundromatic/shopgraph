@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ShopGraph routing engine: intelligent extraction method selection and auto-heal merge.">
+<title>Routing Engine — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <h1>Routing Engine</h1>
+      <p class="subtitle">Intelligent extraction method selection that picks the cheapest path to quality data.</p>
+
+      <h2>Pipeline</h2>
+      <div class="pipeline">
+        <div class="pipeline-step">API REQUEST</div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">CACHE CHECK</div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">TOOL ROUTER</div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">EXTRACTION</div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">RESULT</div>
+      </div>
+
+      <h2>Extraction Method Selection</h2>
+      <p>The tool router evaluates each URL and selects the optimal extraction strategy:</p>
+      <ol style="margin:16px 0;padding-left:24px;line-height:2">
+        <li><strong>Cache check</strong> — If a recent extraction exists (within TTL), return it immediately.</li>
+        <li><strong>Schema.org probe</strong> — Fetch the page and check for JSON-LD / Microdata. If found, extract structured data (cheapest method).</li>
+        <li><strong>LLM extraction</strong> — If Schema.org is absent or incomplete, run LLM extraction on the HTML.</li>
+        <li><strong>Auto-heal merge</strong> — If Schema.org is partial (e.g. missing price), merge with LLM-extracted fields to create a hybrid result.</li>
+        <li><strong>Playwright fallback</strong> — For JS-heavy pages that return empty HTML, render with a headless browser first, then extract.</li>
+      </ol>
+
+      <h2>Cost per Method</h2>
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Latency</th><th>Cost</th><th>Confidence Baseline</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>cache</code></td><td>~50ms</td><td>$0.000</td><td>Original score</td></tr>
+          <tr><td><code>schema_org</code></td><td>~800ms</td><td>$0.001</td><td>0.93</td></tr>
+          <tr><td><code>llm</code></td><td>~3s</td><td>$0.008</td><td>0.70</td></tr>
+          <tr><td><code>hybrid</code></td><td>~3.5s</td><td>$0.009</td><td>0.85</td></tr>
+          <tr><td><code>playwright</code></td><td>~8s</td><td>$0.015</td><td>0.75</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Auto-Heal Merge</h2>
+      <p>When Schema.org extraction returns partial data (e.g. title and price but no description), the router automatically:</p>
+      <ol style="margin:16px 0;padding-left:24px;line-height:2">
+        <li>Keeps all Schema.org fields at their high confidence baseline</li>
+        <li>Runs LLM extraction on the same HTML</li>
+        <li>Fills in missing fields from the LLM result at LLM confidence levels</li>
+        <li>Marks the result as <code>hybrid</code> with per-field provenance</li>
+      </ol>
+
+      <p>This gives you the best of both worlds: high-confidence structured data where available, with LLM-powered gap filling.</p>
+
+      <div class="alert alert-info">
+        The routing engine is automatic. You do not need to specify an extraction method. If you want to force a specific method, use the <code>method</code> parameter in the <a href="/tools/api">REST API</a>.
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+<script src="/components/code-highlight.js"></script>
+</body>
+</html>

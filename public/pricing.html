@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ShopGraph pricing: Free, Starter, Growth, and Enterprise tiers. Stripe MPP for agent payments.">
+<title>Pricing — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <h1>Pricing</h1>
+      <p class="subtitle">Simple, usage-based pricing. Start free, scale as you grow.</p>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <div class="pricing-price">$0</div>
+          <div class="pricing-desc">500 calls/month. No signup required.</div>
+          <ul class="pricing-features">
+            <li>500 extractions/month</li>
+            <li>Schema.org extraction only</li>
+            <li>Per-field confidence scores</li>
+            <li>10 requests/minute</li>
+            <li>Community support</li>
+          </ul>
+          <a href="/install" class="btn btn-secondary" style="text-align:center;display:block;text-decoration:none">Get Started</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <h3>Starter</h3>
+          <div class="pricing-price">$99<span>/mo</span></div>
+          <div class="pricing-desc">10,000 calls/month. Full extraction pipeline.</div>
+          <ul class="pricing-features">
+            <li>10,000 extractions/month</li>
+            <li>Full pipeline (Schema.org + LLM + Playwright)</li>
+            <li>UCP output format</li>
+            <li>AgentReady scoring</li>
+            <li>60 requests/minute</li>
+            <li>Email support</li>
+          </ul>
+          <a href="mailto:hi@kb.computer?subject=ShopGraph%20Starter" class="btn btn-primary" style="text-align:center;display:block;text-decoration:none;color:#fff">Get API Key</a>
+        </div>
+
+        <div class="pricing-card">
+          <h3>Growth</h3>
+          <div class="pricing-price">$299<span>/mo</span></div>
+          <div class="pricing-desc">50,000 calls/month. Higher rate limits.</div>
+          <ul class="pricing-features">
+            <li>50,000 extractions/month</li>
+            <li>Full pipeline + priority routing</li>
+            <li>UCP output format</li>
+            <li>AgentReady scoring</li>
+            <li>200 requests/minute</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="mailto:hi@kb.computer?subject=ShopGraph%20Growth" class="btn btn-secondary" style="text-align:center;display:block;text-decoration:none">Contact Sales</a>
+        </div>
+
+        <div class="pricing-card">
+          <h3>Enterprise</h3>
+          <div class="pricing-price">Custom</div>
+          <div class="pricing-desc">Unlimited calls. Dedicated infrastructure.</div>
+          <ul class="pricing-features">
+            <li>Unlimited extractions</li>
+            <li>Dedicated extraction workers</li>
+            <li>Custom SLA</li>
+            <li>SSO / SAML</li>
+            <li>Custom rate limits</li>
+            <li>Dedicated support</li>
+          </ul>
+          <a href="mailto:hi@kb.computer?subject=ShopGraph%20Enterprise" class="btn btn-secondary" style="text-align:center;display:block;text-decoration:none">Contact Sales</a>
+        </div>
+      </div>
+
+      <h2>Rate Limits by Tier</h2>
+      <table>
+        <thead>
+          <tr><th>Tier</th><th>Monthly Calls</th><th>Rate Limit</th><th>Methods Available</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Free</td><td>500</td><td>10/min</td><td>Schema.org only</td></tr>
+          <tr><td>Starter</td><td>10,000</td><td>60/min</td><td>All methods</td></tr>
+          <tr><td>Growth</td><td>50,000</td><td>200/min</td><td>All methods + priority</td></tr>
+          <tr><td>Enterprise</td><td>Unlimited</td><td>Custom</td><td>All methods + dedicated workers</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Stripe Machine-to-Machine Payments (MPP)</h2>
+      <p>AI agents can pay per call using Stripe MPP. No pre-purchased plan needed.</p>
+      <ul style="margin:16px 0;padding-left:24px;line-height:2">
+        <li>Pass a <code>payment_method_id</code> with each request</li>
+        <li>Charged per extraction: $0.02 for full extraction, $0.001 for basic</li>
+        <li>No monthly commitment — pay only for what you use</li>
+        <li>Automatic receipts via Stripe</li>
+      </ul>
+
+      <div class="code-header"><span>MPP request example</span><button class="copy-btn">Copy</button></div>
+      <pre data-lang="json"><code>{
+  "url": "https://www.allbirds.com/products/mens-tree-runners",
+  "payment_method_id": "pm_1234567890"
+}</code></pre>
+
+      <div class="alert alert-info">
+        Learn more about Stripe MPP: <a href="https://docs.stripe.com/payments/machine/mpp" target="_blank" rel="noopener">Stripe Machine Payments documentation</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+<script src="/components/code-highlight.js"></script>
+</body>
+</html>
