@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopGraph Developer Dashboard</title>
+  <link rel="icon" href="/favicon.ico">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --text-muted: #888;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card h2 { font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .stat-label { color: var(--text-muted); font-size: 0.875rem; }
+    .stat-value { font-weight: 600; }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .progress-fill.warning { background: var(--yellow); }
+    .progress-fill.danger { background: var(--red); }
+
+    .api-key-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+    .api-key-box span { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .tier-free { background: #1a1a2e; color: var(--text-muted); }
+    .tier-starter { background: #1e293b; color: var(--accent); }
+    .tier-growth { background: #1a2e1a; color: var(--green); }
+    .tier-enterprise { background: #2e1a2e; color: #a855f7; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.625rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--border); color: var(--text); }
+    .btn-secondary:hover { background: #333; }
+    .btn-danger { background: #7f1d1d; color: #fca5a5; }
+    .btn-danger:hover { background: #991b1b; }
+    .btn-small { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    .login-form {
+      max-width: 400px;
+      margin: 4rem auto;
+      text-align: center;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .login-form input::placeholder { color: var(--text-muted); }
+    .login-form .btn { width: 100%; }
+
+    .error { color: var(--red); font-size: 0.875rem; margin-top: 0.5rem; }
+    .success { color: var(--green); font-size: 0.875rem; margin-top: 0.5rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login view -->
+    <div id="login-view" class="login-form">
+      <h1>ShopGraph</h1>
+      <p class="subtitle">Developer Dashboard</p>
+      <input type="text" id="api-key-input" placeholder="Enter your API key (sg_live_...)" />
+      <button class="btn btn-primary" onclick="loginWithKey()">Sign In</button>
+      <div id="login-error" class="error hidden"></div>
+    </div>
+
+    <!-- Dashboard view -->
+    <div id="dashboard-view" class="hidden">
+      <h1>ShopGraph Dashboard</h1>
+      <p class="subtitle">Developer API management</p>
+
+      <!-- Tier & Usage -->
+      <div class="card">
+        <h2>Subscription</h2>
+        <div class="stat-row">
+          <span class="stat-label">Current tier</span>
+          <span id="tier-badge" class="tier-badge tier-free">Free</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Rate limit</span>
+          <span id="rate-limit" class="stat-value">2 req/sec</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Usage this period</h2>
+        <div class="stat-row">
+          <span class="stat-label">Requests used</span>
+          <span id="usage-count" class="stat-value">0 / 500</span>
+        </div>
+        <div class="progress-bar">
+          <div id="usage-bar" class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="stat-row" style="margin-top: 0.5rem;">
+          <span class="stat-label">Remaining</span>
+          <span id="usage-remaining" class="stat-value">500</span>
+        </div>
+      </div>
+
+      <!-- API Key -->
+      <div class="card">
+        <h2>API Key</h2>
+        <div class="api-key-box">
+          <span id="api-key-display">sg_live_************************</span>
+          <button class="btn btn-secondary btn-small" onclick="copyApiKey()">Copy</button>
+        </div>
+        <div class="actions">
+          <button class="btn btn-danger btn-small" onclick="regenerateKey()">Regenerate API Key</button>
+        </div>
+        <div id="key-message" class="hidden"></div>
+      </div>
+
+      <!-- Billing -->
+      <div class="card">
+        <h2>Billing</h2>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="upgradeTo('starter')">Upgrade to Starter ($99/mo)</button>
+          <button class="btn btn-primary" onclick="upgradeTo('growth')">Upgrade to Growth ($299/mo)</button>
+          <button id="portal-btn" class="btn btn-secondary hidden" onclick="openPortal()">Manage Billing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentKey = null;
+
+    // Check for key in URL param or localStorage
+    (function init() {
+      const params = new URLSearchParams(window.location.search);
+      const keyParam = params.get('key');
+      const storedKey = localStorage.getItem('sg_api_key');
+
+      if (keyParam) {
+        currentKey = keyParam;
+        localStorage.setItem('sg_api_key', keyParam);
+        // Remove key from URL for security
+        window.history.replaceState({}, '', '/dashboard.html');
+        loadDashboard();
+      } else if (storedKey) {
+        currentKey = storedKey;
+        loadDashboard();
+      }
+    })();
+
+    function loginWithKey() {
+      const input = document.getElementById('api-key-input');
+      const key = input.value.trim();
+      if (!key.startsWith('sg_live_')) {
+        showError('login-error', 'API key must start with sg_live_');
+        return;
+      }
+      currentKey = key;
+      localStorage.setItem('sg_api_key', key);
+      loadDashboard();
+    }
+
+    async function loadDashboard() {
+      try {
+        const resp = await fetch('/api/dashboard/usage', {
+          headers: { 'Authorization': 'Bearer ' + currentKey },
+        });
+
+        if (!resp.ok) {
+          if (resp.status === 401) {
+            showError('login-error', 'Invalid API key');
+            currentKey = null;
+            localStorage.removeItem('sg_api_key');
+            return;
+          }
+          throw new Error('Failed to load dashboard');
+        }
+
+        const data = await resp.json();
+        renderDashboard(data);
+      } catch (err) {
+        showError('login-error', err.message || 'Failed to load dashboard');
+      }
+    }
+
+    function renderDashboard(data) {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+
+      // Tier badge
+      const badge = document.getElementById('tier-badge');
+      badge.textContent = data.tierName;
+      badge.className = 'tier-badge tier-' + data.tier;
+
+      // Rate limit
+      document.getElementById('rate-limit').textContent = data.rateLimit + ' req/sec';
+
+      // Usage
+      const limit = data.limit === null || !isFinite(data.limit) ? 'Unlimited' : data.limit.toLocaleString();
+      document.getElementById('usage-count').textContent = data.usage.toLocaleString() + ' / ' + limit;
+      document.getElementById('usage-remaining').textContent = isFinite(data.remaining) ? data.remaining.toLocaleString() : 'Unlimited';
+
+      const pct = isFinite(data.limit) ? Math.min(100, (data.usage / data.limit) * 100) : 0;
+      const bar = document.getElementById('usage-bar');
+      bar.style.width = pct + '%';
+      bar.className = 'progress-fill' + (pct > 90 ? ' danger' : pct > 70 ? ' warning' : '');
+
+      // API key
+      document.getElementById('api-key-display').textContent = data.apiKeyMasked;
+
+      // Portal button
+      if (data.stripeCustomerId) {
+        document.getElementById('portal-btn').classList.remove('hidden');
+      }
+    }
+
+    async function copyApiKey() {
+      if (currentKey) {
+        await navigator.clipboard.writeText(currentKey);
+        alert('API key copied to clipboard');
+      }
+    }
+
+    async function regenerateKey() {
+      if (!confirm('This will invalidate your current API key. Continue?')) return;
+
+      try {
+        const resp = await fetch('/api/auth/api-key/regenerate', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + currentKey,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error);
+
+        currentKey = data.apiKey;
+        localStorage.setItem('sg_api_key', data.apiKey);
+
+        const msg = document.getElementById('key-message');
+        msg.className = 'success';
+        msg.textContent = 'New API key generated. It has been saved to this session.';
+        msg.classList.remove('hidden');
+
+        loadDashboard();
+      } catch (err) {
+        const msg = document.getElementById('key-message');
+        msg.className = 'error';
+        msg.textContent = err.message || 'Failed to regenerate key';
+        msg.classList.remove('hidden');
+      }
+    }
+
+    async function upgradeTo(tier) {
+      try {
+        const resp = await fetch('/api/billing/checkout', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + currentKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ tier }),
+        });
+
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error);
+
+        window.location.href = data.url;
+      } catch (err) {
+        alert(err.message || 'Failed to create checkout session');
+      }
+    }
+
+    async function openPortal() {
+      try {
+        const resp = await fetch('/api/billing/portal', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + currentKey,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error);
+
+        window.location.href = data.url;
+      } catch (err) {
+        alert(err.message || 'Failed to open billing portal');
+      }
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

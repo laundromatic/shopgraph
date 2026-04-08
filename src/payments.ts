@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import type { MppChallenge, PaymentReceipt } from './types.js';
+import type { MppChallenge, PaymentReceipt, SubscriptionTier } from './types.js';
 import { TOOL_PRICING } from './types.js';
 
 /**
@@ -80,5 +80,64 @@ export class PaymentManager {
   async verifyPayment(paymentIntentId: string): Promise<boolean> {
     const pi = await this.stripe.paymentIntents.retrieve(paymentIntentId);
     return pi.status === 'succeeded';
+  }
+
+  /**
+   * Create a Stripe Checkout Session for a subscription tier.
+   * Returns the checkout URL.
+   */
+  async createSubscriptionCheckout(
+    tier: SubscriptionTier,
+    email: string,
+    customerId: string,
+  ): Promise<string> {
+    const priceEnvMap: Record<string, string | undefined> = {
+      starter: process.env.STRIPE_PRICE_STARTER,
+      growth: process.env.STRIPE_PRICE_GROWTH,
+    };
+
+    const priceId = priceEnvMap[tier];
+    if (!priceId) {
+      throw new Error(`No Stripe price configured for tier: ${tier}`);
+    }
+
+    const session = await this.stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer_email: email,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${process.env.APP_URL ?? 'https://shopgraph.dev'}/dashboard.html?checkout=success`,
+      cancel_url: `${process.env.APP_URL ?? 'https://shopgraph.dev'}/dashboard.html?checkout=cancelled`,
+      metadata: {
+        shopgraph_customer_id: customerId,
+      },
+    });
+
+    if (!session.url) {
+      throw new Error('Stripe did not return a checkout URL');
+    }
+    return session.url;
+  }
+
+  /**
+   * Create a Stripe Customer Portal session.
+   * Returns the portal URL.
+   */
+  async createCustomerPortal(stripeCustomerId: string): Promise<string> {
+    const session = await this.stripe.billingPortal.sessions.create({
+      customer: stripeCustomerId,
+      return_url: `${process.env.APP_URL ?? 'https://shopgraph.dev'}/dashboard.html`,
+    });
+    return session.url;
+  }
+
+  /**
+   * Verify a Stripe webhook signature and return the parsed event.
+   */
+  verifyWebhookSignature(payload: Buffer, signature: string): Stripe.Event {
+    const secret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!secret) {
+      throw new Error('STRIPE_WEBHOOK_SECRET is not configured');
+    }
+    return this.stripe.webhooks.constructEvent(payload, signature, secret);
   }
 }

@@ -28,12 +28,115 @@ import { verifyUrl } from '../src/verify-url.js';
 import { getRedis } from '../src/redis.js';
 import { createAuthMiddleware } from '../src/auth-middleware.js';
 import { checkLimit, incrementUsage, getUsageSummary } from '../src/subscriptions.js';
+import { checkRateLimit } from '../src/rate-limiter.js';
+import { createMagicLink, verifyMagicLink, findOrCreateCustomer } from '../src/auth.js';
+import { generateApiKey, hashApiKey, storeApiKey, revokeApiKey } from '../src/api-keys.js';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const testCorpus = require('../data/test-corpus.json') as Array<{ url: string; vertical: string; added: string }>;
 
 const app = express();
+
+// ---------------------------------------------------------------------------
+// Stripe webhook needs raw body BEFORE express.json() is applied
+// ---------------------------------------------------------------------------
+app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  const signature = req.headers['stripe-signature'] as string | undefined;
+  if (!signature) return res.status(400).json({ error: 'Missing stripe-signature header' });
+
+  let event;
+  try {
+    const payments = getPayments();
+    event = payments.verifyWebhookSignature(req.body as Buffer, signature);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Webhook signature verification failed';
+    console.error('[billing/webhook] signature error:', message);
+    return res.status(400).json({ error: message });
+  }
+
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as Record<string, unknown>;
+        const shopgraphCustomerId = (session.metadata as Record<string, string>)?.shopgraph_customer_id;
+        const stripeCustomerId = session.customer as string;
+
+        if (shopgraphCustomerId && stripeCustomerId) {
+          const raw = await redisClient.get<string>(`customer:${shopgraphCustomerId}`);
+          if (raw) {
+            const customer: Customer = typeof raw === 'string' ? JSON.parse(raw) : raw as unknown as Customer;
+            customer.stripeCustomerId = stripeCustomerId;
+            // Default to starter on first checkout — subscription.updated will refine
+            if (customer.tier === 'free') customer.tier = 'starter';
+            await redisClient.set(`customer:${customer.id}`, JSON.stringify(customer));
+            await redisClient.set(`apikey:${customer.apiKeyHash}`, JSON.stringify(customer));
+            // Store reverse lookup for webhook handlers
+            await redisClient.set(`stripe:customer:${stripeCustomerId}`, customer.id);
+          }
+        }
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Record<string, unknown>;
+        const stripeCustomerId = subscription.customer as string;
+        const items = subscription.items as { data: Array<{ price: { id: string } }> };
+        const priceId = items?.data?.[0]?.price?.id;
+
+        // Map price ID to tier
+        let newTier: SubscriptionTier = 'free';
+        if (priceId === process.env.STRIPE_PRICE_STARTER) newTier = 'starter';
+        else if (priceId === process.env.STRIPE_PRICE_GROWTH) newTier = 'growth';
+
+        // Find customer by stripeCustomerId (scan is expensive; store reverse lookup)
+        await updateCustomerTierByStripe(redisClient, stripeCustomerId, newTier);
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Record<string, unknown>;
+        const stripeCustomerId = subscription.customer as string;
+        await updateCustomerTierByStripe(redisClient, stripeCustomerId, 'free');
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Record<string, unknown>;
+        const stripeCustomerId = invoice.customer as string;
+        // Flag the account by storing a payment_failed marker
+        if (stripeCustomerId) {
+          await redisClient.set(`stripe:payment_failed:${stripeCustomerId}`, new Date().toISOString(), { ex: 30 * 24 * 60 * 60 });
+        }
+        break;
+      }
+    }
+
+    res.json({ received: true });
+  } catch (err) {
+    console.error('[billing/webhook] handler error:', err);
+    res.status(500).json({ error: 'Webhook handler failed' });
+  }
+});
+
+/** Helper: update customer tier by Stripe customer ID */
+async function updateCustomerTierByStripe(redisClient: NonNullable<ReturnType<typeof getRedis>>, stripeCustomerId: string, tier: SubscriptionTier) {
+  // Look up customer via reverse mapping
+  const customerId = await redisClient.get<string>(`stripe:customer:${stripeCustomerId}`);
+  if (!customerId) return;
+
+  const raw = await redisClient.get<string>(`customer:${customerId}`);
+  if (!raw) return;
+
+  const customer: Customer = typeof raw === 'string' ? JSON.parse(raw) : raw as unknown as Customer;
+  customer.tier = tier;
+  await redisClient.set(`customer:${customer.id}`, JSON.stringify(customer));
+  await redisClient.set(`apikey:${customer.apiKeyHash}`, JSON.stringify(customer));
+}
+
 app.use(express.json());
 
 const redis = getRedis();
@@ -58,6 +161,188 @@ function parseFormat(req: express.Request): 'default' | 'ucp' {
 function parseIncludeScore(req: express.Request): boolean {
   return req.body?.include_score === true || req.query?.include_score === 'true';
 }
+
+// ---------------------------------------------------------------------------
+// Rate limiting middleware — applies to enrichment routes
+// ---------------------------------------------------------------------------
+async function rateLimitGuard(req: express.Request, res: express.Response): Promise<boolean> {
+  if (!redis) return false; // no Redis = no rate limiting
+  const tier: SubscriptionTier = req.customer?.tier ?? 'free';
+  const clientId = req.customer?.apiKeyHash
+    ?? (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim()
+    ?? req.ip
+    ?? 'anonymous';
+
+  const result = await checkRateLimit(redis, clientId, tier);
+  if (!result.allowed) {
+    res.status(429).json({
+      error: 'rate_limit_exceeded',
+      limit: result.limit,
+      retry_after_ms: 1000,
+      tier,
+      message: `Rate limit exceeded (${result.limit} req/sec on ${tier} tier). Upgrade for higher limits.`,
+    });
+    return true; // blocked
+  }
+  return false; // allowed
+}
+
+// ---------------------------------------------------------------------------
+// Auth routes — magic link signup flow
+// ---------------------------------------------------------------------------
+
+// POST /api/auth/signup — generate magic link token
+app.post('/api/auth/signup', async (req, res) => {
+  const { email } = req.body ?? {};
+  if (!email || typeof email !== 'string') {
+    return res.status(400).json({ error: 'Missing required field: email' });
+  }
+
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  try {
+    const token = await createMagicLink(redisClient, email);
+    // TODO: Send email with magic link using Resend or similar service
+    // For now, return token directly so it can be tested
+    res.json({ ok: true, message: 'Check your email', token });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to create magic link';
+    res.status(500).json({ error: message });
+  }
+});
+
+// GET /api/auth/verify — verify magic link token, create/find customer
+app.get('/api/auth/verify', async (req, res) => {
+  const token = req.query.token as string;
+  if (!token) {
+    return res.status(400).json({ error: 'Missing token query parameter' });
+  }
+
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  try {
+    const email = await verifyMagicLink(redisClient, token);
+    if (!email) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+
+    const { customer, apiKey } = await findOrCreateCustomer(redisClient, email);
+    res.json({ customer, ...(apiKey ? { apiKey } : {}) });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Verification failed';
+    res.status(500).json({ error: message });
+  }
+});
+
+// POST /api/auth/api-key/regenerate — revoke old key, generate new one (requires auth)
+app.post('/api/auth/api-key/regenerate', async (req, res) => {
+  if (!req.customer) return res.status(401).json({ error: 'API key required' });
+
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  try {
+    // Revoke old key
+    await revokeApiKey(redisClient, req.customer.apiKeyHash);
+
+    // Generate new key
+    const newApiKey = generateApiKey();
+    const newHash = hashApiKey(newApiKey);
+
+    // Update customer record
+    const updatedCustomer: Customer = { ...req.customer, apiKeyHash: newHash };
+    await storeApiKey(redisClient, newHash, updatedCustomer);
+    await redisClient.set(`customer:${updatedCustomer.id}`, JSON.stringify(updatedCustomer));
+
+    res.json({ apiKey: newApiKey, message: 'Store this API key — it cannot be retrieved later.' });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Key regeneration failed';
+    res.status(500).json({ error: message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Billing routes
+// ---------------------------------------------------------------------------
+
+// POST /api/billing/checkout — create Stripe Checkout Session
+app.post('/api/billing/checkout', async (req, res) => {
+  if (!req.customer) return res.status(401).json({ error: 'API key required' });
+
+  const { tier } = req.body ?? {};
+  if (!tier || !['starter', 'growth'].includes(tier)) {
+    return res.status(400).json({ error: 'Invalid tier. Must be "starter" or "growth".' });
+  }
+
+  try {
+    const payments = getPayments();
+    const url = await payments.createSubscriptionCheckout(tier, req.customer.email, req.customer.id);
+
+    // Store Stripe reverse lookup when we know the customer
+    if (redis && req.customer.stripeCustomerId) {
+      await redis.set(`stripe:customer:${req.customer.stripeCustomerId}`, req.customer.id);
+    }
+
+    res.json({ url });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Checkout session creation failed';
+    res.status(500).json({ error: message });
+  }
+});
+
+// POST /api/billing/portal — create Stripe Customer Portal session
+app.post('/api/billing/portal', async (req, res) => {
+  if (!req.customer) return res.status(401).json({ error: 'API key required' });
+  if (!req.customer.stripeCustomerId) {
+    return res.status(400).json({ error: 'No Stripe customer linked. Subscribe first via /api/billing/checkout.' });
+  }
+
+  try {
+    const payments = getPayments();
+    const url = await payments.createCustomerPortal(req.customer.stripeCustomerId);
+    res.json({ url });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Portal session creation failed';
+    res.status(500).json({ error: message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Dashboard data route
+// ---------------------------------------------------------------------------
+
+// GET /api/dashboard/usage — returns usage data for authenticated customer
+app.get('/api/dashboard/usage', async (req, res) => {
+  if (!req.customer) return res.status(401).json({ error: 'API key required' });
+
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  try {
+    const usage = await getUsageSummary(redisClient, req.customer.id, req.customer.tier);
+    const tierConfig = TIER_CONFIGS[req.customer.tier];
+
+    // Mask API key: show prefix + first 4 chars + last 4 chars
+    const maskedKey = `sg_live_${'*'.repeat(24)}`;
+
+    res.json({
+      email: req.customer.email,
+      tier: req.customer.tier,
+      tierName: tierConfig.name,
+      usage: usage.used,
+      limit: usage.limit,
+      remaining: usage.remaining,
+      rateLimit: tierConfig.rateLimit,
+      apiKeyMasked: maskedKey,
+      stripeCustomerId: req.customer.stripeCustomerId ?? null,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to fetch usage data';
+    res.status(500).json({ error: message });
+  }
+});
 
 // ---------------------------------------------------------------------------
 // Routes
@@ -201,6 +486,8 @@ app.get('/api/run-tests', async (req, res) => {
 
 // POST /api/score — extraction + agent-readiness scoring
 app.post('/api/score', async (req, res) => {
+  if (await rateLimitGuard(req, res)) return;
+
   const { url, payment_method_id } = req.body ?? {};
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'Missing required field: url' });
@@ -315,6 +602,8 @@ app.post('/api/score', async (req, res) => {
 
 // POST /api/enrich/basic — Schema.org only, free tier eligible
 app.post('/api/enrich/basic', async (req, res) => {
+  if (await rateLimitGuard(req, res)) return;
+
   const { url } = req.body ?? {};
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'Missing required field: url' });
@@ -452,6 +741,8 @@ app.post('/api/enrich/basic', async (req, res) => {
 
 // POST /api/enrich — Full extraction (Schema.org → LLM → browser fallback)
 app.post('/api/enrich', async (req, res) => {
+  if (await rateLimitGuard(req, res)) return;
+
   const { url, payment_method_id } = req.body ?? {};
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'Missing required field: url' });
@@ -568,6 +859,8 @@ app.post('/api/enrich', async (req, res) => {
 
 // POST /api/enrich/html — Full extraction from raw HTML
 app.post('/api/enrich/html', async (req, res) => {
+  if (await rateLimitGuard(req, res)) return;
+
   const { html, url, payment_method_id } = req.body ?? {};
   if (!html || typeof html !== 'string') {
     return res.status(400).json({ error: 'Missing required field: html' });
