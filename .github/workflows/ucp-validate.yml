@@ -1,0 +1,66 @@
+name: UCP Schema Validation
+
+on:
+  push:
+    paths:
+      - 'src/ucp-mapper.ts'
+      - 'src/types.ts'
+      - '.github/workflows/ucp-validate.yml'
+  pull_request:
+    paths:
+      - 'src/ucp-mapper.ts'
+      - 'src/types.ts'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test:run
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install ucp-schema CLI
+        run: cargo install ucp-schema
+
+      - name: Clone UCP schema repo
+        run: git clone --depth 1 https://github.com/Universal-Commerce-Protocol/ucp.git /tmp/ucp-repo
+
+      - name: Generate UCP output from mock products
+        run: node scripts/generate-ucp-fixtures.mjs
+
+      - name: Validate UCP output (B2C product)
+        run: |
+          ucp-schema validate \
+            --op read \
+            --response \
+            --schema /tmp/ucp-repo/source/schemas/shopping/types/line_item.json \
+            --json \
+            /tmp/ucp-output-0.json
+
+      - name: Validate UCP output (B2B product)
+        run: |
+          ucp-schema validate \
+            --op read \
+            --response \
+            --schema /tmp/ucp-repo/source/schemas/shopping/types/line_item.json \
+            --json \
+            /tmp/ucp-output-1.json
+
+      - name: Report validation status
+        if: success()
+        run: echo "All UCP schema validations passed (ucp-schema v1.1.0)"

@@ -4,6 +4,8 @@ Product data structuring layer for AI agents. Send a URL or raw HTML, get clean 
 
 **Website:** https://shopgraph.dev | **API:** https://shopgraph.dev/api/enrich/basic | **MCP:** https://shopgraph.dev/mcp
 
+UCP output validated with [`ucp-schema` v1.1.0](https://lib.rs/crates/ucp-schema) — the official Universal Commerce Protocol schema validator.
+
 ## Quick Start
 
 ```bash
