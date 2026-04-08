@@ -1,5 +1,6 @@
 import type { ProductData, EnrichmentOptions, ExtractionStatus, ShopGraphMetadata } from './types.js';
-import type { UcpLineItem, UcpItem } from './types.js';
+import type { UcpLineItem, UcpItem, UcpTotal } from './types.js';
+import { createHash } from 'node:crypto';
 
 /**
  * Validation error returned when required UCP fields are missing.
@@ -86,9 +87,20 @@ export function mapToUcp(
     }
   }
 
+  // Generate a deterministic line_item id from the product URL
+  const lineItemId = `li_${createHash('sha256').update(product.url).digest('hex').slice(0, 12)}`;
+
+  // Build totals array (required in UCP responses)
+  const priceInCents = Math.round((product.price!.amount!) * 100);
+  const totals: UcpTotal[] = [
+    { type: 'subtotal', amount: priceInCents },
+  ];
+
   const lineItem: UcpLineItem = {
+    id: lineItemId,
     item,
     quantity: 1,
+    totals,
     _shopgraph: product._shopgraph,
   };
 
@@ -122,6 +134,8 @@ export function mapToUcp(
 export function validateUcpOutput(output: UcpLineItem): { valid: boolean; missing_fields: string[] } {
   const missing: string[] = [];
 
+  if (!output.id) missing.push('id');
+
   if (!output.item) {
     missing.push('item');
   } else {
@@ -131,6 +145,7 @@ export function validateUcpOutput(output: UcpLineItem): { valid: boolean; missin
   }
 
   if (!output.quantity || output.quantity < 1) missing.push('quantity');
+  if (!output.totals || output.totals.length === 0) missing.push('totals');
 
   return { valid: missing.length === 0, missing_fields: missing };
 }

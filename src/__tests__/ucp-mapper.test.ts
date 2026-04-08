@@ -50,11 +50,13 @@ describe('mapToUcp', () => {
     if (!result.valid) return; // type guard
 
     const li = result.line_item;
+    expect(li.id).toMatch(/^li_[a-f0-9]{12}$/); // deterministic hash-based ID
     expect(li.item.id).toBe('https://example.com/product/123');
     expect(li.item.title).toBe('Test Widget');
     expect(li.item.price).toBe(2999); // cents
     expect(li.item.image_url).toBe('https://example.com/img1.jpg');
     expect(li.quantity).toBe(1);
+    expect(li.totals).toEqual([{ type: 'subtotal', amount: 2999 }]);
     expect(li._shopgraph).toBeDefined();
     expect(li._shopgraph!.confidence_method).toBe('tier_baseline');
 
@@ -150,23 +152,38 @@ describe('mapToUcp', () => {
 describe('validateUcpOutput', () => {
   it('validates a correct line_item', () => {
     const result = validateUcpOutput({
+      id: 'li_abc123',
       item: { id: 'x', title: 'Test', price: 100 },
       quantity: 1,
+      totals: [{ type: 'subtotal', amount: 100 }],
     });
     expect(result.valid).toBe(true);
     expect(result.missing_fields).toEqual([]);
   });
 
+  it('detects missing id', () => {
+    const result = validateUcpOutput({
+      id: '',
+      item: { id: 'x', title: 'Test', price: 100 },
+      quantity: 1,
+      totals: [{ type: 'subtotal', amount: 100 }],
+    });
+    expect(result.valid).toBe(false);
+    expect(result.missing_fields).toContain('id');
+  });
+
   it('detects missing item', () => {
-    const result = validateUcpOutput({ item: undefined as any, quantity: 1 });
+    const result = validateUcpOutput({ id: 'li_1', item: undefined as any, quantity: 1, totals: [{ type: 'subtotal', amount: 0 }] });
     expect(result.valid).toBe(false);
     expect(result.missing_fields).toContain('item');
   });
 
   it('detects missing item fields', () => {
     const result = validateUcpOutput({
+      id: 'li_1',
       item: { id: '', title: '', price: null as any },
       quantity: 1,
+      totals: [{ type: 'subtotal', amount: 0 }],
     });
     expect(result.valid).toBe(false);
     expect(result.missing_fields).toContain('item.id');
@@ -174,10 +191,23 @@ describe('validateUcpOutput', () => {
     expect(result.missing_fields).toContain('item.price');
   });
 
+  it('detects missing totals', () => {
+    const result = validateUcpOutput({
+      id: 'li_1',
+      item: { id: 'x', title: 'Test', price: 100 },
+      quantity: 1,
+      totals: [],
+    });
+    expect(result.valid).toBe(false);
+    expect(result.missing_fields).toContain('totals');
+  });
+
   it('detects invalid quantity', () => {
     const result = validateUcpOutput({
+      id: 'li_1',
       item: { id: 'x', title: 'Test', price: 100 },
       quantity: 0,
+      totals: [{ type: 'subtotal', amount: 100 }],
     });
     expect(result.valid).toBe(false);
     expect(result.missing_fields).toContain('quantity');

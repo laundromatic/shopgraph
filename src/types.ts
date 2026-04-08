@@ -150,11 +150,22 @@ export interface UcpItem {
   image_url?: string;
 }
 
+/** UCP total — cost breakdown entry per UCP spec (total.json). */
+export interface UcpTotal {
+  type: string;
+  amount: number; // signed integer, minor currency units
+  display_text?: string;
+}
+
 /** UCP line_item — the standard interchange format for product data. */
 export interface UcpLineItem {
+  /** Line item identifier (server-generated, required in responses). */
+  id: string;
   item: UcpItem;
   /** Quantity of the item (always 1 for single-product enrichment). */
   quantity: number;
+  /** Line item totals breakdown (required in responses). */
+  totals: UcpTotal[];
   /** ShopGraph extraction metadata. */
   _shopgraph?: ShopGraphMetadata;
   /** Fields that were scrubbed or not available. */
