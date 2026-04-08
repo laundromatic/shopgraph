@@ -195,6 +195,80 @@ async function extractFromHtml(url: string, options?: EnrichmentOptions): Promis
 }
 
 /**
+ * Merge two extraction results. Primary fields win on conflict;
+ * secondary fills null/empty fields from primary.
+ */
+function mergeResults(primary: ProductData, secondary: Partial<ProductData>): ProductData {
+  const merged = { ...primary };
+
+  // Fill null/empty fields from secondary
+  if (!merged.product_name && secondary.product_name) {
+    merged.product_name = secondary.product_name;
+  }
+  if (!merged.brand && secondary.brand) {
+    merged.brand = secondary.brand;
+  }
+  if (!merged.description && secondary.description) {
+    merged.description = secondary.description;
+  }
+  if (!merged.price && secondary.price) {
+    merged.price = secondary.price;
+  }
+  if (merged.availability === 'unknown' && secondary.availability && secondary.availability !== 'unknown') {
+    merged.availability = secondary.availability;
+  }
+  if (merged.categories.length === 0 && secondary.categories && secondary.categories.length > 0) {
+    merged.categories = secondary.categories;
+  }
+  if (merged.image_urls.length === 0 && secondary.image_urls && secondary.image_urls.length > 0) {
+    merged.image_urls = secondary.image_urls;
+  }
+  if (!merged.primary_image_url && secondary.primary_image_url) {
+    merged.primary_image_url = secondary.primary_image_url;
+  }
+  if (merged.color.length === 0 && secondary.color && secondary.color.length > 0) {
+    merged.color = secondary.color;
+  }
+  if (merged.material.length === 0 && secondary.material && secondary.material.length > 0) {
+    merged.material = secondary.material;
+  }
+  if (!merged.dimensions && secondary.dimensions) {
+    merged.dimensions = secondary.dimensions;
+  }
+
+  // Merge confidence: use the source that provided each field
+  const mergedPerField = { ...primary.confidence.per_field };
+  if (secondary.confidence?.per_field) {
+    for (const [field, conf] of Object.entries(secondary.confidence.per_field)) {
+      if (mergedPerField[field] === undefined) {
+        mergedPerField[field] = conf;
+      }
+    }
+  }
+
+  const fieldCount = Object.keys(mergedPerField).length;
+  const overall = fieldCount > 0
+    ? Object.values(mergedPerField).reduce((a, b) => a + b, 0) / fieldCount
+    : 0;
+
+  merged.confidence = { overall, per_field: mergedPerField };
+  merged.extraction_method = 'hybrid';
+
+  return merged;
+}
+
+/**
+ * Check if Schema.org result is partial — has product_name but missing
+ * critical fields like price or availability.
+ */
+function isPartialSchemaResult(result: Partial<ProductData>): boolean {
+  const hasName = result.product_name !== null && result.product_name !== undefined;
+  const missingPrice = !result.price;
+  const missingAvailability = !result.availability || result.availability === 'unknown';
+  return hasName && (missingPrice || missingAvailability);
+}
+
+/**
  * Core extraction logic shared by both URL-fetched and pre-provided HTML paths.
  */
 async function extractFromHtmlContent(html: string, url: string, options?: EnrichmentOptions): Promise<ProductData> {
@@ -203,7 +277,7 @@ async function extractFromHtmlContent(html: string, url: string, options?: Enric
   // Try schema.org first (fast, high confidence)
   const schemaResult = extractSchemaOrg(html);
   if (schemaResult && schemaResult.product_name) {
-    return applyThresholdAndMetadata({
+    const schemaProduct: ProductData = {
       url,
       extracted_at: now,
       extraction_method: 'schema_org',
@@ -220,7 +294,23 @@ async function extractFromHtmlContent(html: string, url: string, options?: Enric
       dimensions: schemaResult.dimensions ?? null,
       schema_org_raw: schemaResult.schema_org_raw ?? null,
       confidence: schemaResult.confidence ?? { overall: 0, per_field: {} },
-    }, options);
+    };
+
+    // Auto-heal: if Schema.org is partial, fill gaps with LLM
+    if (isPartialSchemaResult(schemaProduct)) {
+      try {
+        const llmResult = await extractWithLlm(html, url);
+        if (llmResult) {
+          const merged = mergeResults(schemaProduct, llmResult);
+          merged.schema_org_raw = schemaProduct.schema_org_raw;
+          return applyThresholdAndMetadata(merged, options);
+        }
+      } catch {
+        // LLM failed — return Schema.org partial result
+      }
+    }
+
+    return applyThresholdAndMetadata(schemaProduct, options);
   }
 
   // Fall back to LLM extraction

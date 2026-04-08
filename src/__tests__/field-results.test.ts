@@ -207,6 +207,98 @@ describe('ground truth comparison', () => {
   });
 });
 
+describe('cross_signal_agreement and llm_validation fields', () => {
+  it('stores cross_signal_agreement on FieldResults', () => {
+    const product = makeProduct();
+    const entry = makeEntry();
+    const result = buildFieldResults(product, entry);
+
+    // Before setting, field should be undefined
+    expect(result.cross_signal_agreement).toBeUndefined();
+
+    // Simulate setting it
+    result.cross_signal_agreement = { product_name: true, price: true, availability: false };
+    expect(result.cross_signal_agreement.product_name).toBe(true);
+    expect(result.cross_signal_agreement.availability).toBe(false);
+  });
+
+  it('stores llm_validation on FieldResults', () => {
+    const product = makeProduct();
+    const entry = makeEntry();
+    const result = buildFieldResults(product, entry);
+
+    // Before setting, field should be undefined
+    expect(result.llm_validation).toBeUndefined();
+
+    // Simulate setting it
+    result.llm_validation = {
+      fields_verified: { product_name: true, brand: true, price_amount: false },
+      overall_accuracy: 0.67,
+      duration_ms: 1500,
+    };
+    expect(result.llm_validation.overall_accuracy).toBeCloseTo(0.67);
+    expect(result.llm_validation.fields_verified.product_name).toBe(true);
+    expect(result.llm_validation.fields_verified.price_amount).toBe(false);
+    expect(result.llm_validation.duration_ms).toBe(1500);
+  });
+
+  it('aggregateFieldAndSegmentStats handles results with llm_validation', () => {
+    const results: BatchResult[] = [
+      {
+        url: 'https://example.com/p',
+        vertical: 'Electronics',
+        success: true,
+        confidence: 0.85,
+        extraction_method: 'schema_org',
+        product_name: 'Widget',
+        error: null,
+        duration_ms: 500,
+        field_results: {
+          fields_extracted: ['product_name', 'brand'],
+          fields_total: 9,
+          field_completeness: 2 / 9,
+          per_field_confidence: { product_name: 0.9, brand: 0.8 },
+          llm_validation: {
+            fields_verified: { product_name: true, brand: false },
+            overall_accuracy: 0.5,
+            duration_ms: 1200,
+          },
+        },
+      },
+    ];
+
+    // Should not throw
+    const { fieldStats } = aggregateFieldAndSegmentStats(results);
+    expect(fieldStats.find(f => f.field_name === 'product_name')?.extraction_rate).toBe(1);
+  });
+
+  it('aggregateFieldAndSegmentStats handles results with cross_signal_agreement', () => {
+    const results: BatchResult[] = [
+      {
+        url: 'https://example.com/p',
+        vertical: 'Electronics',
+        success: true,
+        confidence: 0.85,
+        extraction_method: 'schema_org',
+        product_name: 'Widget',
+        error: null,
+        duration_ms: 500,
+        field_results: {
+          fields_extracted: ['product_name'],
+          fields_total: 9,
+          field_completeness: 1 / 9,
+          per_field_confidence: { product_name: 0.9 },
+          cross_signal_agreement: { product_name: true },
+        },
+      },
+    ];
+
+    // Should not throw
+    const { fieldStats } = aggregateFieldAndSegmentStats(results);
+    expect(fieldStats).toBeDefined();
+  });
+});
+
 describe('aggregateFieldAndSegmentStats', () => {
   function makeBatchResult(overrides: Partial<BatchResult> = {}): BatchResult {
     return {

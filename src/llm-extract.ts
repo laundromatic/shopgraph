@@ -192,6 +192,117 @@ export async function extractWithLlm(
   };
 }
 
+// ── LLM-as-Validator ────────────────────────────────────────────────
+
+export interface ValidationResult {
+  fields_verified: Record<string, {
+    correct: boolean;
+    confidence: number;
+    correction?: string;
+  }>;
+  overall_accuracy: number;
+  validator_model: string;
+  duration_ms: number;
+}
+
+const VALIDATION_PROMPT = `You are a product data verification expert. Given an extracted JSON and the original page content, verify each field.
+
+For each field below, determine if the extracted value is correct based on the HTML content.
+Return a JSON object with this structure:
+{
+  "fields": {
+    "product_name": { "correct": true/false, "confidence": 0.0-1.0, "correction": "correct value if wrong" },
+    "brand": { "correct": true/false, "confidence": 0.0-1.0, "correction": "correct value if wrong" },
+    "description": { "correct": true/false, "confidence": 0.0-1.0, "correction": "correct value if wrong" },
+    "price_amount": { "correct": true/false, "confidence": 0.0-1.0, "correction": "correct value if wrong" },
+    "price_currency": { "correct": true/false, "confidence": 0.0-1.0, "correction": "correct value if wrong" },
+    "availability": { "correct": true/false, "confidence": 0.0-1.0, "correction": "correct value if wrong" }
+  }
+}
+
+Rules:
+- Only check fields that have non-null extracted values
+- Set correct=true if the value matches what's on the page
+- Set confidence to how sure you are of your verification (0.0-1.0)
+- Only include correction if correct=false
+- Return ONLY the JSON object, no markdown or explanation`;
+
+/**
+ * Validate extracted product data against original HTML using LLM-as-validator.
+ */
+export async function validateExtraction(
+  product: ProductData,
+  html: string,
+  apiKey?: string,
+): Promise<ValidationResult> {
+  const start = Date.now();
+  const key = apiKey ?? process.env.GOOGLE_API_KEY;
+  if (!key) {
+    throw new Error('GOOGLE_API_KEY is required for LLM validation');
+  }
+
+  const { text } = cleanHtml(html);
+  const truncated = text.slice(0, 15_000);
+
+  const extractedFields: Record<string, unknown> = {};
+  if (product.product_name) extractedFields.product_name = product.product_name;
+  if (product.brand) extractedFields.brand = product.brand;
+  if (product.description) extractedFields.description = product.description;
+  if (product.price?.amount != null) extractedFields.price_amount = product.price.amount;
+  if (product.price?.currency) extractedFields.price_currency = product.price.currency;
+  if (product.availability !== 'unknown') extractedFields.availability = product.availability;
+
+  const genAI = new GoogleGenerativeAI(key);
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+  const prompt = `${VALIDATION_PROMPT}\n\nExtracted data:\n${JSON.stringify(extractedFields, null, 2)}\n\nPage content:\n${truncated}`;
+
+  const result = await model.generateContent(prompt);
+  const responseText = result.response.text();
+
+  const jsonStr = responseText
+    .replace(/^```json?\s*/m, '')
+    .replace(/```\s*$/m, '')
+    .trim();
+
+  let parsed: { fields?: Record<string, { correct?: boolean; confidence?: number; correction?: string }> };
+  try {
+    parsed = JSON.parse(jsonStr);
+  } catch {
+    // Return a default result on parse failure
+    return {
+      fields_verified: {},
+      overall_accuracy: 0,
+      validator_model: 'gemini-2.5-flash',
+      duration_ms: Date.now() - start,
+    };
+  }
+
+  const fieldsVerified: ValidationResult['fields_verified'] = {};
+  let correctCount = 0;
+  let totalCount = 0;
+
+  if (parsed.fields) {
+    for (const [fieldName, fieldResult] of Object.entries(parsed.fields)) {
+      const correct = fieldResult.correct === true;
+      const confidence = typeof fieldResult.confidence === 'number' ? fieldResult.confidence : 0;
+      fieldsVerified[fieldName] = { correct, confidence };
+      if (fieldResult.correction && !correct) {
+        fieldsVerified[fieldName].correction = String(fieldResult.correction);
+      }
+      if (correct) correctCount++;
+      totalCount++;
+    }
+  }
+
+  return {
+    fields_verified: fieldsVerified,
+    overall_accuracy: totalCount > 0 ? correctCount / totalCount : 0,
+    validator_model: 'gemini-2.5-flash',
+    duration_ms: Date.now() - start,
+  };
+}
+
 function parseAvailability(value: unknown): ProductData['availability'] {
   if (typeof value !== 'string') return 'unknown';
   const lower = value.toLowerCase();

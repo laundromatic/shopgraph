@@ -9,7 +9,7 @@
  * - Corpus verification: periodically re-verifies all URLs
  */
 
-import { extractProduct } from './extract.js';
+import { extractProduct, extractBasicFromUrl, fetchPage } from './extract.js';
 import type { ProductData, CorpusEntry } from './types.js';
 import {
   type BatchResult,
@@ -41,12 +41,25 @@ import {
   ALERT_THRESHOLD,
 } from './health.js';
 import { verifyUrl } from './verify-url.js';
+import { validateExtraction } from './llm-extract.js';
+import { saveSnapshot, checkRegression } from './regression.js';
 
 // Re-export CorpusEntry for backward compatibility
 export type { CorpusEntry } from './types.js';
 
 export const BATCH_SIZE = 12;
 const EXTRACTION_TIMEOUT_MS = 15_000;
+
+/** Number of URLs per batch to run LLM validation on (cost control). */
+export const VALIDATION_SAMPLE_SIZE = 3;
+
+/** Counter for how many validations have been done in current batch. */
+let _validationCount = 0;
+
+/** Reset the per-batch validation counter. Exported for testing. */
+export function resetValidationCount(): void {
+  _validationCount = 0;
+}
 
 /**
  * How often to run a verification pass instead of normal extraction.
@@ -138,12 +151,79 @@ export function buildFieldResults(product: ProductData, entry: CorpusEntry): Fie
 
 /**
  * Run a single extraction and return a BatchResult.
+ * Optionally runs LLM validation and regression checks.
  */
 async function extractOne(entry: CorpusEntry): Promise<BatchResult> {
   const start = Date.now();
   try {
     const product = await extractWithTimeout(entry.url);
     const success = isSuccessful(product);
+    const fieldResults = buildFieldResults(product, entry);
+
+    const enableValidation = process.env.ENABLE_LLM_VALIDATION === 'true';
+    const redis = getRedis();
+
+    // LLM validation (cost-controlled: only VALIDATION_SAMPLE_SIZE per batch)
+    if (enableValidation && success && _validationCount < VALIDATION_SAMPLE_SIZE) {
+      try {
+        _validationCount++;
+        const html = await fetchPage(entry.url);
+        const validation = await validateExtraction(product, html);
+        fieldResults.llm_validation = {
+          fields_verified: Object.fromEntries(
+            Object.entries(validation.fields_verified).map(([k, v]) => [k, v.correct]),
+          ),
+          overall_accuracy: validation.overall_accuracy,
+          duration_ms: validation.duration_ms,
+        };
+      } catch {
+        // Validation is best-effort; don't fail the extraction
+      }
+    }
+
+    // Cross-signal agreement: if extraction used schema_org, compare with basic extraction
+    if (success && product.extraction_method === 'schema_org') {
+      try {
+        const basicResult = await extractBasicFromUrl(entry.url);
+        const agreement: Record<string, boolean> = {};
+        if (basicResult.product_name && product.product_name) {
+          agreement.product_name = basicResult.product_name.toLowerCase() === product.product_name.toLowerCase();
+        }
+        if (basicResult.price && product.price) {
+          agreement.price = basicResult.price.amount === product.price.amount;
+        }
+        if (basicResult.availability !== 'unknown' && product.availability !== 'unknown') {
+          agreement.availability = basicResult.availability === product.availability;
+        }
+        if (Object.keys(agreement).length > 0) {
+          fieldResults.cross_signal_agreement = agreement;
+        }
+      } catch {
+        // Cross-signal is best-effort
+      }
+    }
+
+    // Regression check and snapshot
+    if (redis && success) {
+      try {
+        const regressionResult = await checkRegression(redis, entry.url, product);
+        if (regressionResult.regressed) {
+          console.error(`[regression] Detected regression for ${entry.url}:`, regressionResult.changes);
+        }
+
+        // Save snapshot for high-confidence + validated extractions
+        const highConfidence = (product.confidence?.overall ?? 0) > 0.85;
+        const validated = fieldResults.llm_validation?.overall_accuracy !== undefined
+          ? fieldResults.llm_validation.overall_accuracy >= 0.8
+          : false;
+        if (highConfidence || validated) {
+          await saveSnapshot(redis, entry.url, product);
+        }
+      } catch {
+        // Regression is best-effort
+      }
+    }
+
     return {
       url: entry.url,
       vertical: entry.vertical,
@@ -154,7 +234,7 @@ async function extractOne(entry: CorpusEntry): Promise<BatchResult> {
       product_name: product.product_name,
       error: null,
       duration_ms: Date.now() - start,
-      field_results: buildFieldResults(product, entry),
+      field_results: fieldResults,
     };
   } catch (err: unknown) {
     return {
@@ -177,6 +257,9 @@ const CONCURRENCY = 5;
  */
 async function runBatch(entries: CorpusEntry[]): Promise<BatchResult[]> {
   const results: BatchResult[] = [];
+
+  // Reset per-batch validation counter
+  resetValidationCount();
 
   // Process in chunks of CONCURRENCY
   for (let i = 0; i < entries.length; i += CONCURRENCY) {

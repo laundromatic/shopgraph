@@ -32,6 +32,12 @@ export interface FieldResults {
   per_field_confidence: Record<string, number>;
   ground_truth_match?: Record<string, boolean>;
   accuracy_score?: number;
+  cross_signal_agreement?: Record<string, boolean>;
+  llm_validation?: {
+    fields_verified: Record<string, boolean>;
+    overall_accuracy: number;
+    duration_ms: number;
+  };
 }
 
 export interface FieldStats {

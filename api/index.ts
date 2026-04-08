@@ -101,6 +101,27 @@ app.get('/api/stats/segments', async (_req, res) => {
   res.json(segmentStats ?? { b2b: null, b2c: null });
 });
 
+// GET /api/stats/calibration — confidence calibration report
+app.get('/api/stats/calibration', async (_req, res) => {
+  const redis = getRedis();
+  if (!redis) return res.json({ error: 'Redis not configured' });
+  const report = await redis.get('stats:calibration');
+  res.json(report ?? { recommendation: 'insufficient_data', sample_size: 0 });
+});
+
+// POST /api/run-calibration — manual trigger for calibration report
+app.post('/api/run-calibration', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  const redis = getRedis();
+  if (!redis) return res.status(500).json({ error: 'Redis not configured' });
+  const { generateCalibrationReport } = await import('../src/calibration.js');
+  const report = await generateCalibrationReport(redis);
+  res.json(report);
+});
+
 // Health check API — pipeline monitoring
 app.get('/api/health-check', async (_req, res) => {
   try {
