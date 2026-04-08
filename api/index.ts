@@ -85,6 +85,22 @@ app.get('/api/stats', async (_req, res) => {
   }
 });
 
+// GET /api/stats/fields — per-field extraction rates + confidence
+app.get('/api/stats/fields', async (_req, res) => {
+  const redis = getRedis();
+  if (!redis) return res.json({ error: 'Redis not configured' });
+  const fieldStats = await redis.get('stats:field_stats');
+  res.json(fieldStats ?? { fields: [] });
+});
+
+// GET /api/stats/segments — B2B vs B2C breakdown
+app.get('/api/stats/segments', async (_req, res) => {
+  const redis = getRedis();
+  if (!redis) return res.json({ error: 'Redis not configured' });
+  const segmentStats = await redis.get('stats:segments');
+  res.json(segmentStats ?? { b2b: null, b2c: null });
+});
+
 // Health check API — pipeline monitoring
 app.get('/api/health-check', async (_req, res) => {
   try {

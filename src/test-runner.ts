@@ -10,12 +10,15 @@
  */
 
 import { extractProduct } from './extract.js';
-import type { ProductData } from './types.js';
+import type { ProductData, CorpusEntry } from './types.js';
 import {
   type BatchResult,
   type LastBatch,
   type DashboardStats,
   type VerticalStats,
+  type FieldResults,
+  type FieldStats,
+  type SegmentStats,
   KV_KEYS,
   BASELINE_STATS,
   getRedis,
@@ -39,12 +42,8 @@ import {
 } from './health.js';
 import { verifyUrl } from './verify-url.js';
 
-// Import test corpus type
-export interface CorpusEntry {
-  url: string;
-  vertical: string;
-  added: string;
-}
+// Re-export CorpusEntry for backward compatibility
+export type { CorpusEntry } from './types.js';
 
 export const BATCH_SIZE = 12;
 const EXTRACTION_TIMEOUT_MS = 15_000;
@@ -82,6 +81,61 @@ function isSuccessful(result: ProductData): boolean {
   return result.product_name !== null && result.product_name.length > 0;
 }
 
+const TRACKED_FIELDS = ['product_name', 'brand', 'description', 'price', 'availability', 'categories', 'color', 'material', 'dimensions'];
+
+export function buildFieldResults(product: ProductData, entry: CorpusEntry): FieldResults {
+  const fieldsExtracted: string[] = [];
+
+  for (const field of TRACKED_FIELDS) {
+    const value = (product as unknown as Record<string, unknown>)[field];
+    const isPresent = value !== null && value !== undefined &&
+      !(Array.isArray(value) && value.length === 0) &&
+      value !== 'unknown';
+    if (isPresent) fieldsExtracted.push(field);
+  }
+
+  const result: FieldResults = {
+    fields_extracted: fieldsExtracted,
+    fields_total: TRACKED_FIELDS.length,
+    field_completeness: fieldsExtracted.length / TRACKED_FIELDS.length,
+    per_field_confidence: { ...(product.confidence?.per_field ?? {}) },
+  };
+
+  // Ground truth comparison
+  if (entry.ground_truth) {
+    const matches: Record<string, boolean> = {};
+    const gt = entry.ground_truth;
+
+    if (gt.product_name !== undefined) {
+      matches.product_name = product.product_name !== null &&
+        product.product_name.toLowerCase().includes(gt.product_name.toLowerCase());
+    }
+    if (gt.brand !== undefined) {
+      matches.brand = product.brand !== null &&
+        product.brand.toLowerCase() === gt.brand.toLowerCase();
+    }
+    if (gt.price_amount !== undefined) {
+      matches.price = product.price !== null && product.price.amount !== null &&
+        Math.abs(product.price.amount - gt.price_amount) / gt.price_amount < 0.01;
+    }
+    if (gt.price_currency !== undefined) {
+      matches.currency = product.price !== null &&
+        product.price.currency === gt.price_currency;
+    }
+    if (gt.availability !== undefined) {
+      matches.availability = product.availability === gt.availability;
+    }
+
+    result.ground_truth_match = matches;
+    const matchValues = Object.values(matches);
+    result.accuracy_score = matchValues.length > 0
+      ? matchValues.filter(Boolean).length / matchValues.length
+      : undefined;
+  }
+
+  return result;
+}
+
 /**
  * Run a single extraction and return a BatchResult.
  */
@@ -93,12 +147,14 @@ async function extractOne(entry: CorpusEntry): Promise<BatchResult> {
     return {
       url: entry.url,
       vertical: entry.vertical,
+      segment: entry.segment,
       success,
       confidence: product.confidence?.overall ?? 0,
       extraction_method: product.extraction_method,
       product_name: product.product_name,
       error: null,
       duration_ms: Date.now() - start,
+      field_results: buildFieldResults(product, entry),
     };
   } catch (err: unknown) {
     return {
@@ -213,6 +269,105 @@ export function recalculateStats(
     last_updated: new Date().toISOString().split('T')[0],
     verticals,
   };
+}
+
+/**
+ * Aggregate per-field extraction rates, confidence, segment breakdown,
+ * and golden-set accuracy from a batch of results.
+ */
+export function aggregateFieldAndSegmentStats(
+  batchResults: BatchResult[],
+): {
+  fieldStats: FieldStats[];
+  segmentStats: SegmentStats;
+  accuracyStats: { avg_accuracy: number; entries_with_ground_truth: number };
+} {
+  // Per-field aggregation
+  const fieldCounts: Record<string, { extracted: number; total: number; confidenceSum: number; confidenceCount: number; accurateCount: number; accuracyTotal: number }> = {};
+
+  for (const field of TRACKED_FIELDS) {
+    fieldCounts[field] = { extracted: 0, total: 0, confidenceSum: 0, confidenceCount: 0, accurateCount: 0, accuracyTotal: 0 };
+  }
+
+  for (const r of batchResults) {
+    for (const field of TRACKED_FIELDS) {
+      const fc = fieldCounts[field];
+      fc.total += 1;
+
+      if (r.field_results) {
+        if (r.field_results.fields_extracted.includes(field)) {
+          fc.extracted += 1;
+        }
+        const conf = r.field_results.per_field_confidence[field];
+        if (conf !== undefined) {
+          fc.confidenceSum += conf;
+          fc.confidenceCount += 1;
+        }
+        if (r.field_results.ground_truth_match && field in r.field_results.ground_truth_match) {
+          fc.accuracyTotal += 1;
+          if (r.field_results.ground_truth_match[field]) fc.accurateCount += 1;
+        }
+      }
+    }
+  }
+
+  const fieldStats: FieldStats[] = TRACKED_FIELDS.map(field => {
+    const fc = fieldCounts[field];
+    const stat: FieldStats = {
+      field_name: field,
+      extraction_rate: fc.total > 0 ? fc.extracted / fc.total : 0,
+      avg_confidence: fc.confidenceCount > 0 ? fc.confidenceSum / fc.confidenceCount : 0,
+    };
+    if (fc.accuracyTotal > 0) {
+      stat.accuracy_rate = fc.accurateCount / fc.accuracyTotal;
+    }
+    return stat;
+  });
+
+  // Segment aggregation
+  const segments: Record<'b2b' | 'b2c', { tested: number; successful: number; confidenceSum: number }> = {
+    b2b: { tested: 0, successful: 0, confidenceSum: 0 },
+    b2c: { tested: 0, successful: 0, confidenceSum: 0 },
+  };
+
+  for (const r of batchResults) {
+    if (r.segment && (r.segment === 'b2b' || r.segment === 'b2c')) {
+      const s = segments[r.segment];
+      s.tested += 1;
+      if (r.success) s.successful += 1;
+      s.confidenceSum += r.confidence;
+    }
+  }
+
+  const segmentStats: SegmentStats = {
+    b2b: {
+      tested: segments.b2b.tested,
+      success_rate: segments.b2b.tested > 0 ? segments.b2b.successful / segments.b2b.tested : 0,
+      avg_confidence: segments.b2b.tested > 0 ? segments.b2b.confidenceSum / segments.b2b.tested : 0,
+    },
+    b2c: {
+      tested: segments.b2c.tested,
+      success_rate: segments.b2c.tested > 0 ? segments.b2c.successful / segments.b2c.tested : 0,
+      avg_confidence: segments.b2c.tested > 0 ? segments.b2c.confidenceSum / segments.b2c.tested : 0,
+    },
+  };
+
+  // Golden set accuracy
+  let accuracySum = 0;
+  let accuracyCount = 0;
+  for (const r of batchResults) {
+    if (r.field_results?.accuracy_score !== undefined) {
+      accuracySum += r.field_results.accuracy_score;
+      accuracyCount += 1;
+    }
+  }
+
+  const accuracyStats = {
+    avg_accuracy: accuracyCount > 0 ? accuracySum / accuracyCount : 0,
+    entries_with_ground_truth: accuracyCount,
+  };
+
+  return { fieldStats, segmentStats, accuracyStats };
 }
 
 /**
@@ -388,6 +543,18 @@ export async function runDailyTests(corpus: CorpusEntry[]): Promise<{
 
       // Write updated stats
       await writeStats(redis, updatedStats);
+
+      // Aggregate and store field-level, segment, and accuracy stats
+      const { fieldStats, segmentStats, accuracyStats } = aggregateFieldAndSegmentStats(results);
+      await Promise.all([
+        redis.set(KV_KEYS.FIELD_STATS, { fields: fieldStats }),
+        redis.set(KV_KEYS.SEGMENT_STATS, segmentStats),
+        redis.set(KV_KEYS.ACCURACY_STATS, accuracyStats),
+      ]);
+
+      // Field-level health alerts
+      const { checkFieldHealth } = await import('./health.js');
+      await checkFieldHealth(redis, fieldStats);
 
       // Auto-switch to maintenance mode at 5,000 pages
       if (updatedStats.total_tested >= MAINTENANCE_TARGET) {

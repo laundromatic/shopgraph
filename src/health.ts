@@ -179,4 +179,21 @@ export async function runHealthCheck(): Promise<HealthCheckResult> {
   }
 }
 
+/**
+ * Check per-field extraction rates and alert if any critical field drops below 60%.
+ */
+export async function checkFieldHealth(redis: Redis, fieldStats: import('./stats.js').FieldStats[]): Promise<void> {
+  const criticalFields = ['product_name', 'price', 'brand'];
+  for (const stat of fieldStats) {
+    if (criticalFields.includes(stat.field_name) && stat.extraction_rate < 0.60) {
+      await redis.set('alert:field_degraded', JSON.stringify({
+        field: stat.field_name,
+        extraction_rate: stat.extraction_rate,
+        threshold: 0.60,
+        timestamp: new Date().toISOString(),
+      }));
+    }
+  }
+}
+
 export { ALERT_THRESHOLD, DEGRADED_THRESHOLD };

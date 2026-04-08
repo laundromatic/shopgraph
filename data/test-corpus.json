@@ -3,702 +3,1545 @@
     "url": "https://www.johnnyseeds.com/vegetables/tomatoes/",
     "vertical": "Agriculture & Farm Supply",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.lettucegrow.com/the-farmstand",
     "vertical": "Agriculture & Farm Supply",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.copic.jp/en/product/sketch/",
     "vertical": "Arts & Crafts",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.dickblick.com/products/blick-studio-acrylics/",
     "vertical": "Arts & Crafts",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.michaels.com/product/crayola-colored-pencils-50ct-10400646",
     "vertical": "Arts & Crafts",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.autozone.com/batteries-starting-and-charging/battery/p/duralast-gold-battery-h6-dl/304_800866_0_0",
     "vertical": "Automotive & Parts",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.autozone.com/engine-management/spark-plug/p/ngk-iridium-ix-spark-plug-bkr6eix/372_0_0",
     "vertical": "Automotive & Parts",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.autozone.com/wipers-and-washer-fluid/windshield-washer-fluid/p/rain-x-original-windshield-washer-fluid-1-gallon/325_0_0",
     "vertical": "Automotive & Parts",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.autozone.com/wipers-and-washer-fluid/windshield-wiper-blade/p/bosch-icon-26a-wiper-blade/440_0_0",
     "vertical": "Automotive & Parts",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://linear.app/pricing",
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://railway.com/pricing",
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://vercel.com/pricing",
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.figma.com/pricing/",
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.notion.com/product",
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B007NVSSFS",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.iFixit.com/products/essential-electronics-toolkit",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.iFixit.com/products/minnow-driver-kit",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.iFixit.com/products/pro-tech-toolkit",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://store.google.com/product/pixel_9_pro",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://store.google.com/us/product/google_nest_hub_2nd_gen",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://store.google.com/us/product/pixel_buds_pro_2",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/Apple-MacBook-Laptop-12%E2%80%91core-19%E2%80%91core/dp/B0BSHF7LLL",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B09V3KXJPB",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B0CL61F39H",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B0CX22ZW1T",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B0D1XD1ZV3",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B0D54JZTHY",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B0D7Q7FLNT",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.apple.com/shop/buy-iphone/iphone-16-pro",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "iPhone 16 Pro",
+      "brand": "Apple",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.keychron.com/products/keychron-q1-max-qmk-via-wireless-custom-mechanical-keyboard",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Keychron Q1 Max QMK/VIA Wireless Custom Mechanical Keyboard",
+      "brand": "Keychron",
+      "price_amount": 209.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.razer.com/gaming-mice/razer-deathadder-v3/RZ01-04640100-R3U1",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.samsung.com/us/smartphones/galaxy-s25-ultra/",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Galaxy S25 Ultra",
+      "brand": "Samsung",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.sonos.com/en-us/shop/era-300",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Era 300",
+      "brand": "Sonos",
+      "price_amount": 479.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://bombas.com/products/men-s-solid-ankle-four-pack?variant=mixed",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://bombas.com/products/men-s-solid-ankle-sock-white-large-1?variant=white",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.6pm.com/p/adidas-running-ultraboost-5x/product/9971875",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.allbirds.com/products/mens-tree-runners",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Men's Tree Runner",
+      "brand": "Allbirds",
+      "price_amount": 100.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.awaytravel.com/products/mini-crossbody-glazed-opal-blue",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.awaytravel.com/products/softside-garment-roller-navy-blue",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.awaytravel.com/products/stadium-bag-island-pink",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.chubbiesshorts.com/products/the-midnight-adventures-6-everywear-short",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.jcrew.com/p/girls/categories/clothing/t-shirts-and-tops/sequin-stripe-t-shirt/BV025",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.koio.co/products/capri-triple-white",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.nike.com/t/air-force-1-07-mens-shoes-jBrhbr/CW2288-111",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.patagonia.com/product/mens-better-sweater-fleece-jacket/25528.html",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.quince.com/women/mongolian-cashmere-crewneck-sweater",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.skims.com/products/fits-everybody-t-shirt-bra-onyx",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.trueclassictees.com/products/heather-polo-3-pack",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.trueclassictees.com/products/sleeveless-active-muscle-tee-3-pack",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.trueclassictees.com/products/the-staple-6-pack",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.lemonade.com/renters",
     "vertical": "Financial Services",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.nerdwallet.com/best/credit-cards/rewards",
     "vertical": "Financial Services",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.progressive.com/auto/",
     "vertical": "Financial Services",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.sofi.com/invest/",
     "vertical": "Financial Services",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://mercury.com/",
     "vertical": "FinTech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://stripe.com/payments",
     "vertical": "FinTech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://wise.com/us/send-money",
     "vertical": "FinTech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.brex.com/product/business-account",
     "vertical": "FinTech",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://thrivemarket.com/p/organic-extra-virgin-coconut-oil",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.counterculturecoffee.com/shop/coffee/big-trouble",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.counterculturecoffee.com/shop/coffee/hologram",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.drinkolipop.com/products/orange-squeeze",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.drinkolipop.com/products/strawberry-vanilla",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.drinkolipop.com/products/vintage-cola",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Vintage Cola (12 Pack)",
+      "brand": "OLIPOP",
+      "price_amount": 35.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.graza.co/products/sizzle",
     "vertical": "Food & Beverage",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Sizzle Extra Virgin Olive Oil",
+      "brand": "Graza",
+      "price_amount": 16.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://us.dollarshaveclub.com/products/ball-spray",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://us.dollarshaveclub.com/products/beard-oil",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.drsquatch.com/products/pine-tar",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Pine Tar Bar Soap",
+      "brand": "Dr. Squatch",
+      "price_amount": 7.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.glossier.com/products/boy-brow",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Boy Brow",
+      "brand": "Glossier",
+      "price_amount": 22.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.nativecos.com/products/body-wash",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.nativecos.com/products/deodorant-stick",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.nativecos.com/products/deodorant-stick-plastic-free",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.nativecos.com/products/hand-soap",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.fishersci.com/shop/products/p/S25361A",
     "vertical": "Healthcare & Life Sciences",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Fisher Science Education Hydrogen Peroxide, 6%",
+      "brand": "Fisher Science Education",
+      "price_amount": 15.5,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.performancehealth.com/baseline-bubble-inclinometer",
     "vertical": "Healthcare & Life Sciences",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.rehabmart.com/product/drive-blue-streak-wheelchair-45019.html",
     "vertical": "Healthcare & Life Sciences",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.rehabmart.com/product/invacare-tracer-sx5-wheelchair-45016.html",
     "vertical": "Healthcare & Life Sciences",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://buffy.co/products/breeze-comforter",
     "vertical": "Home & Furniture",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://materialkitchen.com/products/the-grippy-reboard",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The (grippy) reBoard",
+      "brand": "Material",
+      "price_amount": 40.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://materialkitchen.com/products/the-midi-mk-free-board",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://materialkitchen.com/products/the-mk-free-board",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://materialkitchen.com/products/the-mk-free-set",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.article.com/product/1891/sven-charme-tan-sofa",
     "vertical": "Home & Furniture",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.article.com/product/3568/timber-charme-chocolat-sofa",
     "vertical": "Home & Furniture",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.brooklinen.com/products/luxe-core-sheet-set",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Luxe Sateen Sheet Set",
+      "brand": "Brooklinen",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.greatjonesgoods.com/products/the-dutchess",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.ikea.com/us/en/p/kallax-shelf-unit-white-20275814/",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "KALLAX Shelf unit, white",
+      "brand": "IKEA",
+      "price_amount": 44.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.potterybarn.com/products/comfort-roll-arm-slipcovered-sofa/",
     "vertical": "Home & Furniture",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.saatva.com/mattresses/saatva-classic",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Saatva Classic Mattress",
+      "brand": "Saatva",
+      "price_amount": 2179.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://mejuri.com/products/pave-diamond-huggie-hoops?Material=14k+Yellow+Gold&Stone=Natural+Diamond",
     "vertical": "Jewelry & Accessories",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://mejuri.com/products/rolo-chain-charm-necklace?Material=14k+Yellow+Gold",
     "vertical": "Jewelry & Accessories",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://drinkag1.com/",
     "vertical": "Niche Health & Wellness",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://ouraring.com/product/rings/heritage",
     "vertical": "Niche Health & Wellness",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.athleticgreens.com/en",
     "vertical": "Niche Health & Wellness",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.ritual.com/products/essential-for-women-multivitamin",
     "vertical": "Niche Health & Wellness",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B00006IE8J",
     "vertical": "Office & Supplies",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.amazon.com/dp/B0000AQODM",
     "vertical": "Office & Supplies",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.moleskine.com/en-us/classic-notebook-hard-cover-black-8058647626604.html",
     "vertical": "Office & Supplies",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.petplate.com/products/chompin-chicken",
     "vertical": "Pets",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.petplate.com/products/tail-waggin-turkey",
     "vertical": "Pets",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.wildone.com/products/harness-walk-kit",
     "vertical": "Pets",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.wildone.com/products/walk-kit",
     "vertical": "Pets",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.webstaurantstore.com/vollrath-47935-5-qt-stainless-steel-mixing-bowl/92247935.html",
     "vertical": "Restaurant & Food Service",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Vollrath 47935 5 Qt. Stainless Steel Mixing Bowl",
+      "brand": "Vollrath",
+      "price_amount": 7.8,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.gazelle.com/products/iphone-14-pro",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.gazelle.com/products/iphone-15-pro-max",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.refurbed.com/en-us/p/apple-iphone-15-pro-max",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.swappa.com/buy/apple-iphone-14",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.swappa.com/buy/apple-iphone-15-pro-max",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.gymshark.com/products/gymshark-arrival-contrast-t-shirt-ss-tops",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.gymshark.com/products/gymshark-geo-seamless-t-shirt-ss-tops-blue-ss26",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.gymshark.com/products/gymshark-vital-t-shirt-ss-tops",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.stanley1913.com/products/clutch-bottle-16-oz",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.stanley1913.com/products/quencher-protour-flipstraw-tumbler",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Quencher ProTour Flip Straw Tumbler 40 oz",
+      "brand": "Stanley",
+      "price_amount": 45.0,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-1105/Trash-Cans/Rubbermaid-Brute-Trash-Can-32-Gallon-Gray",
     "vertical": "Waste Management & Recycling",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.alibaba.com/product-detail/Custom-Logo-Printed-Shopping-Bags_1600527847498.html",
     "vertical": "Wholesale & Distribution",
     "added": "2026-03-24",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.alibaba.com/product-detail/Wholesale-Custom-Logo-Tote-Bags_1601234567890.html",
     "vertical": "Wholesale & Distribution",
     "added": "2026-03-26",
-    "verified": "2026-03-26"
+    "verified": "2026-03-26",
+    "segment": "b2c"
   },
   {
     "url": "https://www.etsy.com/listing/1544289838/",
     "vertical": "Jewelry & Accessories",
     "added": "2026-03-26",
-    "verified": "2026-03-26-pending-browser"
+    "verified": "2026-03-26-pending-browser",
+    "segment": "b2c"
+  },
+  {
+    "url": "https://www.grainger.com/product/DAYTON-General-Purpose-Motor-Totally-6K181",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "DAYTON General Purpose Motor, 1/3 hp, Single Phase",
+      "brand": "DAYTON",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.grainger.com/product/DAYTON-General-Purpose-Motor-Totally-2N863",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/DAYTON-General-Purpose-Motor-Single-6K702",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/ENERPAC-Electric-Hydraulic-Pump-with-26VY83",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/HONEYWELL-SALISBURY-Hard-Hat-60HR85",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/HONEYWELL-UVEX-Safety-Glasses-3TE11",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "HONEYWELL UVEX Safety Glasses, Clear A400",
+      "brand": "HONEYWELL UVEX",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.grainger.com/product/3M-Safety-Glasses-4MRP6",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/3M-Safety-Glasses-Traditional-406W44",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/AMEREX-Fire-Extinguisher-ABC-Dry-55PW65",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "AMEREX Fire Extinguisher, ABC Dry Chemical, 10A:120B:C",
+      "brand": "AMEREX",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.grainger.com/product/KIDDE-Fire-Extingshr-4XP88",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.mouser.com/ProductDetail/STMicroelectronics/L6202",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.mouser.com/ProductDetail/Texas-Instruments/LM2672MX-5.0",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.mouser.com/ProductDetail/STMicroelectronics/TSV6392AIST",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/cisco-catalyst-9200cx-network-essentials-switch-compact-12-ports/7108758",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Cisco Catalyst 9200CX Network Essentials Switch, Compact, 12 Ports, Managed",
+      "brand": "Cisco",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.cdw.com/product/cisco-catalyst-9500-network-advantage-switch-48-port-managed/5083143",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/cisco-catalyst-9300-network-advantage-switch-48-ports-managed-rac/4842720",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/lenovo-thinkpad-p16v-gen-3-ai-workstation-16-intel-core-ultra-9-28/8469505",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Lenovo ThinkPad P16v Gen 3 AI Workstation, 16\", Intel Core Ultra 9 285H, 32 GB RAM, 1 TB SSD",
+      "brand": "Lenovo",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.cdw.com/product/lenovo-thinkpad-p1-gen-8-ai-workstation-16-intel-core-ultra-9-285h/8515858",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/lenovo-thinkpad-p14s-gen-6-copilot-pc-ai-workstation-14-amd-ryzen/8446145",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/ubiquiti-unifi-enterprise-fortress-security-appliance/8417002",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/microsoft-windows-server-2025-license/3446600",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/lenovo-thinkpad-p16s-gen-4-ai-workstation-16-intel-core-ultra-7-26/8515862",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/lenovo-thinkpad-p16-gen-3-ai-workstation-16-intel-core-ultra-7-255/8531569",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-15044/Corrugated-Boxes-200-Test/",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-2414LBPS/Colored-Shipping-Tags/Shipping-Tags-5-4-3-4-x-2-3-8-Pre-strung-Light-Blue",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-15723R/Barcode-Labels/Industrial-Thermal-Transfer-Labels-Red-2-x-1-Ribbons-Required",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-19731/Laminating-Machines-and-Supplies/Laminating-Pouches-Glossy-Half-Letter-Size-5-Mil",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-11355/Insulated-Shippers-and-Supplies/Insulated-Foam-Shipping-Kit-8-x-6-x-12",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-25159/Dunnage-Bags/Kraft-Dunnage-Bags-2-Ply-36-x-66",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/S-25139-1/Warehouse-Signs/Monitored-By-Video-Camera-Decals-3-1-2-x-5",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-676/Label-Dispensers/Label-Tape-Dispenser-18",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-958/Desktop-Tape-Dispensers/Uline-Bench-Tape-Dispenser-2",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Uline Bench Tape Dispenser - 2\"",
+      "brand": "Uline",
+      "price_amount": 21.0,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-380/Hand-Held-Tape-Dispensers/Uline-Metal-Strapping-Tape-Dispenser-2",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sigald/179124",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Acetone, ACS reagent, >= 99.5%",
+      "brand": "Sigma-Aldrich",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sigald/746398",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sial/s1679",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sigald/32201",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/mm/567440",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sigald/793566",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sigald/s9625",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.sigmaaldrich.com/US/en/product/sigald/s9888",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.mscdirect.com/product/details/02922797",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "SGS Circuit Board Drill Bit, 2.4 mm Dia, 130 deg Point, Solid Carbide",
+      "brand": "SGS",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.mscdirect.com/product/details/48990840",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.mscdirect.com/product/details/71454466",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.mscdirect.com/product/details/63687354",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/parafilm-m-laboratory-wrapping-film-2/133745",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Amcor Parafilm M Laboratory Film",
+      "brand": "Amcor",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/fisherbrand-lab-labl-adhesive-lab-labels-3/15922",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Fisherbrand Lab-Label Adhesive Lab Labels",
+      "brand": "Fisherbrand",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/labomed-cxl-binocular-laboratory-microscope-2/p-3595233",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Labomed CxL Binocular Laboratory Microscope LED",
+      "brand": "Labo America Inc",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/thermo-scientific-tsx-series-high-performance-lab-refrigerators/tsx2305sa",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Thermo Scientific TSX Series High-Performance Lab Refrigerator",
+      "brand": "Thermo Scientific",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/spare-evaporation-beaker-flask-4000-ml/05405076",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/grid-lab-notebook-blue-200pg/501537762",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/lab-starter-kit/12141460",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/metromax-i-polymer-lab-worktable-black-phenolic-top-solid-i-shelf/11100218",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/laboratory-notebook-9/p-8436003",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://us.rs-online.com/product/panasonic-electronic-components/cb1-r-m-12v/70158499/",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://us.rs-online.com/product/te-connectivity/v23086c1001a403/70289051/",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.newark.com/raspberry-pi/raspberry-pi-pico/mcu-board-rpi-pico-264kb-133mhz/dp/22AJ1097",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Raspberry Pi Pico, RP2040 Microcontroller Board, 264KB, 133MHz",
+      "brand": "Raspberry Pi",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.newark.com/omron-electronic-components/xs2g-d4s2/sensor-conn-m12-plug-4pos-cable/dp/88M5228",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.newark.com/raspberry-pi/rp2040ct/mcu-32bit-133mhz-qfn-56/dp/49AJ8739",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.newark.com/embest/embedded-pi/i-o-bridge-rpi-arduino-arm/dp/67W2379",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.newark.com/gertboard/gertduino/arduino-uno-compatible-i-o-board/dp/01X2969",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Wholesale-Commercial-Bakery-Equipment-Industrial-Electric_60488279134.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Wholesale Commercial Bakery Equipment Industrial Electric Cake Bread Baking Oven",
+      "brand": null,
+      "price_amount": null,
+      "price_currency": "USD"
+    }
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Custom-Factory-Supply-Industrial-Heating-Equipment_1601578658025.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Wholesale-China-Industrial-Laundry-Equipment-Heavy_10000031646667.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/wholesale-pattern-machine-motor-energy-power_1601268845847.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Magnetic-Sheet-Wholesale-Factory-Supply-Industrial_1601201834957.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Wholesale-Industrial-Factory-Heating-and-Stirrer_1601295044774.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/wholesale-industrial-ep200-ep250-18MPA-800mm_60692376175.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Commercial-Baking-Equipment-Industry-China-Wholesale_1601594990695.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.zoro.com/dewalt-impact-drill-bit-1164-dd5111/i/G8614990/",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.zoro.com/dewalt-drill-guide-for-use-with-impact-drivers-dwairdg/i/G4848877/",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.zoro.com/dewalt-impct-rstnt-goggls-antfg-scrch-rstnt-smk-dpg82-21/i/G2203914/",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.zoro.com/honeywell-uvex-safety-glasses-amber-a802/i/G0382724/",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.zoro.com/square-d-nonfusible-double-throw-safety-switch-heavy-duty-600v-ac-3pdt-dtu363awk/i/G6741305/",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fastenal.com/product/details/2140298",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fastenal.com/product/details/0200421",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/KIDDE-Fire-Extingshr-4XP89",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/PULSAFEEDER-Pump-Repair-Kit-6KYF8",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.grainger.com/product/3M-Safety-Glasses-Anti-Fog-Anti-5PA86",
+    "vertical": "Industrial Supplies & MRO",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-93/Stretch-Wrap-Dispensers/Metal-Dispenser-for-Mini-Wrap-with-Adjustable-Setting",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-440/Desktop-Tape-Dispensers/Uline-Industrial-Multi-Roll-Tape-Dispenser-2",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/lenovo-thinkpad-p14s-gen-6-ai-workstation-14.5-intel-core-ultra-7/8515879",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.cdw.com/product/Microsoft-Windows-Server-Enterprise-Edition-license-software-assurance/2320028",
+    "vertical": "IT & Enterprise Hardware",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.newark.com/chipkit/chipkit-pi/dev-board-pic32-chipkit-pi-for/dp/01X2967",
+    "vertical": "Electronic Components",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.alibaba.com/product-detail/Factory-Wholesale-Industrial-Combustion-Electromechanical-Magnetic_1601345946856.html",
+    "vertical": "Wholesale & Trade",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/laboratory-research-notebook/NC9874118",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.fishersci.com/shop/products/laboratory-notebooks/NC9905897",
+    "vertical": "Industrial Chemicals & Lab Equipment",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-801/Kraft-Tape-Dispensers/Paper-Tape-Dispenser-3",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-465LIME/Hand-Held-Tape-Dispensers/Uline-Heavy-Duty-Tape-Dispenser-3-Lime-Green",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-1162/Hand-Held-Tape-Dispensers/Metal-Tape-Dispenser-3",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
+  },
+  {
+    "url": "https://www.uline.com/Product/Detail/H-108/Hand-Held-Tape-Dispensers/Metal-Tape-Dispenser-1",
+    "vertical": "Office & Shipping Wholesale",
+    "added": "2026-04-08",
+    "segment": "b2b"
   }
 ]

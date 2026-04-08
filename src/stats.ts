@@ -25,15 +25,38 @@ export interface DashboardStats {
   verticals: VerticalStats[];
 }
 
+export interface FieldResults {
+  fields_extracted: string[];
+  fields_total: number;
+  field_completeness: number;
+  per_field_confidence: Record<string, number>;
+  ground_truth_match?: Record<string, boolean>;
+  accuracy_score?: number;
+}
+
+export interface FieldStats {
+  field_name: string;
+  extraction_rate: number;
+  avg_confidence: number;
+  accuracy_rate?: number;
+}
+
+export interface SegmentStats {
+  b2b: { tested: number; success_rate: number; avg_confidence: number };
+  b2c: { tested: number; success_rate: number; avg_confidence: number };
+}
+
 export interface BatchResult {
   url: string;
   vertical: string;
+  segment?: 'b2b' | 'b2c';
   success: boolean;
   confidence: number;
   extraction_method: string | null;
   product_name: string | null;
   error: string | null;
   duration_ms: number;
+  field_results?: FieldResults;
 }
 
 export interface LastBatch {
@@ -55,6 +78,9 @@ export const KV_KEYS = {
   VERTICALS: 'stats:verticals',
   LAST_BATCH: 'stats:last_batch',
   BATCH_OFFSET: 'stats:batch_offset',
+  FIELD_STATS: 'stats:field_stats',
+  SEGMENT_STATS: 'stats:segments',
+  ACCURACY_STATS: 'stats:accuracy',
   resultKey: (urlHash: string) => `results:${urlHash}`,
 } as const;
 

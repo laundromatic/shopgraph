@@ -199,3 +199,20 @@ export interface Customer {
   apiKeyHash: string;
   createdAt: string;
 }
+
+// ── Test corpus types ──────────────────────────────────────────────
+
+export interface CorpusEntry {
+  url: string;
+  vertical: string;
+  added: string;
+  verified?: string;
+  segment?: 'b2b' | 'b2c';
+  ground_truth?: {
+    product_name?: string;
+    brand?: string;
+    price_amount?: number;
+    price_currency?: string;
+    availability?: string;
+  };
+}
