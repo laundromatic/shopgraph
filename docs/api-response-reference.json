@@ -1,0 +1,143 @@
+{
+  "product": {
+    "url": "https://www.grainger.com/product/DAYTON-1-2-HP-Jet-Pump-5UXK1",
+    "extracted_at": "2026-04-10T14:32:07.891Z",
+    "extraction_method": "schema_org",
+    "product_name": "DAYTON 1/2 HP Jet Pump, Model 5UXK1",
+    "brand": "DAYTON",
+    "description": "Jet Pump, 1/2 HP, 115/230V AC, 1 Phase, 1-1/4 in NPT Inlet, 1 in NPT Outlet, 55 ft Max Head, Cast Iron Housing, Thermoplastic Impeller, 12.8/6.4 Full Load Amps",
+    "price": {
+      "amount": 284.00,
+      "currency": "USD"
+    },
+    "availability": "in_stock",
+    "categories": ["Jet Pumps", "Pumps", "Plumbing"],
+    "image_urls": [
+      "https://static.grainger.com/rp/s/is/image/Grainger/5UXK1_AS01",
+      "https://static.grainger.com/rp/s/is/image/Grainger/5UXK1_AS02"
+    ],
+    "primary_image_url": "https://static.grainger.com/rp/s/is/image/Grainger/5UXK1_AS01",
+    "color": [],
+    "material": ["Cast Iron", "Thermoplastic"],
+    "dimensions": {
+      "inlet": "1-1/4 in NPT",
+      "outlet": "1 in NPT",
+      "max_head_ft": "55",
+      "weight_lb": "32.5"
+    },
+    "schema_org_raw": {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "DAYTON 1/2 HP Jet Pump, Model 5UXK1",
+      "brand": {
+        "@type": "Brand",
+        "name": "DAYTON"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "284.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "sku": "5UXK1",
+      "mpn": "5UXK1",
+      "image": "https://static.grainger.com/rp/s/is/image/Grainger/5UXK1_AS01"
+    },
+    "confidence": {
+      "overall": 0.93,
+      "per_field": {
+        "product_name": 0.98,
+        "brand": 0.93,
+        "description": 0.88,
+        "price": 0.93,
+        "availability": 0.83,
+        "categories": 0.93,
+        "image_urls": 0.93,
+        "primary_image_url": 0.93,
+        "color": 0.88,
+        "material": 0.88,
+        "dimensions": 0.88
+      }
+    },
+    "_shopgraph": {
+      "source_url": "https://www.grainger.com/product/DAYTON-1-2-HP-Jet-Pump-5UXK1",
+      "extraction_timestamp": "2026-04-10T14:32:07.891Z",
+      "response_timestamp": "2026-04-10T14:32:08.104Z",
+      "extraction_method": "schema_org",
+      "data_source": "live",
+      "field_confidence": {
+        "product_name": 0.98,
+        "brand": 0.93,
+        "description": 0.88,
+        "price": 0.93,
+        "availability": 0.83,
+        "categories": 0.93,
+        "image_urls": 0.93,
+        "primary_image_url": 0.93,
+        "color": 0.88,
+        "material": 0.88,
+        "dimensions": 0.88
+      },
+      "field_freshness": {
+        "price": {
+          "volatility_class": "real_time",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "availability": {
+          "volatility_class": "real_time",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "product_name": {
+          "volatility_class": "slow_change",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "brand": {
+          "volatility_class": "stable",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "description": {
+          "volatility_class": "slow_change",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "categories": {
+          "volatility_class": "stable",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "image_urls": {
+          "volatility_class": "slow_change",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "primary_image_url": {
+          "volatility_class": "slow_change",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "color": {
+          "volatility_class": "stable",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "material": {
+          "volatility_class": "stable",
+          "age_seconds": 0,
+          "decayed": false
+        },
+        "dimensions": {
+          "volatility_class": "stable",
+          "age_seconds": 0,
+          "decayed": false
+        }
+      },
+      "confidence_method": "tier_baseline"
+    }
+  },
+  "cached": false,
+  "credit_mode": "standard"
+}
