@@ -353,6 +353,23 @@ async function handleEnrichment(
       : await extractProduct(url, options);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Extraction failed';
+
+    // Extraction failed — attempt cache fallback before returning error.
+    // If we have stale cache data, serve it at cache_hit pricing instead
+    // of charging the premium rate for a failed extraction.
+    const staleCached = cache.get(url);
+    if (staleCached) {
+      const fallbackProduct = applyThresholdAndMetadata({ ...staleCached }, options, true);
+      const result: EnrichmentResult & { credit_mode: CreditMode; extraction_error: string } = {
+        product: fallbackProduct,
+        receipt,
+        cached: true,
+        credit_mode: 'cache_hit',
+        extraction_error: message,
+      };
+      return formatResult(result, options);
+    }
+
     return {
       content: [{ type: 'text' as const, text: JSON.stringify({ error: 'extraction_failed', message, receipt }, null, 2) }],
       isError: true,
