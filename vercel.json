@@ -32,7 +32,7 @@
   "crons": [
     {
       "path": "/api/run-tests",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 * * * *"
     }
   ]
 }

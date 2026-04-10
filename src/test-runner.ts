@@ -48,7 +48,7 @@ import { saveSnapshot, checkRegression } from './regression.js';
 // Re-export CorpusEntry for backward compatibility
 export type { CorpusEntry } from './types.js';
 
-export const BATCH_SIZE = 12;
+export const BATCH_SIZE = 6;
 const EXTRACTION_TIMEOUT_MS = 15_000;
 
 /** Number of URLs per batch to run LLM validation on (cost control). */
