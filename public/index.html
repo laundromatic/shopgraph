@@ -43,20 +43,21 @@
 
         <!-- Execution flags -->
         <div style="margin-top:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:4px">
+            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--color-border);border-radius:4px 0 0 4px;background:rgba(255,255,255,0.05)">
+              <input type="radio" name="pg-fetch-mode" value="standard" checked style="accent-color:var(--color-accent)">
+              Standard (Cache Allowed)
+            </label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--color-border);border-radius:0 4px 4px 0;border-left:0">
+              <input type="radio" name="pg-fetch-mode" value="force_live" style="accent-color:var(--color-accent)">
+              Force Live Fetch <span style="color:var(--color-accent);font-weight:600">(3x)</span>
+            </label>
+          </div>
           <div style="display:flex;align-items:center;gap:8px">
             <label for="pg-threshold" style="font-size:12px;color:var(--color-text-secondary);white-space:nowrap">Confidence threshold</label>
             <input id="pg-threshold" type="range" min="0" max="1" step="0.05" value="0" style="width:100px;accent-color:var(--color-accent)">
             <span id="pg-threshold-val" style="font-size:12px;font-family:var(--font-mono);color:var(--color-accent);min-width:32px">Off</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <label for="pg-min-confidence" style="font-size:12px;color:var(--color-text-secondary);white-space:nowrap">Min confidence</label>
-            <input id="pg-min-confidence" type="range" min="0" max="1" step="0.05" value="0" style="width:100px;accent-color:var(--color-accent)">
-            <span id="pg-min-conf-val" style="font-size:12px;font-family:var(--font-mono);color:var(--color-accent);min-width:32px">Off</span>
-          </div>
-          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);cursor:pointer">
-            <input id="pg-force-refresh" type="checkbox" style="accent-color:var(--color-accent)">
-            Force refresh (3x credits)
-          </label>
         </div>
 
         <div style="margin-top:6px;font-size:13px;color:var(--color-text-secondary)">500 free calls/month · No signup</div>
@@ -67,24 +68,6 @@
           </div>
           <div id="pg-error" style="display:none;background:#fce8e6;border-radius:8px;padding:12px;color:#611a15;font-size:13px;margin-top:8px"></div>
           <div id="pg-result" style="margin-top:12px"></div>
-        </div>
-      </div>
-
-      <hr>
-
-      <!-- Quick Stats -->
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="stat-number" id="pages-tested">3,628</div>
-          <div class="stat-label">Product URLs tested</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number" id="verticals-total">22</div>
-          <div class="stat-label">Verticals covered</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number" id="success-rate">97%</div>
-          <div class="stat-label">Extraction success</div>
         </div>
       </div>
 
@@ -142,13 +125,5 @@
 <script src="/components/nav.js"></script>
 <script src="/components/playground.js"></script>
 <script src="/components/code-highlight.js"></script>
-<script>
-// Fetch live stats
-fetch('/api/stats').then(function(r){return r.json()}).then(function(s){
-  if(s.total_tested)document.getElementById('pages-tested').textContent=s.total_tested.toLocaleString();
-  if(s.overall_success_rate)document.getElementById('success-rate').textContent=s.overall_success_rate+'%';
-  if(s.verticals)document.getElementById('verticals-total').textContent=s.verticals.length;
-}).catch(function(){});
-</script>
 </body>
 </html>

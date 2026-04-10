@@ -13,13 +13,10 @@
     if (thresholdEl && thresholdEl.value && parseFloat(thresholdEl.value) > 0) {
       opts.strict_confidence_threshold = parseFloat(thresholdEl.value);
     }
-    var forceRefreshEl = $('pg-force-refresh');
-    if (forceRefreshEl && forceRefreshEl.checked) {
+    // Fetch mode radio: standard vs force_live
+    var modeRadio = document.querySelector('input[name="pg-fetch-mode"]:checked');
+    if (modeRadio && modeRadio.value === 'force_live') {
       opts.force_refresh = true;
-    }
-    var minConfEl = $('pg-min-confidence');
-    if (minConfEl && minConfEl.value && parseFloat(minConfEl.value) > 0) {
-      opts.minimum_confidence = parseFloat(minConfEl.value);
     }
     return opts;
   }
@@ -196,15 +193,6 @@
     }
   }
 
-  function updateMinConfDisplay() {
-    var el = $('pg-min-confidence');
-    var display = $('pg-min-conf-val');
-    if (el && display) {
-      var val = parseFloat(el.value);
-      display.textContent = val > 0 ? (val * 100).toFixed(0) + '%' : 'Off';
-    }
-  }
-
   function initPlayground() {
     var btn = $('pg-extract-btn');
     if (!btn) return;
@@ -223,13 +211,6 @@
     if (thresholdEl) {
       thresholdEl.addEventListener('input', updateThresholdDisplay);
       updateThresholdDisplay();
-    }
-
-    // Minimum confidence slider
-    var minConfEl = $('pg-min-confidence');
-    if (minConfEl) {
-      minConfEl.addEventListener('input', updateMinConfDisplay);
-      updateMinConfDisplay();
     }
   }
 
