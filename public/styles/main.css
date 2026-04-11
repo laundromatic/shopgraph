@@ -375,6 +375,8 @@ td {
   color: rgba(0, 0, 0, 0.8);
 }
 
+tr:last-child td { border-bottom: none; }
+
 tr:hover td { background: var(--card-bg); }
 
 /* === CARDS === */
