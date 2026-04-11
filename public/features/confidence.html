@@ -36,7 +36,7 @@
           <tr><td><code>schema_org</code></td><td><strong>0.93</strong></td><td>Structured data from the page (JSON-LD, Microdata). Highest reliability.</td></tr>
           <tr><td><code>llm</code></td><td><strong>0.70</strong></td><td>LLM extraction from raw HTML. Good coverage, variable precision.</td></tr>
           <tr><td><code>hybrid</code></td><td><strong>0.85</strong></td><td>Auto-heal merge: Schema.org partial + LLM fills gaps.</td></tr>
-          <tr><td><code>playwright</code></td><td><strong>0.75</strong></td><td>Full browser rendering for JS-heavy pages, then LLM extraction.</td></tr>
+          <tr><td><code>playwright</code></td><td><strong>0.75</strong></td><td>Full browser rendering for dynamic sites where JavaScript execution is required for data access, followed by LLM extraction.</td></tr>
         </tbody>
       </table>
 
@@ -66,6 +66,17 @@
 }</code></pre>
 
       <p>With <code>strict_confidence_threshold: 0.85</code>, any field with confidence below 0.85 will be excluded from the response. This is useful for applications that require high data quality and prefer missing data over uncertain data.</p>
+
+      <h2>Choosing Your Confidence Strategy</h2>
+      <p>ShopGraph supports two patterns for handling data quality:</p>
+
+      <h3>Threshold filtering</h3>
+      <p>Set <code>strict_confidence_threshold</code> to omit fields below your quality bar. Best for autonomous pipelines where missing data is preferable to uncertain data. Fields below the threshold are excluded from the response entirely.</p>
+
+      <h3>Confidence routing</h3>
+      <p>Omit <code>strict_confidence_threshold</code> to receive all fields with their scores. Build routing logic in your application: high-confidence fields go to automation, low-confidence fields go to human review. Best for human-in-the-loop workflows where partial data is still actionable.</p>
+
+      <p>These patterns are mutually exclusive. If you set a threshold, fields below it will not appear in the response and cannot be routed.</p>
 
       <h2>Response Example</h2>
       <div class="code-header"><span>Response with field_confidence</span><button class="copy-btn">Copy</button></div>
@@ -115,6 +126,8 @@
     "fields_omitted_by_threshold": ["brand", "availability", "image", "description"]
   }
 }</code></pre>
+
+      <p>When using <code>format: ucp</code>, confidence data appears under <code>_extensions.shopgraph.field_confidence</code>. See <a href="/features/ucp">UCP Output</a> for the full mapping.</p>
 
       <div class="alert alert-info">
         <strong>Tip:</strong> Start with a threshold of 0.7 and increase as needed. Most Schema.org extractions return fields above 0.9.

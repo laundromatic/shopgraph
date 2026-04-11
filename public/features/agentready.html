@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ShopGraph AgentReady scoring: 5-dimension scoring for AI agent readiness of product data.">
+<meta name="description" content="ShopGraph AgentReady scoring: 6-dimension scoring for AI agent readiness of product data.">
 <title>AgentReady Scoring — ShopGraph</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -19,19 +19,20 @@
       <p class="subtitle">A composite score that tells agents how ready product data is for automated decision-making.</p>
 
       <h2>What is AgentReady Scoring?</h2>
-      <p>AgentReady scoring evaluates extracted product data across five dimensions to produce a single score (0-1) indicating how suitable the data is for autonomous agent workflows like purchasing, comparison, or inventory management.</p>
+      <p>AgentReady scoring evaluates extracted product data across six dimensions to produce a single score (0-1) indicating how suitable the data is for autonomous agent workflows like purchasing, comparison, or inventory management.</p>
 
-      <h2>Five Dimensions</h2>
+      <h2>Six Dimensions</h2>
       <table>
         <thead>
           <tr><th>Dimension</th><th>Weight</th><th>Description</th></tr>
         </thead>
         <tbody>
           <tr><td><strong>Completeness</strong></td><td>0.30</td><td>Percentage of expected fields present. Core fields (title, price, currency) weighted more heavily.</td></tr>
-          <tr><td><strong>Confidence</strong></td><td>0.25</td><td>Average per-field confidence score from the extraction pipeline.</td></tr>
+          <tr><td><strong>Confidence</strong></td><td>0.20</td><td>Average per-field confidence score from the extraction pipeline.</td></tr>
           <tr><td><strong>Structure</strong></td><td>0.20</td><td>Data format quality: correct types, valid URLs, proper currency codes, parseable prices.</td></tr>
           <tr><td><strong>Actionability</strong></td><td>0.15</td><td>Can an agent act on this data? Requires price + availability + product URL at minimum.</td></tr>
-          <tr><td><strong>Freshness</strong></td><td>0.10</td><td>How recent is the extraction? Cached data older than 24h gets a penalty.</td></tr>
+          <tr><td><strong>Freshness</strong></td><td>0.15</td><td>How recent is the extraction? Cached data older than 24h gets a penalty.</td></tr>
+          <tr><td><strong>Access Readiness</strong></td><td>0.00</td><td>Agent accessibility score. Activates when Web Bot Auth adoption reaches detection threshold. Currently all test corpus URLs are fully open.</td></tr>
         </tbody>
       </table>
 
@@ -75,7 +76,7 @@
       },
       "confidence": {
         "score": 0.88,
-        "weight": 0.25,
+        "weight": 0.20,
         "details": {
           "mean_confidence": 0.88,
           "min_confidence": 0.72,
@@ -104,10 +105,18 @@
       },
       "freshness": {
         "score": 0.95,
-        "weight": 0.10,
+        "weight": 0.15,
         "details": {
           "extraction_age_hours": 0.5,
           "cached": false
+        }
+      },
+      "access_readiness": {
+        "score": 1.0,
+        "weight": 0.00,
+        "details": {
+          "access_label": "fully_open",
+          "note": "Web Bot Auth probing activates when adoption reaches detection threshold"
         }
       }
     },

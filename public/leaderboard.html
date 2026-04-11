@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Which commerce sites are ready for AI agents? Live AgentReady scores across 25+ retailers, updated daily. See how Grainger, Amazon, Target, and more perform across 5 dimensions of agent readiness.">
+<title>Access Readiness Leaderboard — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+<style>
+  .last-updated {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+  }
+
+  .leaderboard-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+  }
+
+  .leaderboard-table-wrap {
+    width: 780px;
+    max-width: calc(100vw - 2rem);
+    overflow-x: auto;
+    margin: 16px 0 32px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .leaderboard-table th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--color-border);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .leaderboard-table th:hover {
+    color: var(--color-text);
+  }
+
+  .leaderboard-table th .sort-arrow {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 10px;
+    opacity: 0.4;
+  }
+
+  .leaderboard-table th.sort-active .sort-arrow {
+    opacity: 1;
+    color: var(--color-accent);
+  }
+
+  .leaderboard-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+  }
+
+  .leaderboard-table tbody tr {
+    cursor: pointer;
+    transition: background 0.1s ease;
+  }
+
+  .leaderboard-table tbody tr:hover td {
+    background: var(--color-card-bg);
+  }
+
+  .leaderboard-table .domain-cell {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text);
+  }
+
+  .leaderboard-table .score-cell {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .leaderboard-table .dim-cell {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-secondary);
+  }
+
+  .leaderboard-table .time-cell {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .score-green { color: #16a34a; }
+  .score-amber { color: #d97706; }
+  .score-red { color: #dc2626; }
+
+  /* Detail row */
+  .detail-row td {
+    padding: 0;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .detail-row:hover td {
+    background: transparent !important;
+  }
+
+  .detail-panel {
+    padding: 16px 12px;
+    background: var(--color-card-bg);
+  }
+
+  .detail-panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--color-text);
+  }
+
+  .detail-bars {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .detail-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .detail-bar-label {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    min-width: 90px;
+  }
+
+  .detail-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .detail-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .detail-bar-fill.bar-green { background: #16a34a; }
+  .detail-bar-fill.bar-amber { background: #d97706; }
+  .detail-bar-fill.bar-red { background: #dc2626; }
+  .detail-bar-fill.bar-default { background: var(--color-accent); }
+
+  .detail-bar-value {
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .leaderboard-cta {
+    margin-top: 32px;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  .leaderboard-cta a {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .leaderboard-cta a:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .leaderboard-table-wrap {
+      margin-left: -20px;
+      margin-right: -20px;
+      max-width: calc(100vw);
+      padding: 0 20px;
+    }
+
+    .detail-bars {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <h1>Access Readiness Leaderboard</h1>
+      <p class="subtitle">How accessible are major commerce sites to authenticated AI agents?</p>
+      <p class="last-updated" id="last-updated"></p>
+
+      <div id="leaderboard-loading" class="leaderboard-loading">
+        <span class="spinner"></span> Loading leaderboard data...
+      </div>
+
+      <div id="leaderboard-content" style="display:none">
+        <div class="leaderboard-table-wrap">
+          <table class="leaderboard-table" id="leaderboard-table">
+            <thead>
+              <tr>
+                <th data-key="domain">Domain <span class="sort-arrow">&#9650;</span></th>
+                <th data-key="score" class="sort-active">Score <span class="sort-arrow">&#9660;</span></th>
+                <th data-key="completeness">Completeness <span class="sort-arrow">&#9650;</span></th>
+                <th data-key="confidence">Confidence <span class="sort-arrow">&#9650;</span></th>
+                <th data-key="structure">Structure <span class="sort-arrow">&#9650;</span></th>
+                <th data-key="actionability">Actionability <span class="sort-arrow">&#9650;</span></th>
+                <th data-key="freshness">Freshness <span class="sort-arrow">&#9650;</span></th>
+                <th data-key="scored_at">Last Checked <span class="sort-arrow">&#9650;</span></th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+          </table>
+        </div>
+
+        <div class="leaderboard-cta">
+          Want to score a URL not on this list? <a href="/">Try the playground.</a>
+        </div>
+        <!-- TODO: embed badge generator (LAU-298) -->
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+<script src="/components/code-highlight.js"></script>
+<script>
+(function () {
+  var SEED_DATA = [
+    { domain: "grainger.com", url: "https://www.grainger.com/product/DAYTON-1-2-HP-Jet-Pump-5UXK1", score: 87, completeness: 92, confidence: 88, structure: 85, actionability: 80, freshness: 95, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "amazon.com", url: "https://www.amazon.com/dp/B0BSHF7WHN", score: 82, completeness: 88, confidence: 83, structure: 80, actionability: 85, freshness: 90, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "homedepot.com", url: "https://www.homedepot.com/p/Milwaukee-M18-FUEL-18V/309476381", score: 85, completeness: 90, confidence: 86, structure: 82, actionability: 83, freshness: 92, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "target.com", url: "https://www.target.com/p/stanley-quencher/-/A-87408364", score: 79, completeness: 84, confidence: 80, structure: 75, actionability: 78, freshness: 88, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "walmart.com", url: "https://www.walmart.com/ip/Product/123456789", score: 76, completeness: 82, confidence: 78, structure: 72, actionability: 75, freshness: 85, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "bestbuy.com", url: "https://www.bestbuy.com/site/product/6505727", score: 81, completeness: 86, confidence: 82, structure: 78, actionability: 80, freshness: 89, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "nike.com", url: "https://www.nike.com/t/air-max-90-shoe", score: 73, completeness: 78, confidence: 75, structure: 70, actionability: 72, freshness: 82, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "allbirds.com", url: "https://www.allbirds.com/products/mens-tree-runners", score: 84, completeness: 89, confidence: 85, structure: 82, actionability: 81, freshness: 91, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "wayfair.com", url: "https://www.wayfair.com/furniture/pdp/product-W123456.html", score: 71, completeness: 76, confidence: 72, structure: 68, actionability: 70, freshness: 80, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "nordstrom.com", url: "https://www.nordstrom.com/s/product/6789012", score: 77, completeness: 83, confidence: 79, structure: 74, actionability: 76, freshness: 86, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "zappos.com", url: "https://www.zappos.com/p/product/123456", score: 75, completeness: 80, confidence: 76, structure: 72, actionability: 74, freshness: 84, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "etsy.com", url: "https://www.etsy.com/listing/1234567890", score: 68, completeness: 73, confidence: 69, structure: 65, actionability: 67, freshness: 78, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "uline.com", url: "https://www.uline.com/Product/Detail/S-12345", score: 83, completeness: 88, confidence: 84, structure: 80, actionability: 82, freshness: 90, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "fastenal.com", url: "https://www.fastenal.com/product/12345", score: 80, completeness: 85, confidence: 81, structure: 77, actionability: 79, freshness: 88, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "mcmaster.com", url: "https://www.mcmaster.com/catalog/12345", score: 45, completeness: 50, confidence: 48, structure: 42, actionability: 40, freshness: 55, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "zoro.com", url: "https://www.zoro.com/product/G12345", score: 86, completeness: 91, confidence: 87, structure: 83, actionability: 84, freshness: 93, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "globalindustrial.com", url: "https://www.globalindustrial.com/p/product/123456", score: 78, completeness: 83, confidence: 79, structure: 75, actionability: 77, freshness: 86, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "rs-online.com", url: "https://us.rs-online.com/product/123456", score: 74, completeness: 79, confidence: 75, structure: 71, actionability: 73, freshness: 83, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "digikey.com", url: "https://www.digikey.com/en/products/detail/part/123456", score: 88, completeness: 93, confidence: 89, structure: 86, actionability: 85, freshness: 94, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "mouser.com", url: "https://www.mouser.com/ProductDetail/123456", score: 86, completeness: 91, confidence: 87, structure: 83, actionability: 84, freshness: 92, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "newark.com", url: "https://www.newark.com/product/123456", score: 82, completeness: 87, confidence: 83, structure: 79, actionability: 81, freshness: 89, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "mscdirect.com", url: "https://www.mscdirect.com/product/12345678", score: 81, completeness: 86, confidence: 82, structure: 78, actionability: 80, freshness: 88, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "ikea.com", url: "https://www.ikea.com/us/en/p/product-12345678", score: 72, completeness: 77, confidence: 73, structure: 69, actionability: 71, freshness: 81, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "asos.com", url: "https://www.asos.com/product/123456", score: 70, completeness: 75, confidence: 71, structure: 67, actionability: 69, freshness: 79, scored_at: "2026-04-11T06:00:00Z" },
+    { domain: "webstaurantstore.com", url: "https://www.webstaurantstore.com/product/123456.html", score: 85, completeness: 90, confidence: 86, structure: 82, actionability: 83, freshness: 91, scored_at: "2026-04-11T06:00:00Z" }
+  ];
+
+  var DIMENSIONS = ['completeness', 'confidence', 'structure', 'actionability', 'freshness'];
+  var currentSort = { key: 'score', dir: 'desc' };
+  var expandedDomain = null;
+  var data = [];
+
+  function scoreClass(val) {
+    if (val >= 80) return 'score-green';
+    if (val >= 60) return '';
+    if (val >= 40) return 'score-amber';
+    return 'score-red';
+  }
+
+  function barClass(val) {
+    if (val >= 80) return 'bar-green';
+    if (val >= 60) return 'bar-default';
+    if (val >= 40) return 'bar-amber';
+    return 'bar-red';
+  }
+
+  function relativeTime(isoStr) {
+    var then = new Date(isoStr);
+    var now = new Date();
+    var diffMs = now - then;
+    var diffSec = Math.floor(diffMs / 1000);
+    var diffMin = Math.floor(diffSec / 60);
+    var diffHr = Math.floor(diffMin / 60);
+    var diffDay = Math.floor(diffHr / 24);
+
+    if (diffMin < 1) return 'just now';
+    if (diffMin < 60) return diffMin + 'm ago';
+    if (diffHr < 24) return diffHr + 'h ago';
+    if (diffDay < 7) return diffDay + 'd ago';
+    return then.toLocaleDateString();
+  }
+
+  function sortData(key, dir) {
+    data.sort(function (a, b) {
+      var aVal = a[key];
+      var bVal = b[key];
+      if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+      if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+      if (aVal < bVal) return dir === 'asc' ? -1 : 1;
+      if (aVal > bVal) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  function renderTable() {
+    sortData(currentSort.key, currentSort.dir);
+    var tbody = document.getElementById('leaderboard-body');
+    tbody.innerHTML = '';
+
+    data.forEach(function (row) {
+      var tr = document.createElement('tr');
+      tr.setAttribute('data-domain', row.domain);
+
+      tr.innerHTML =
+        '<td class="domain-cell">' + row.domain + '</td>' +
+        '<td class="score-cell ' + scoreClass(row.score) + '">' + row.score + '</td>' +
+        '<td class="dim-cell">' + row.completeness + '</td>' +
+        '<td class="dim-cell">' + row.confidence + '</td>' +
+        '<td class="dim-cell">' + row.structure + '</td>' +
+        '<td class="dim-cell">' + row.actionability + '</td>' +
+        '<td class="dim-cell">' + row.freshness + '</td>' +
+        '<td class="time-cell">' + relativeTime(row.scored_at) + '</td>';
+
+      tr.addEventListener('click', function () {
+        toggleDetail(row);
+      });
+
+      tbody.appendChild(tr);
+
+      // If this row is expanded, show detail
+      if (expandedDomain === row.domain) {
+        tbody.appendChild(buildDetailRow(row));
+      }
+    });
+
+    // Update header arrows
+    var ths = document.querySelectorAll('.leaderboard-table th');
+    ths.forEach(function (th) {
+      var key = th.getAttribute('data-key');
+      var arrow = th.querySelector('.sort-arrow');
+      if (key === currentSort.key) {
+        th.classList.add('sort-active');
+        arrow.innerHTML = currentSort.dir === 'asc' ? '&#9650;' : '&#9660;';
+      } else {
+        th.classList.remove('sort-active');
+        arrow.innerHTML = '&#9650;';
+      }
+    });
+  }
+
+  function buildDetailRow(row) {
+    var detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    var td = document.createElement('td');
+    td.setAttribute('colspan', '8');
+
+    var html = '<div class="detail-panel">';
+    html += '<div class="detail-panel-title">Dimension Breakdown: ' + row.domain + '</div>';
+    html += '<div class="detail-bars">';
+
+    DIMENSIONS.forEach(function (dim) {
+      var val = row[dim];
+      var label = dim.charAt(0).toUpperCase() + dim.slice(1);
+      html += '<div class="detail-bar-item">';
+      html += '<span class="detail-bar-label">' + label + '</span>';
+      html += '<div class="detail-bar-track"><div class="detail-bar-fill ' + barClass(val) + '" style="width:' + val + '%"></div></div>';
+      html += '<span class="detail-bar-value">' + val + '</span>';
+      html += '</div>';
+    });
+
+    html += '</div></div>';
+    td.innerHTML = html;
+    detailTr.appendChild(td);
+    return detailTr;
+  }
+
+  function toggleDetail(row) {
+    if (expandedDomain === row.domain) {
+      expandedDomain = null;
+    } else {
+      expandedDomain = row.domain;
+    }
+    renderTable();
+  }
+
+  function handleHeaderClick(e) {
+    var th = e.target.closest('th');
+    if (!th) return;
+    var key = th.getAttribute('data-key');
+    if (!key) return;
+
+    if (currentSort.key === key) {
+      currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort.key = key;
+      // Default to desc for numeric columns, asc for text
+      currentSort.dir = key === 'domain' ? 'asc' : 'desc';
+    }
+    renderTable();
+  }
+
+  function updateTimestamp(entries) {
+    var latest = null;
+    entries.forEach(function (e) {
+      var d = new Date(e.scored_at);
+      if (!latest || d > latest) latest = d;
+    });
+    if (latest) {
+      document.getElementById('last-updated').textContent =
+        'Last updated: ' + latest.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+        ' at ' + latest.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+    }
+  }
+
+  function init(entries) {
+    data = entries;
+    document.getElementById('leaderboard-loading').style.display = 'none';
+    document.getElementById('leaderboard-content').style.display = 'block';
+    updateTimestamp(entries);
+    renderTable();
+
+    // Attach sort handlers
+    var thead = document.querySelector('.leaderboard-table thead');
+    thead.addEventListener('click', handleHeaderClick);
+  }
+
+  // Attempt to load from API, fall back to seed data
+  fetch('/api/leaderboard')
+    .then(function (res) {
+      if (!res.ok) throw new Error('API returned ' + res.status);
+      return res.json();
+    })
+    .then(function (apiData) {
+      if (apiData && Array.isArray(apiData.entries) && apiData.entries.length > 0) {
+        init(apiData.entries);
+      } else {
+        init(SEED_DATA);
+      }
+    })
+    .catch(function () {
+      init(SEED_DATA);
+    });
+})();
+</script>
+</body>
+</html>

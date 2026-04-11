@@ -424,7 +424,7 @@
     <div class="content-inner">
 
       <h1>Self-Healing Architecture</h1>
-      <p class="subtitle">Legacy B2B portals and dynamic retail sites break simple scrapers. ShopGraph uses a three-tier fallback pipeline to guarantee extraction, automatically routing around Cloudflare blocks, missing semantic data, and JavaScript-rendered DOMs.</p>
+      <p class="subtitle">Legacy B2B portals and dynamic retail sites break single-method extraction. ShopGraph uses a three-tier fallback pipeline to maximize extraction coverage, automatically routing around Cloudflare blocks, missing semantic data, and JavaScript-rendered DOMs.</p>
 
       <!-- HERO: Interactive Routing Engine Dashboard -->
       <div class="routing-dashboard" id="routing-dashboard">
@@ -540,7 +540,7 @@
       <!-- END HERO -->
 
       <h2>The Escalation Logic</h2>
-      <p>The engine makes deterministic routing decisions to balance speed, cost, and accuracy without requiring downstream intervention.</p>
+      <p>The engine makes structured routing decisions to balance speed, cost, and accuracy without requiring downstream intervention.</p>
 
       <h3>Tier 1: Semantic Extraction (schema_org)</h3>
       <p>The engine always attempts the fastest route first. If the target URL contains valid JSON-LD or Schema.org markup, ShopGraph extracts and maps the data instantly.</p>
@@ -548,11 +548,11 @@
       <h3>Tier 2: Probabilistic Fallback (llm)</h3>
       <p>If semantic data is missing, malformed, or incomplete, the engine passes the raw DOM to the LLM to structure the Universal Commerce Protocol (UCP) JSON.</p>
 
-      <h3>Tier 3: The Infrastructure Hammer (hybrid)</h3>
-      <p>If the HTTP request hits a 403 (e.g., Cloudflare, Datadome) or requires JavaScript execution to reveal variant pricing, the engine spins up a headless Chrome instance to solve the challenge and render the page before passing the resolved DOM back to the LLM.</p>
+      <h3>Tier 3: Full Rendering (hybrid)</h3>
+      <p>If the HTTP request hits a 403 (e.g., Cloudflare, Datadome) or requires JavaScript execution to reveal variant pricing, the engine spins up a headless Chrome instance to render the page with full JavaScript execution before passing the resolved DOM back to the LLM.</p>
 
       <h2>Latency &amp; Cost Tradeoffs</h2>
-      <p>Predictable orchestration requires transparent physics. Escalation guarantees data, but it introduces latency.</p>
+      <p>Each escalation tier adds latency and cost. Escalation improves coverage, but it introduces latency.</p>
 
       <table>
         <thead>
@@ -580,13 +580,13 @@
             <td><strong>Hybrid (Playwright)</strong></td>
             <td>5-10s</td>
             <td>$0.005</td>
-            <td>Bot protection or JS-rendered matrices</td>
+            <td>CDN access controls or JS-rendered content</td>
           </tr>
         </tbody>
       </table>
 
       <h3>Developer Control (max_cache_age)</h3>
-      <p>You control the latency tradeoff. By default, ShopGraph forces a fresh extraction for accurate pricing. For bulk catalog ingestion where real-time inventory is not critical, pass <code>max_cache_age: 86400</code> in your request to accept 24-hour cached data and bypass the Playwright sync block entirely.</p>
+      <p>You control the latency tradeoff. By default, ShopGraph forces a fresh extraction for accurate pricing. For bulk catalog ingestion where real-time inventory is not critical, pass <code>max_cache_age: 86400</code> in your request to accept 24-hour cached data and skip the Playwright rendering step entirely.</p>
 
       <h2>Payload Transparency</h2>
       <p>Your downstream orchestrator must know how the data was acquired. ShopGraph attaches a <code>_shopgraph</code> metadata object to every response, allowing you to programmatically branch your agent's logic based on the extraction method used.</p>
@@ -599,7 +599,7 @@
   "product": { "..." },
   "_shopgraph": {
     "extraction_method": "hybrid",
-    "confidence_method": "llm_validated",
+    "confidence_method": "tier_baseline",
     "field_confidence": {
       "product_name": 0.75,
       "price": 0.70,
