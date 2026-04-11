@@ -487,9 +487,6 @@ tr:hover td { background: var(--card-bg); }
   margin: 1rem 0;
   width: 780px;
   max-width: calc(100vw - 2rem);
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .playground-header {
