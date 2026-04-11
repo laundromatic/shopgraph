@@ -16,10 +16,10 @@
     <div class="content-inner">
 
       <h1>UCP Output</h1>
-      <p class="subtitle">Universal Commerce Protocol compatible output for standardized commerce data interchange.</p>
+      <p class="subtitle">Standardize your procurement and agent pipelines. Native Universal Commerce Protocol (UCP) JSON output.</p>
 
       <h2>What is UCP?</h2>
-      <p>The Universal Commerce Protocol (UCP) defines a standard schema for representing commerce data across systems. ShopGraph can output extraction results in UCP <code>line_item</code> format, making it directly consumable by any UCP-compatible system.</p>
+      <p>The Universal Commerce Protocol (UCP) defines a strict, unified schema for commerce data. ShopGraph extracts product data across any target URL and normalizes it into UCP line_item format. One schema, regardless of the merchant's architecture. No custom mappers per supplier.</p>
 
       <div class="alert alert-success">
         <strong>UCP Schema Compatible</strong> — Validated against ucp-schema v1.1.0
@@ -56,6 +56,11 @@
       "shopgraph": {
         "extraction_method": "schema_org",
         "confidence_score": 0.93,
+        "access_routing": {
+          "cdn_gate_detected": "cloudflare_turnstile",
+          "auth_method": "rfc_9421_signature",
+          "access_readiness_score": 0.0
+        },
         "field_confidence": {
           "name": 0.98,
           "unit_price": 0.97,
@@ -68,6 +73,8 @@
   "_extraction_status": "complete"
 }</code></pre>
 
+      <p>Note: The <code>access_routing</code> block appears in responses when the access_readiness dimension is active. This dimension is currently at weight 0.00 and activates when Web Bot Auth adoption reaches detection threshold. All other fields are live today.</p>
+
       <h2>Key Differences from Standard Output</h2>
       <table>
         <thead>
@@ -78,10 +85,11 @@
           <tr><td><code>product.price</code></td><td><code>line_item.unit_price.amount</code></td><td>Converted to cents (integer)</td></tr>
           <tr><td><code>product.currency</code></td><td><code>line_item.unit_price.currency</code></td><td>ISO 4217</td></tr>
           <tr><td><code>_shopgraph.*</code></td><td><code>_extensions.shopgraph.*</code></td><td>Metadata in UCP extensions</td></tr>
+          <tr><td><code>_shopgraph.access_routing</code></td><td><code>_extensions.shopgraph.access_routing</code></td><td>CDN gate and auth metadata</td></tr>
         </tbody>
       </table>
 
-      <h2>Graceful Degradation</h2>
+      <h2>Extraction Status</h2>
       <p>When extraction is partial, the <code>_extraction_status</code> field indicates quality:</p>
       <table>
         <thead>
@@ -94,6 +102,8 @@
           <tr><td><code>failed</code></td><td>Extraction failed entirely</td></tr>
         </tbody>
       </table>
+
+      <p>Note: If you apply a <code>strict_confidence_threshold</code> to a request, fields falling below that threshold are omitted from the <code>line_item</code>, and the <code>_extraction_status</code> will downgrade to <code>partial</code>. For agent routing workflows, we recommend omitting the threshold and evaluating the <code>field_confidence</code> block directly.</p>
 
       <div class="alert alert-info">
         See the full <a href="/output/ucp-line-item">UCP Line Item schema reference</a> for all fields and types.
