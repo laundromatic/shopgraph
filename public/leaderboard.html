@@ -12,14 +12,14 @@
 <style>
   .last-updated {
     font-size: 12px;
-    color: var(--color-text-muted);
+    color: var(--text-muted);
     margin-bottom: 20px;
   }
 
   .leaderboard-loading {
     text-align: center;
     padding: 40px 20px;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     font-size: 14px;
   }
 
@@ -40,10 +40,10 @@
   .leaderboard-table th {
     text-align: left;
     padding: 10px 12px;
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 2px solid var(--border-heavy);
     font-weight: 600;
     font-size: 12px;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
@@ -51,7 +51,7 @@
   }
 
   .leaderboard-table th:hover {
-    color: var(--color-text);
+    color: var(--body-color);
   }
 
   .leaderboard-table th .sort-arrow {
@@ -63,12 +63,12 @@
 
   .leaderboard-table th.sort-active .sort-arrow {
     opacity: 1;
-    color: var(--color-accent);
+    color: var(--link-color);
   }
 
   .leaderboard-table td {
     padding: 9px 12px;
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
   }
 
@@ -78,13 +78,13 @@
   }
 
   .leaderboard-table tbody tr:hover td {
-    background: var(--color-card-bg);
+    background: var(--card-bg);
   }
 
   .leaderboard-table .domain-cell {
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--color-text);
+    color: var(--body-color);
   }
 
   .leaderboard-table .score-cell {
@@ -94,12 +94,12 @@
 
   .leaderboard-table .dim-cell {
     font-variant-numeric: tabular-nums;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
   }
 
   .leaderboard-table .time-cell {
     font-size: 12px;
-    color: var(--color-text-muted);
+    color: var(--text-muted);
     white-space: nowrap;
   }
 
@@ -110,7 +110,7 @@
   /* Detail row */
   .detail-row td {
     padding: 0;
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .detail-row:hover td {
@@ -119,14 +119,14 @@
 
   .detail-panel {
     padding: 16px 12px;
-    background: var(--color-card-bg);
+    background: var(--card-bg);
   }
 
   .detail-panel-title {
     font-size: 13px;
     font-weight: 600;
     margin-bottom: 12px;
-    color: var(--color-text);
+    color: var(--body-color);
   }
 
   .detail-bars {
@@ -143,14 +143,14 @@
 
   .detail-bar-label {
     font-size: 12px;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     min-width: 90px;
   }
 
   .detail-bar-track {
     flex: 1;
     height: 6px;
-    background: var(--color-border);
+    background: var(--border-heavy);
     border-radius: 3px;
     overflow: hidden;
   }
@@ -164,7 +164,7 @@
   .detail-bar-fill.bar-green { background: #16a34a; }
   .detail-bar-fill.bar-amber { background: #d97706; }
   .detail-bar-fill.bar-red { background: #dc2626; }
-  .detail-bar-fill.bar-default { background: var(--color-accent); }
+  .detail-bar-fill.bar-default { background: var(--link-color); }
 
   .detail-bar-value {
     font-size: 12px;
@@ -179,16 +179,16 @@
     padding: 20px 0;
     text-align: center;
     font-size: 14px;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
   }
 
   .leaderboard-cta a {
-    color: var(--color-accent);
+    color: var(--link-color);
     font-weight: 500;
   }
 
   .leaderboard-cta a:hover {
-    color: var(--color-accent-hover);
+    color: #333;
     text-decoration: underline;
   }
 
