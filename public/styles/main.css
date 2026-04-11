@@ -4,8 +4,7 @@
 
 :root {
   --sidebar-width: 160px;
-  --layout-offset: 176px;
-  --content-max: 600px;
+  --content-max: 36rem;
   --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
   --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
@@ -51,25 +50,26 @@ a:hover { color: var(--color-accent-hover); text-decoration: underline; }
 
 /* === LAYOUT === */
 .layout {
-  display: flex;
   min-height: 100vh;
 }
 
 /* === SIDEBAR === */
 .sidebar {
   position: fixed;
-  top: 60px;
-  left: var(--layout-offset);
+  top: 3.75rem;
+  bottom: 1.5rem;
+  left: calc(50% - 29rem);
   width: var(--sidebar-width);
-  height: calc(100vh - 60px);
   background: transparent;
   border-right: none;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  scrollbar-width: none;
   z-index: 50;
-  transition: transform 0.2s ease;
 }
+
+.sidebar::-webkit-scrollbar { display: none; }
 
 .sidebar-header {
   padding: 24px 20px 16px;
@@ -193,15 +193,14 @@ a:hover { color: var(--color-accent-hover); text-decoration: underline; }
 
 /* === CONTENT === */
 .content {
-  margin-left: calc(var(--layout-offset) + var(--sidebar-width) + 24px);
   flex: 1;
   min-width: 0;
 }
 
 .content-inner {
   max-width: var(--content-max);
-  margin: 0;
-  padding: 60px 24px 80px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 3rem;
 }
 
 /* === MOBILE HAMBURGER === */
@@ -805,25 +804,32 @@ tr:hover td { background: var(--color-card-bg); }
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
+@media (max-width: 980px) {
+  .sidebar { display: none; }
   .mobile-toggle { display: flex; }
 
-  .sidebar {
-    transform: translateX(-100%);
-  }
-
   .sidebar.open {
-    transform: translateX(0);
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: #fff;
+    padding-top: 60px;
+    z-index: 50;
   }
 
   .mobile-overlay.open { display: block; }
 
-  .content {
-    margin-left: 0;
-  }
-
   .content-inner {
-    padding: 60px 20px 60px;
+    padding-top: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-inner {
+    padding: 2rem 1rem 3rem;
   }
 
   h1 { font-size: 26px; }
