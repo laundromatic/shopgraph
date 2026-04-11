@@ -28,7 +28,7 @@
 
         <div class="playground-inputs" style="display:flex;gap:12px;align-items:flex-end">
           <div class="playground-field" style="flex:1">
-            <input id="pg-url" type="url" value="https://www.homedepot.com/p/Milwaukee-M18-FUEL-18V-Lithium-Ion-Brushless-Cordless-Hammer-Drill-and-Impact-Driver-Combo-Kit-2-Tool-with-2-Batteries/312667940" placeholder="Paste any product URL" style="width:100%;padding:10px 12px;border:1px solid var(--color-border);border-radius:6px;font-size:14px;font-family:var(--font-mono)">
+            <input id="pg-url" type="url" value="https://www.homedepot.com/p/Milwaukee-M18-FUEL-18V-Lithium-Ion-Brushless-Cordless-Hammer-Drill-and-Impact-Driver-Combo-Kit-2-Tool-with-2-Batteries/312667940" placeholder="Paste any product URL" style="width:100%;padding:10px 12px;border:1px solid var(--border-color);border-radius:6px;font-size:14px;font-family:var(--font-mono)">
           </div>
           <button id="pg-extract-btn" class="btn btn-primary">Extract</button>
         </div>
@@ -37,26 +37,26 @@
         <!-- Execution flags -->
         <div style="margin-top:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:4px">
-            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--color-border);border-radius:4px 0 0 4px;background:rgba(255,255,255,0.05)">
-              <input type="radio" name="pg-fetch-mode" value="standard" checked style="accent-color:var(--color-accent)">
+            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--border-color);border-radius:4px 0 0 4px;background:rgba(255,255,255,0.05)">
+              <input type="radio" name="pg-fetch-mode" value="standard" checked style="accent-color:#111">
               Standard (Cache Allowed)
             </label>
-            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--color-border);border-radius:0 4px 4px 0;border-left:0">
-              <input type="radio" name="pg-fetch-mode" value="force_live" style="accent-color:var(--color-accent)">
-              Force Live Fetch <span style="color:var(--color-accent);font-weight:600">(3x)</span>
+            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--border-color);border-radius:0 4px 4px 0;border-left:0">
+              <input type="radio" name="pg-fetch-mode" value="force_live" style="accent-color:#111">
+              Force Live Fetch <span style="color:#111;font-weight:600">(3x)</span>
             </label>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <label for="pg-threshold" style="font-size:12px;color:var(--color-text-secondary);white-space:nowrap">Confidence threshold</label>
-            <input id="pg-threshold" type="range" min="0" max="1" step="0.05" value="0.70" style="width:100px;accent-color:var(--color-accent)">
-            <span id="pg-threshold-val" style="font-size:12px;font-family:var(--font-mono);color:var(--color-accent);min-width:32px">70%</span>
+            <label for="pg-threshold" style="font-size:12px;color:var(--text-secondary);white-space:nowrap">Confidence threshold</label>
+            <input id="pg-threshold" type="range" min="0" max="1" step="0.05" value="0.70" style="width:100px;accent-color:#111">
+            <span id="pg-threshold-val" style="font-size:12px;font-family:var(--font-mono);color:#111;min-width:32px">70%</span>
           </div>
         </div>
 
-        <div style="margin-top:6px;font-size:13px;color:var(--color-text-secondary)">500 free calls/month · No signup</div>
+        <div style="margin-top:6px;font-size:13px;color:var(--text-secondary)">500 free calls/month · No signup</div>
 
         <div id="pg-results" class="playground-results">
-          <div id="pg-loading" style="display:none;text-align:center;padding:20px;color:var(--color-accent)">
+          <div id="pg-loading" style="display:none;text-align:center;padding:20px;color:#111">
             <span class="spinner"></span> Extracting product data...
           </div>
           <div id="pg-error" style="display:none;background:#fce8e6;border-radius:8px;padding:12px;color:#611a15;font-size:13px;margin-top:8px"></div>

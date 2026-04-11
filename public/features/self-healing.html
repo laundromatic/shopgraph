@@ -31,7 +31,7 @@
 .routing-header-title {
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--body-color);
   letter-spacing: 0.02em;
 }
 
@@ -50,7 +50,7 @@
   font-size: 12px;
   font-weight: 600;
   background: #f4f4f6;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   border: 1px solid #e7e7eb;
   transition: all 0.3s ease;
 }
@@ -59,14 +59,14 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   font-weight: 600;
 }
 
 .metric-badge .metric-value {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--color-text);
+  color: var(--body-color);
 }
 
 .metric-badge.active-green { border-color: #16a34a; background: #f0fdf4; }
@@ -112,7 +112,7 @@
 
 .node-box.active {
   background: #f0f7ff;
-  border-color: var(--color-accent);
+  border-color: #111;
   box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
 }
 
@@ -132,7 +132,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   text-align: center;
   line-height: 1.3;
 }
@@ -168,12 +168,12 @@
 }
 
 .connector-line.active-path {
-  background: var(--color-accent);
+  background: #111;
   height: 3px;
 }
 
 .connector-line.active-path::after {
-  background: var(--color-accent);
+  background: #111;
 }
 
 .connector-line.muted {
@@ -218,7 +218,7 @@
 }
 
 .tier-sep-line.active-path {
-  background: var(--color-accent);
+  background: #111;
   height: 3px;
 }
 
@@ -236,21 +236,20 @@
   padding: 12px 16px;
   margin: 16px 0;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.5;
   transition: all 0.3s ease;
 }
 
 .routing-strategy strong {
-  color: var(--color-text);
+  color: var(--body-color);
 }
 
 /* Controls */
 .routing-controls {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 16px;
 }
 
@@ -262,8 +261,8 @@
 
 .control-row {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  align-items: flex-end;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -271,8 +270,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
-  min-width: 200px;
+  width: 100%;
 }
 
 .control-field label {
@@ -280,24 +278,25 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 
 .control-field input[type="text"] {
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
   font-family: var(--font-mono);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.375rem;
   background: #fff;
-  color: var(--color-text);
+  color: var(--body-color);
   outline: none;
   transition: border-color 0.15s;
+  width: 100%;
 }
 
 .control-field input[type="text"]:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: none;
 }
 
 .control-options {
@@ -312,13 +311,13 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   cursor: pointer;
   user-select: none;
 }
 
 .control-checkbox input[type="checkbox"] {
-  accent-color: var(--color-accent);
+  accent-color: #111;
 }
 
 .slider-control {
@@ -326,19 +325,19 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .slider-control input[type="range"] {
   width: 100px;
-  accent-color: var(--color-accent);
+  accent-color: #111;
 }
 
 .slider-control .slider-val {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--body-color);
   min-width: 28px;
 }
 
@@ -350,7 +349,7 @@
   font-size: 14px;
   font-weight: 600;
   font-family: var(--font-sans);
-  background: var(--color-accent);
+  background: #111;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -360,7 +359,7 @@
   align-self: flex-end;
 }
 
-.sim-button:hover { background: var(--color-accent-hover); }
+.sim-button:hover { background: #333; }
 .sim-button:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* Pulse animation for active nodes */
