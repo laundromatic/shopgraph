@@ -21,7 +21,10 @@
       <h2>April 8, 2026</h2>
       <span class="badge badge-blue">v1.0.1</span>
       <ul style="margin:12px 0 32px;padding-left:24px;line-height:2">
-        <li><strong>AgentReady scoring</strong> — New 5-dimension scoring system for evaluating product data readiness for AI agents. Includes completeness, confidence, structure, actionability, and freshness dimensions.</li>
+        <li><strong>AgentReady scoring</strong> — New 6-dimension scoring system (5 currently active, access_readiness stubbed at weight 0.00) for evaluating product data readiness for AI agents. Scores across six dimensions: completeness (<code>structured_data_completeness</code>), semantic richness (<code>semantic_richness</code>), UCP compatibility (<code>ucp_compatibility</code>), pricing clarity (<code>pricing_clarity</code>), inventory signals (<code>inventory_signal_quality</code>), and access readiness (<code>access_readiness</code>).
+          <ul><li>Scoring methodology version: <code>2026-04-08-v1</code></li></ul>
+        </li>
+        <li><strong>Access readiness dimension</strong> — Stubbed at weight 0.00. Activates when Web Bot Auth adoption reaches detection threshold.</li>
         <li><strong>POST /api/score endpoint</strong> — Score existing product data without extraction.</li>
         <li><strong>include_score parameter</strong> — Add AgentReady scoring inline with any extraction request.</li>
         <li><strong>B2B scoring awareness</strong> — MOQ, lead time, and bulk pricing detection enhance scoring for B2B products.</li>

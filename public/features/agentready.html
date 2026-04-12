@@ -27,16 +27,18 @@
           <tr><th>Dimension</th><th>Weight</th><th>Description</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Completeness</strong></td><td>0.30</td><td>Percentage of expected fields present. Core fields (title, price, currency) weighted more heavily.</td></tr>
-          <tr><td><strong>Semantic Richness</strong></td><td>0.20</td><td>Category depth, attribute count, variant coverage, and description quality.</td></tr>
-          <tr><td><strong>UCP Compatibility</strong></td><td>0.20</td><td>How well the extracted data maps to the Universal Commerce Protocol schema.</td></tr>
-          <tr><td><strong>Pricing Clarity</strong></td><td>0.15</td><td>Base price, currency, sale price, and B2B signals like bulk pricing and MOQ.</td></tr>
-          <tr><td><strong>Inventory Signals</strong></td><td>0.15</td><td>Stock status specificity, quantity information, lead time, and backorder signals.</td></tr>
-          <tr><td><strong>Access Readiness</strong></td><td>0.00</td><td>Agent accessibility score. Activates when Web Bot Auth adoption reaches detection threshold. Currently all test corpus URLs are fully open.</td></tr>
+          <tr><td><strong>Completeness</strong> <code>structured_data_completeness</code></td><td>0.30</td><td>Percentage of expected fields present. Core fields (title, price, currency) weighted more heavily.</td></tr>
+          <tr><td><strong>Semantic Richness</strong> <code>semantic_richness</code></td><td>0.20</td><td>Category depth, attribute count, variant coverage, and description quality.</td></tr>
+          <tr><td><strong>UCP Compatibility</strong> <code>ucp_compatibility</code></td><td>0.20</td><td>How well the extracted data maps to the Universal Commerce Protocol schema.</td></tr>
+          <tr><td><strong>Pricing Clarity</strong> <code>pricing_clarity</code></td><td>0.15</td><td>Base price, currency, sale price, and B2B signals like bulk pricing and MOQ.</td></tr>
+          <tr><td><strong>Inventory Signals</strong> <code>inventory_signal_quality</code></td><td>0.15</td><td>Stock status specificity, quantity information, lead time, and backorder signals.</td></tr>
+          <tr><td><strong>Access Readiness</strong> <code>access_readiness</code></td><td>0.00</td><td>Agent accessibility score. Activates when Web Bot Auth adoption reaches detection threshold. Currently all test corpus URLs are fully open.</td></tr>
         </tbody>
       </table>
 
       <p>In API responses, these dimensions appear under their full names: <code>structured_data_completeness</code>, <code>semantic_richness</code>, <code>ucp_compatibility</code>, <code>pricing_clarity</code>, <code>inventory_signal_quality</code>, <code>access_readiness</code>.</p>
+
+      <p>AgentReady scores use a 0-100 scale. Per-field confidence scores (from the extraction pipeline) use a separate 0-1 scale. See <a href="/features/confidence">Confidence Scoring</a> for the field-level system.</p>
 
       <h2>Usage</h2>
       <h3>Inline with extraction</h3>

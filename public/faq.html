@@ -47,7 +47,7 @@
             <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
           </button>
           <div class="accordion-content">
-            <p>Every field includes a confidence score from 0 to 1. The score starts with a baseline from the extraction method (Schema.org: 0.93, LLM: 0.70), then gets adjusted by field-level modifiers (cross-validation, format checks, etc.). You can set a <code>strict_confidence_threshold</code> to filter out low-confidence fields. See <a href="/features/confidence">Confidence Scoring</a> for details.</p>
+            <p>Every field includes a confidence score from 0 to 1. The score starts with a baseline from the extraction method (Schema.org: 0.93, LLM: 0.70 base) then adjusted per field by modifiers (cross-validation, format checks, etc.). You can set a <code>strict_confidence_threshold</code> to filter out low-confidence fields. See <a href="/features/confidence">Confidence Scoring</a> for details.</p>
           </div>
         </div>
 
@@ -67,7 +67,7 @@
             <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
           </button>
           <div class="accordion-content">
-            <p>AgentReady scoring evaluates extracted product data across 6 dimensions (completeness, confidence, structure, actionability, freshness, access readiness) with 5 currently active to produce a single score indicating how suitable the data is for autonomous agent workflows. See <a href="/features/agentready">AgentReady Scoring</a>.</p>
+            <p>AgentReady scoring evaluates extracted product data across six dimensions — completeness (<code>structured_data_completeness</code>), semantic richness (<code>semantic_richness</code>), UCP compatibility (<code>ucp_compatibility</code>), pricing clarity (<code>pricing_clarity</code>), inventory signals (<code>inventory_signal_quality</code>), and access readiness (<code>access_readiness</code>) — with 5 currently active (access_readiness stubbed at weight 0.00) to produce a single 0-100 score indicating how suitable the data is for autonomous agent workflows. See <a href="/features/agentready">AgentReady Scoring</a>.</p>
           </div>
         </div>
       </div>
