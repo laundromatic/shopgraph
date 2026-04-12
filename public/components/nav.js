@@ -113,6 +113,15 @@
 
     document.body.appendChild(sidebar);
 
+    // Page footer (privacy, tos, github)
+    var contentInner = document.querySelector('.content-inner');
+    if (contentInner) {
+      var pageFooter = document.createElement('footer');
+      pageFooter.style.cssText = 'max-width:var(--content-max);margin:0 auto;padding:1rem 1.5rem 3rem;border-top:1px solid rgba(0,0,0,0.06);font-size:0.75rem;color:rgba(0,0,0,0.4);display:flex;gap:1rem;align-items:center';
+      pageFooter.innerHTML = '<a href="/privacy" style="color:rgba(0,0,0,0.4);text-decoration:none">Privacy</a><a href="/tos" style="color:rgba(0,0,0,0.4);text-decoration:none">Terms</a><a href="' + GITHUB_URL + '" target="_blank" rel="noopener" style="color:rgba(0,0,0,0.4);text-decoration:none">GitHub</a>';
+      contentInner.parentElement.appendChild(pageFooter);
+    }
+
     // Mobile toggle behavior
     toggle.addEventListener('click', function () {
       sidebar.classList.toggle('open');
