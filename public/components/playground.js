@@ -122,7 +122,7 @@
 
     // Fields table with per-field confidence
     var fields = ['product_name', 'brand', 'price', 'description', 'availability', 'categories', 'image_urls'];
-    html += '<table style="width:100%;font-size:13px;border-collapse:collapse"><thead><tr style="border-bottom:2px solid #333">';
+    html += '<table style="width:100%;font-size:13px;border-collapse:collapse"><thead><tr style="border-bottom:1px solid rgba(0,0,0,0.08)">';
     html += '<th style="padding:6px 8px;text-align:left;font-size:11px;color:#999;font-weight:600">FIELD</th>';
     html += '<th style="padding:6px 8px;text-align:left;font-size:11px;color:#999;font-weight:600">VALUE</th>';
     html += '<th style="padding:6px 8px;text-align:right;font-size:11px;color:#999;font-weight:600">CONFIDENCE</th>';
@@ -163,8 +163,8 @@
         }
       }
 
-      html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.06)">';
-      html += '<td style="padding:6px 8px;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--color-text-secondary);width:140px">' + f + '</td>';
+      html += '<tr style="border-bottom:1px solid rgba(0,0,0,0.06)">';
+      html += '<td style="padding:6px 8px;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text-secondary);width:140px">' + f + '</td>';
       html += '<td style="padding:6px 8px;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + displayVal + '</td>';
       html += '<td style="padding:6px 8px;text-align:right;font-weight:600;font-size:11px;width:70px"><span style="color:' + cc + '">' + confStr + '</span></td>';
       html += '<td style="padding:6px 8px;text-align:right;font-size:11px;width:70px">' + freshnessStr + '</td>';
@@ -173,11 +173,15 @@
     html += '</tbody></table>';
 
     // Full JSON toggle
-    html += '<details style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--color-accent)">View full JSON response</summary>';
-    html += '<pre style="background:#1e1e2e;color:#d8dee9;padding:16px;border-radius:8px;font-size:12px;overflow-x:auto;margin-top:8px;max-height:400px;overflow-y:auto"><code>' + escapeHtml(JSON.stringify(data, null, 2)) + '</code></pre>';
+    html += '<details style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--link-color)">View full JSON response</summary>';
+    html += '<pre style="background:#f8f8f8;color:#333;padding:0.875rem 1rem;border-radius:0.5rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;max-height:400px;overflow-y:auto;border:1px solid rgba(0,0,0,0.06)"><code>' + escapeHtml(JSON.stringify(data, null, 2)) + '</code></pre>';
     html += '</details>';
 
     container.innerHTML = html;
+
+    // Show the results container
+    var resultsWrap = $('pg-results');
+    if (resultsWrap) resultsWrap.classList.add('visible');
   }
 
   function escapeHtml(str) {
