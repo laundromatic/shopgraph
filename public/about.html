@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="ShopGraph is a product data structuring layer for AI agents. REST API + MCP server. Schema.org + LLM extraction. Built by Krishna Brown.">
 <meta property="og:title" content="About ShopGraph">
-<meta property="og:description" content="Product data structuring layer for agent commerce. Send a URL or raw HTML, get structured product data with per-field confidence scores. UCP-compatible output. Subscription and pay-per-call pricing.">
+<meta property="og:description" content="Product data structuring layer for agent commerce. Send a URL or raw HTML, get structured product data with confidence scores.">
 <meta property="og:url" content="https://shopgraph.dev/about">
 <title>About ShopGraph</title>
 <style>
@@ -93,10 +93,10 @@ ul{padding-left:24px}
 
 <p>ShopGraph turns raw product pages into clean, confidence-scored, agent-ready JSON. It works alongside scraping tools like Bright Data and Firecrawl, not instead of them. They get the HTML. ShopGraph makes it useful.</p>
 
-<p>Extraction follows three tiers. Schema.org and JSON-LD parsing runs first: fast, free to compute, 0.95 confidence. When structured markup is missing, a Gemini LLM reads the page content and extracts product attributes. For JavaScript-rendered or bot-protected pages, a Playwright browser renders the page before extraction. Every field in the response includes a per-field confidence score (<code>_shopgraph.field_confidence</code>) with field-type modifiers, so agents know how much to trust each value. Set <code>strict_confidence_threshold</code> to reject low-confidence fields automatically. Add <code>format=ucp</code> for Universal Commerce Protocol-compatible output.</p>
+<p>Extraction follows three tiers. Schema.org and JSON-LD parsing runs first: fast, free to compute, 0.95 confidence. When structured markup is missing, a Gemini LLM reads the page content and extracts product attributes. For JavaScript-rendered or bot-protected pages, a Playwright browser renders the page before extraction. Every field in the response includes a confidence score so agents know how much to trust it.</p>
 
 <div class="stats-row">
-  <div class="stat"><div class="stat-value" id="pages-tested">3,628+</div><div class="stat-label">Pages Tested</div></div>
+  <div class="stat"><div class="stat-value" id="pages-tested">2,308+</div><div class="stat-label">Pages Tested</div></div>
   <div class="stat"><div class="stat-value">97%</div><div class="stat-label">Success Rate</div></div>
   <div class="stat"><div class="stat-value">22</div><div class="stat-label">Product Verticals</div></div>
   <div class="stat"><div class="stat-value">118</div><div class="stat-label">Automated Tests</div></div>
@@ -105,12 +105,12 @@ ul{padding-left:24px}
 <p>Reliability monitoring is not an afterthought. ShopGraph tests 117 verified URLs across 22 verticals every 30 minutes. A circuit breaker auto-quarantines URLs after consecutive failures. A verification gate checks URLs before they enter the test corpus. A health endpoint reports degradation in real time. The monitoring infrastructure is as much work as the extraction engine. For infrastructure that agents call programmatically, that is the right ratio.</p>
 
 <div class="endpoint-row">
-  <div class="endpoint"><code>POST /api/enrich/basic</code><div class="price free">Free (500/month)</div></div>
-  <div class="endpoint"><code>POST /api/enrich</code><div class="price paid">Starter $99/mo (10K)</div></div>
-  <div class="endpoint"><code>POST /api/enrich/html</code><div class="price paid">Growth $299/mo (50K)</div></div>
+  <div class="endpoint"><code>POST /api/enrich/basic</code><div class="price free">Free (200/month)</div></div>
+  <div class="endpoint"><code>POST /api/enrich</code><div class="price paid">$0.02/call</div></div>
+  <div class="endpoint"><code>POST /api/enrich/html</code><div class="price paid">$0.02/call</div></div>
 </div>
 
-<p>REST API at <code>shopgraph.dev/api</code>. MCP protocol at <code>shopgraph.dev/mcp</code>. Free: 500 calls/month, no signup. Subscription tiers: Starter ($99/mo, 10K calls), Growth ($299/mo, 50K calls), Enterprise (custom). Pay-per-call via <a href="https://docs.stripe.com/payments/machine/mpp">Stripe MPP</a> still available for agents. API key auth (<code>sg_live_</code>) or MPP. <a href="https://github.com/laundromatic/shopgraph">GitHub</a>.</p>
+<p>REST API at <code>shopgraph.dev/api</code>. MCP protocol at <code>shopgraph.dev/mcp</code>. 200 free calls per month, no signup. Paid calls via <a href="https://docs.stripe.com/payments/machine/mpp">Stripe Machine Payments Protocol</a>. <a href="https://github.com/laundromatic/shopgraph">GitHub</a>.</p>
 
 <!-- Section 1b: Where It Fits -->
 <h2>Where It Fits</h2>
@@ -155,19 +155,13 @@ ul{padding-left:24px}
   <div class="tl-entry">
     <div class="tl-date">March 31, 2026</div>
     <div class="tl-title">REST API + free tier</div>
-    <p class="tl-desc">Moved beyond MCP-only distribution. REST API makes ShopGraph accessible from any language, any framework. Free tier removes the evaluation barrier: 500 calls per month, no signup needed.</p>
+    <p class="tl-desc">Moved beyond MCP-only distribution. REST API makes ShopGraph accessible from any language, any framework. Free tier removes the evaluation barrier: 200 calls per month, no signup needed.</p>
   </div>
 
   <div class="tl-entry">
     <div class="tl-date">April 2026</div>
     <div class="tl-title">API playground + npm SDK</div>
     <p class="tl-desc">Live playground on the homepage &mdash; paste a URL, get structured data back, no signup. npm client SDK for JavaScript/TypeScript developers. Three integration paths: REST API, MCP protocol, npm SDK.</p>
-  </div>
-
-  <div class="tl-entry">
-    <div class="tl-date">April 7, 2026</div>
-    <div class="tl-title">Per-field confidence scoring, UCP output, subscription billing, API key auth</div>
-    <p class="tl-desc">Per-field confidence scoring with field-type modifiers (<code>_shopgraph.field_confidence</code>). <code>strict_confidence_threshold</code> parameter to enforce data quality. UCP-compatible output format (<code>format=ucp</code>). Subscription tiers (Free, Starter $99, Growth $299, Enterprise) alongside MPP pay-per-call. API key authentication (<code>sg_live_</code> keys).</p>
   </div>
 
   <div class="tl-entry future">

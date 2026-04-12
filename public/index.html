@@ -3,127 +3,342 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Structured product data from the open web. Per-field confidence scores. REST API + MCP server. 500 free calls/month.">
-<title>ShopGraph — Structured Product Data from the Open Web</title>
+<meta name="description" content="Clean product data from any URL. One structured schema, any merchant. REST API + MCP server. 200 free calls/month.">
+<title>ShopGraph — Clean Product Data from Any URL</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles/main.css">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Meow+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:#000;font-family:'Google Sans Flex',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.8}
+
+/* Background image */
+.page::before{
+  content:'';position:absolute;top:-31.7vw;left:0;width:100vw;height:138.7vw;
+  background:url('/bg-laundromat.jpg') center top / 100vw auto no-repeat;
+  z-index:0;
+}
+
+/* Frosted overlay */
+.frosted-overlay{
+  position:absolute;top:50.4vw;left:0;width:100%;height:51.8vw;
+  background:rgba(255,255,255,0.75);z-index:1;
+}
+
+/* All positions use vw units: figma_px / 1792 * 100 */
+
+/* === NAV === */
+.nav-logo{position:absolute;z-index:10;left:14.3vw;top:1.17vw;font-size:.89vw;font-weight:900;color:#fff;letter-spacing:.5px}
+.nav-right{position:absolute;z-index:10;right:5vw;top:.78vw;display:flex;gap:1.34vw}
+.nav-right a{font-size:.89vw;font-weight:900;color:#fff;letter-spacing:.5px;line-height:1.34vw}
+
+/* === HERO BRAND CARD === */
+.hero-brand{
+  position:absolute;z-index:2;left:14.3vw;top:11.55vw;width:21.76vw;height:17.24vw;
+  background:rgba(116,54,45,0.75);border-radius:2.23vw;
+  padding:3.13vw 2.01vw 2.96vw 2.46vw;color:#fff;
+}
+.hero-brand-name{font-size:1.34vw;font-weight:900;letter-spacing:.5px}
+.hero-brand-sub{font-size:1.56vw;font-weight:500;line-height:2.34vw;margin-top:.11vw}
+
+/* === PLAYGROUND CARD === */
+.hero-playground{
+  position:absolute;z-index:2;left:37.6vw;top:11.55vw;width:44.3vw;height:17.24vw;
+  background:rgba(255,255,255,0.75);border-radius:2.23vw;
+}
+.pg-try{position:absolute;left:1vw;top:.61vw;font-family:'Meow Script',cursive;font-size:4.8vw;color:#74362d;line-height:1}
+.pg-desc{position:absolute;left:2.29vw;top:6.75vw;width:30.9vw;font-size:1.12vw;font-weight:500;color:#000}
+.pg-radios{position:absolute;left:1.79vw;top:9.5vw;display:flex;gap:1.9vw;align-items:center}
+.pg-radio{display:flex;align-items:center;gap:.17vw;font-size:.89vw;font-weight:500;color:#74362d;cursor:pointer}
+.pg-radio input[type="radio"]{accent-color:#74362d;width:1.34vw;height:1.34vw;margin:0}
+.pg-input{
+  position:absolute;left:2.4vw;top:11.44vw;width:32.42vw;height:3.13vw;
+  background:#fff;border:1px solid #fff;border-radius:1.34vw;
+  padding:0 .89vw;font-size:.89vw;font-family:'Google Sans Flex',system-ui,sans-serif;
+  outline:none;line-height:3.13vw;
+}
+.pg-input:focus{border-color:#74362d}
+.pg-btn{
+  position:absolute;left:35.6vw;top:11.44vw;height:3.13vw;
+  background:#74362d;color:#fff;border:none;border-radius:.89vw;
+  padding:0 1.34vw;font-size:.89vw;font-weight:500;font-family:'Google Sans Flex',system-ui,sans-serif;
+  cursor:pointer;line-height:3.13vw;
+}
+.pg-btn:hover{opacity:.9}
+.pg-btn:disabled{opacity:.6}
+.pg-result{display:none}
+
+/* === WORKS WITH BUBBLE === */
+.works-bubble{position:absolute;z-index:3;left:74.78vw;top:6.98vw;width:10.94vw;height:10.94vw}
+.works-bubble img{position:absolute;inset:0;width:100%;height:100%}
+.works-bubble span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#000;font-size:.89vw;font-weight:400;padding:1.56vw;line-height:1.3}
+
+/* === INTEGRATION SHAPES === */
+/* All values: Figma px / 1792 * 100 = vw */
+/* Left blob: 372×254, content ml:32 mt:44 w:308, code w:252 h:126 */
+.int-left{position:absolute;z-index:2;left:14.45vw;top:32.31vw;width:20.76vw;height:14.17vw;overflow:hidden}
+.int-left img.shape{width:100%;height:100%}
+.int-left .int-title{position:absolute;left:1.79vw;top:2.46vw;width:17.19vw;text-align:center;font-size:1.12vw;font-weight:700;color:#f7cccd}
+.int-left .int-code{position:absolute;left:1.79vw;top:4.47vw;width:14.06vw;height:7.03vw;font-family:'IBM Plex Mono',monospace;font-size:.78vw;font-weight:500;color:#f7cccd;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+/* Right blob: 372×254, title ml:39 mt:44 w:296, code ml:71 mt:81 w:273 h:162 */
+.int-right{position:absolute;z-index:2;left:65.01vw;top:32.31vw;width:20.76vw;height:14.17vw;overflow:hidden}
+.int-right img.shape{width:100%;height:100%}
+.int-right .int-title{position:absolute;left:2.18vw;top:2.46vw;width:16.52vw;text-align:center;font-size:1.12vw;font-weight:700;color:#f7cccd}
+.int-right .int-code{position:absolute;left:3.96vw;top:3.8vw;width:15.23vw;height:9.04vw;font-family:'IBM Plex Mono',monospace;font-size:.72vw;font-weight:500;color:#f7cccd;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+/* Center dome: 478×254, content ml:49 mt:55 w:389 */
+.int-center-shape{position:absolute;z-index:2;left:36.66vw;top:32.31vw;width:26.67vw;height:14.17vw}
+.int-center-shape img.shape{width:100%;height:100%}
+.int-center-shape .content{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:3.07vw 2.73vw 0;text-align:center}
+.int-center-title{font-size:1.12vw;font-weight:700;color:#000}
+.int-center-body{font-size:.78vw;font-weight:500;color:#000;line-height:1.5;margin-top:.67vw}
+.int-center-detail{font-size:.78vw;font-weight:500;color:#000;line-height:1.5;margin-top:1.12vw}
+.int-center-detail strong{font-weight:700}
+
+/* === WHERE SECTION === */
+.where-heading{position:absolute;z-index:2;left:0;top:53.46vw;width:100%;text-align:center;font-size:2.68vw;font-weight:400;color:#000}
+.where-heading strong{font-weight:900}
+.where-col1{position:absolute;z-index:2;left:14.23vw;top:59.99vw;width:20.54vw}
+.where-col2{position:absolute;z-index:2;left:39.79vw;top:59.99vw;width:20.54vw}
+.where-col3{position:absolute;z-index:2;left:65.23vw;top:59.99vw;width:20.54vw}
+.where-title{font-size:1.12vw;font-weight:700;color:#000;margin-bottom:.45vw}
+.where-body{font-size:.89vw;font-weight:500;color:#000;line-height:1.34vw}
+
+/* === STATS === */
+.stats-heading{position:absolute;z-index:2;left:0;top:76vw;width:100%;text-align:center;font-size:2.68vw;font-weight:400;color:#000}
+.stats-heading strong{font-weight:900}
+.stats-date{position:absolute;z-index:2;left:0;top:79vw;width:100%;text-align:center;font-size:.78vw;font-weight:400;color:#000}
+.stat-left{position:absolute;z-index:2;left:26.9vw;top:82.5vw;width:19.2vw;text-align:center;cursor:pointer}
+.stat-right{position:absolute;z-index:2;left:54.08vw;top:82.5vw;width:19.2vw;text-align:center;cursor:pointer}
+.stat-num{font-size:2.68vw;font-weight:900;color:#000}
+.stat-label{font-size:1.34vw;font-weight:500;color:#000;margin-top:.22vw}
+.stat-desc{font-size:.89vw;font-weight:400;color:#000;margin-top:.11vw;line-height:1.4}
+
+/* === FOOTER === */
+.footer-left{position:absolute;z-index:2;left:14.29vw;top:103.6vw;font-size:.89vw;color:#000;line-height:1.6}
+.footer-left strong{font-weight:500}
+.footer-left a{text-decoration:underline}
+.footer-right{position:absolute;z-index:2;right:14.29vw;top:103.6vw;text-align:right;font-size:.89vw;font-weight:500;color:#000;line-height:1.4vw}
+.footer-right a{color:#000}
+
+/* === RESULT / MODAL === */
+#playground-loading{text-align:center;padding:20px;color:#74362d;font-size:16px}
+#playground-error{background:#fce8e6;border-radius:8px;padding:16px;color:#611a15;font-size:14px;margin-top:12px}
+#playground-json{background:#1e1e2e;color:#cdd6f4;padding:20px;border-radius:12px;font-size:13px;font-family:'IBM Plex Mono',monospace;max-height:55vh;overflow-y:auto;line-height:1.5;white-space:pre-wrap;word-break:break-all;margin-top:12px}
+#playground-meta{font-size:13px;color:#74362d;margin-top:8px}
+#result-modal .modal-content{max-width:800px}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal-content{background:#fff;border-radius:16px;padding:32px;max-width:720px;width:90%;max-height:80vh;overflow-y:auto}
+.modal-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;color:#74362d;font-weight:700}
+.modal-content table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.95em}
+.modal-content th{text-align:left;padding:10px 12px;border-bottom:2px solid #dadce0;font-weight:600;font-size:.85em;color:#595959}
+.modal-content td{padding:10px 12px;border-bottom:1px solid #f1f3f4}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #f7cccd;border-top-color:#74362d;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+
+/* === RESPONSIVE SCALING === */
+/* All absolute positions use vw units derived from 1792px base */
+/* Formula: (figma_px / 1792) * 100vw */
+body{overflow-x:hidden;margin:0}
+.page{position:relative;width:100vw;min-height:107vw;overflow:hidden}
+</style>
 </head>
 <body>
-<div class="layout">
-  <div class="content">
-    <div class="content-inner">
 
-      <div class="hero">
-        <h1>ShopGraph</h1>
-        <p class="subtitle">Structured product data from the open web. Per-field confidence scores. One schema, any merchant.</p>
-        <div class="hero-badges">
-          <span class="badge badge-blue">v1.0.1</span>
-          <span class="badge badge-green">REST API</span>
-          <span class="badge badge-green">MCP Server</span>
-          <span class="badge badge-gray">500 free calls/mo</span>
-        </div>
-      </div>
+<div class="page">
+  <!-- Frosted overlay -->
+  <div class="frosted-overlay"></div>
 
-      <!-- Playground -->
-      <div class="playground">
-        <div class="playground-header">
-          <h3>Try it</h3>
-          <span style="font-size:13px;color:var(--color-text-secondary)">Paste any product URL. 500 free calls/month, no signup.</span>
-        </div>
+  <!-- Health Banner -->
+  <div id="health-banner" style="display:none;position:absolute;z-index:20;top:0;left:0;width:100%;background:#fef7e0;border-bottom:1px solid #f9ab00;padding:10px 24px;text-align:center;font-size:.9em;color:#594300">
+    <span id="health-banner-text"></span>
+  </div>
 
-        <div class="playground-inputs" style="display:flex;gap:12px;align-items:flex-end">
-          <div class="playground-field" style="flex:1">
-            <input id="pg-url" type="url" value="https://www.homedepot.com/p/Milwaukee-M18-FUEL-18V-Lithium-Ion-Brushless-Cordless-Hammer-Drill-and-Impact-Driver-Combo-Kit-2-Tool-with-2-Batteries/312667940" placeholder="Paste any product URL" style="width:100%;padding:10px 12px;border:1px solid var(--color-border);border-radius:6px;font-size:14px;font-family:var(--font-mono)">
-          </div>
-          <button id="pg-extract-btn" class="btn btn-primary">Extract</button>
-        </div>
+  <!-- Nav -->
+  <a href="/" class="nav-logo">SHOPGRAPH</a>
+  <div class="nav-right">
+    <a href="https://github.com/laundromatic/shopgraph">GITHUB</a>
+    <a href="/health">STATUS</a>
+    <a href="/about">ABOUT</a>
+  </div>
 
+  <!-- Hero Brand Card -->
+  <div class="hero-brand">
+    <div class="hero-brand-name">SHOPGRAPH</div>
+    <div class="hero-brand-sub">Clean product data from any URL. One structured schema, any merchant.</div>
+  </div>
 
-        <!-- Execution flags -->
-        <div style="margin-top:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:4px">
-            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--color-border);border-radius:4px 0 0 4px;background:rgba(255,255,255,0.05)">
-              <input type="radio" name="pg-fetch-mode" value="standard" checked style="accent-color:var(--color-accent)">
-              Standard (Cache Allowed)
-            </label>
-            <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--color-border);border-radius:0 4px 4px 0;border-left:0">
-              <input type="radio" name="pg-fetch-mode" value="force_live" style="accent-color:var(--color-accent)">
-              Force Live Fetch <span style="color:var(--color-accent);font-weight:600">(3x)</span>
-            </label>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <label for="pg-threshold" style="font-size:12px;color:var(--color-text-secondary);white-space:nowrap">Confidence threshold</label>
-            <input id="pg-threshold" type="range" min="0" max="1" step="0.05" value="0.70" style="width:100px;accent-color:var(--color-accent)">
-            <span id="pg-threshold-val" style="font-size:12px;font-family:var(--font-mono);color:var(--color-accent);min-width:32px">70%</span>
-          </div>
-        </div>
-
-        <div style="margin-top:6px;font-size:13px;color:var(--color-text-secondary)">500 free calls/month · No signup</div>
-
-        <div id="pg-results" class="playground-results">
-          <div id="pg-loading" style="display:none;text-align:center;padding:20px;color:var(--color-accent)">
-            <span class="spinner"></span> Extracting product data...
-          </div>
-          <div id="pg-error" style="display:none;background:#fce8e6;border-radius:8px;padding:12px;color:#611a15;font-size:13px;margin-top:8px"></div>
-          <div id="pg-result" style="margin-top:12px"></div>
-        </div>
-      </div>
-
-      <hr>
-
-      <!-- Where does ShopGraph fit? -->
-      <h2>Where does ShopGraph fit?</h2>
-
-      <div class="card-grid">
-        <div class="card">
-          <div class="card-icon">&#128279;</div>
-          <h3>From a URL</h3>
-          <p>POST /api/enrich with any product URL. ShopGraph handles fetching, JS rendering, and extraction into a consistent schema. Every field includes a confidence score.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">&#128196;</div>
-          <h3>From HTML</h3>
-          <p>POST /api/enrich/html with raw HTML. Skip the fetch when you have your own scraping infrastructure. Same structured output, no redundant network calls.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">&#129302;</div>
-          <h3>From any agent</h3>
-          <p>Connect via MCP with one line of config. Paid calls settle through Stripe MPP or API key subscriptions. Add format=ucp for Universal Commerce Protocol output.</p>
-        </div>
-      </div>
-
-      <hr>
-
-      <h2>Get Started</h2>
-      <div class="card-grid">
-        <div class="card">
-          <a href="/install">
-            <h3>Installation &rarr;</h3>
-            <p>npm install, MCP config, API key setup, and your first curl request in under 2 minutes.</p>
-          </a>
-        </div>
-        <div class="card">
-          <a href="/tools/api">
-            <h3>REST API Reference &rarr;</h3>
-            <p>Full endpoint documentation with request/response examples and authentication details.</p>
-          </a>
-        </div>
-        <div class="card">
-          <a href="/features">
-            <h3>Features &rarr;</h3>
-            <p>Confidence scoring, UCP output, AgentReady scoring, routing engine, and self-healing.</p>
-          </a>
-        </div>
-      </div>
-
+  <!-- Playground Card -->
+  <div class="hero-playground">
+    <div class="pg-try">Try it</div>
+    <p class="pg-desc">Paste any product URL. 200 free calls/month, no signup.</p>
+    <div class="pg-radios">
+      <label class="pg-radio"><input type="radio" name="pg-mode" value="basic" checked onchange="updatePlaygroundMode()"> Basic (free)</label>
+      <label class="pg-radio"><input type="radio" name="pg-mode" value="full" onchange="updatePlaygroundMode()"> Full ($0.02)</label>
     </div>
+    <input id="playground-url" class="pg-input" type="url" value="https://www.allbirds.com/products/mens-tree-runners" placeholder="https://example.com/product">
+    <button id="playground-btn" class="pg-btn" onclick="runPlayground()">Extract</button>
+    <div class="pg-result"></div>
+  </div>
+
+  <!-- Works With Bubble -->
+  <div class="works-bubble">
+    <img src="/shape-bubble.svg" alt="" aria-hidden="true">
+    <span>Works with Claude, Cursor, CrewAI, LangGraph, AutoGen, and any MCP client</span>
+  </div>
+
+  <!-- Integration: Left Blob (npm SDK) -->
+  <div class="int-left">
+    <img class="shape" src="/shape-blob.svg" alt="">
+    <div class="int-title">npm SDK</div>
+    <pre class="int-code">import { ShopGraph } from
+'shopgraph'; const sg = new
+ShopGraph(); const data =
+await sg.enrichBasic(url);</pre>
+  </div>
+
+  <!-- Integration: Center (pink dome) -->
+  <div class="int-center-shape">
+    <img class="shape" src="/shape-center.svg" alt="">
+    <div class="content">
+      <div class="int-center-title">Integration</div>
+      <div class="int-center-body">
+        REST API: POST /api/enrich/basic (free)<br>
+        POST /api/enrich ($0.02)<br>
+        POST /api/enrich/html ($0.02)
+      </div>
+      <div class="int-center-detail">
+        No API keys needed for the free tier.<br>
+        Paid calls use <strong>Stripe MPP</strong>.<br>
+        No subscriptions, no minimums
+      </div>
+    </div>
+  </div>
+
+  <!-- Integration: Right Blob (MCP Client) -->
+  <div class="int-right">
+    <img class="shape" src="/shape-blob.svg" alt="">
+    <div class="int-title">MCP Client</div>
+    <pre class="int-code">{
+  "mcpServers": {
+    "shopgraph": {
+      "type": "url",
+      "url": "https://shopgraph.dev/mcp"
+    }
+  }
+}</pre>
+  </div>
+
+  <!-- Where does SHOPGRAPH fit -->
+  <h2 class="where-heading">Where does <strong>SHOPGRAPH</strong> fit in your stack?</h2>
+
+  <div class="where-col1">
+    <div class="where-title">From a URL: POST /api/enrich</div>
+    <p class="where-body">You have a product URL and want structured data back. ShopGraph handles fetching, rendering JavaScript-heavy pages, and extracting product attributes into a single consistent schema. Free tier: 200 calls/month, no signup.</p>
+  </div>
+  <div class="where-col2">
+    <div class="where-title">From HTML: POST /api/enrich/html</div>
+    <p class="where-body">You already have the HTML from your own scraping infrastructure. ShopGraph skips the fetch and goes straight to structuring &mdash; so you keep your proxy setup and ShopGraph handles the product data extraction. Same output, no redundant network calls.</p>
+  </div>
+  <div class="where-col3">
+    <div class="where-title">From any agent: connect via MCP</div>
+    <p class="where-body">You&rsquo;re building in the MCP ecosystem. One line of config connects your agent to ShopGraph&rsquo;s full extraction pipeline. Paid calls settle through Stripe Machine Payments &mdash; no API keys, no subscriptions.</p>
+  </div>
+
+  <!-- Stats -->
+  <h2 class="stats-heading">Tested <strong id="pages-tested">3,628</strong> Product Pages</h2>
+  <p class="stats-date" id="stats-date"></p>
+  <div class="stat-left" onclick="openStatsModal()">
+    <div class="stat-num" id="success-rate">97%</div>
+    <div class="stat-label">Extraction Success</div>
+    <div class="stat-desc">Percentage of product pages that return structured data</div>
+  </div>
+  <div class="stat-right" onclick="openStatsModal()">
+    <div class="stat-num" id="verticals-total">22</div>
+    <div class="stat-label">Verticals</div>
+    <div class="stat-desc">B2C and B2B shopping categories tested</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-left">
+    <span style="font-weight:800">SHOPGRAPH</span><span style="font-weight:500">, clean product data from any URL</span><br>
+    Built by Krishna Brown &middot; <a href="mailto:hi@kb.computer">hi@kb.computer</a>
+  </div>
+  <div class="footer-right">
+    <a href="https://github.com/laundromatic/shopgraph">Github</a> &middot; <a href="/mcp">MCP EndPoint</a> &middot; <a href="/health">Health Check</a><br>
+    <a href="/tos">Terms of Service</a> &middot; <a href="/privacy">Privacy Policy</a>
+  </div>
+
+</div><!-- /page -->
+
+<!-- Extract Result Modal -->
+<div class="modal-overlay" id="result-modal" onclick="if(event.target===this)closeResultModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeResultModal()">&times;</button>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:4px">Extraction Result</h3>
+    <p id="result-modal-url" style="font-size:13px;color:#595959;margin-bottom:8px;word-break:break-all"></p>
+    <div id="playground-loading" style="display:none"><span class="spinner"></span>Extracting...</div>
+    <div id="playground-error" style="display:none"></div>
+    <pre id="playground-json" style="display:none"></pre>
+    <div id="playground-meta" style="display:none"></div>
   </div>
 </div>
 
-<script src="/components/nav.js"></script>
-<script src="/components/playground.js"></script>
-<script src="/components/code-highlight.js"></script>
+<!-- Stats Modal -->
+<div class="modal-overlay" id="stats-modal" onclick="if(event.target===this)closeStatsModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeStatsModal()">&times;</button>
+    <h3 style="font-size:24px;font-weight:700;margin-bottom:8px">Extraction Results by Vertical</h3>
+    <p style="font-size:14px;color:#595959;margin-bottom:16px">Across <span id="modal-verticals-count">-</span> shopping verticals &middot; Last updated: <span id="modal-last-updated">-</span></p>
+    <table>
+      <thead><tr><th>Vertical</th><th style="text-align:right">Pages</th><th style="text-align:right">Success</th></tr></thead>
+      <tbody id="modal-verticals-table"><tr><td colspan="3" style="padding:20px;text-align:center;color:#595959">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+var pgMode='basic';
+function updatePlaygroundMode(){pgMode=document.querySelector('input[name="pg-mode"]:checked').value}
+function openResultModal(){document.getElementById('result-modal').classList.add('active')}
+function closeResultModal(){document.getElementById('result-modal').classList.remove('active')}
+function runPlayground(){
+  var url=document.getElementById('playground-url').value.trim();if(!url)return;
+  var l=document.getElementById('playground-loading'),e=document.getElementById('playground-error'),j=document.getElementById('playground-json'),m=document.getElementById('playground-meta'),b=document.getElementById('playground-btn'),u=document.getElementById('result-modal-url');
+  l.style.display='block';e.style.display='none';j.style.display='none';m.style.display='none';b.disabled=true;b.textContent='...';
+  u.textContent=url;
+  openResultModal();
+  var s=Date.now(),ep=pgMode==='full'?'/api/enrich':'/api/enrich/basic';
+  fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})})
+  .then(function(r){return r.json().then(function(d){return{status:r.status,data:d}})})
+  .then(function(res){l.style.display='none';var ms=Date.now()-s;
+    if(res.status===402){e.style.display='block';e.innerHTML='<strong>Full extraction requires Stripe MPP payment.</strong><br><br>The playground uses the free Basic tier. To use Full extraction ($0.02/call), pass a <code>payment_method_id</code> via the REST API or MCP protocol.<br><br><a href="https://docs.stripe.com/payments/machine/mpp" target="_blank" style="color:#1a73e8;text-decoration:underline">Learn about Stripe Machine Payments &rarr;</a><br><a href="/about" style="color:#1a73e8;text-decoration:underline">See all integration options &rarr;</a><br><br><span style="color:#74362d;font-weight:500">Try switching to Basic (free) above to see Schema.org extraction.</span>';}
+    else if(res.status>=400){e.style.display='block';e.textContent=res.data.message||res.data.error||'Failed';}
+    else{j.style.display='block';j.textContent=JSON.stringify(res.data,null,2);m.style.display='block';
+      var p=[ms+'ms'];if(res.data.cached)p.push('cached');if(res.data.free_tier)p.push(res.data.free_tier.used+'/'+res.data.free_tier.limit+' used');if(res.data.upgrade_hint)p.push(res.data.upgrade_hint);m.textContent=p.join(' · ');}
+  }).catch(function(x){l.style.display='none';e.style.display='block';e.textContent='Error: '+x.message;})
+  .finally(function(){b.disabled=false;b.textContent='Extract';});
+}
+document.getElementById('playground-url').addEventListener('keydown',function(e){if(e.key==='Enter')runPlayground()});
+
+var statsData=null;
+fetch('/api/stats').then(function(r){return r.json()}).then(function(s){statsData=s;
+  if(s.total_tested)document.getElementById('pages-tested').textContent=s.total_tested.toLocaleString();
+  if(s.overall_success_rate)document.getElementById('success-rate').textContent=s.overall_success_rate+'%';
+  if(s.verticals)document.getElementById('verticals-total').textContent=s.verticals.length;
+  if(s.last_updated){var d=new Date(s.last_updated),opts={year:'numeric',month:'long',day:'numeric'};document.getElementById('stats-date').textContent='Last test: '+d.toLocaleDateString('en-US',opts);}
+}).catch(function(){});
+function openStatsModal(){document.getElementById('stats-modal').classList.add('active');
+  if(statsData&&statsData.verticals){document.getElementById('modal-verticals-count').textContent=statsData.verticals.length;document.getElementById('modal-last-updated').textContent=statsData.last_updated||'-';
+    document.getElementById('modal-verticals-table').innerHTML=statsData.verticals.map(function(v){var c=v.success_rate>=90?'#34a853':v.success_rate>=70?'#fbbc04':'#595959';return'<tr><td style="font-weight:500">'+v.name+'</td><td style="text-align:right;color:#595959">'+v.tested+'</td><td style="text-align:right"><span style="color:'+c+';font-weight:600">'+v.success_rate+'%</span></td></tr>';}).join('');}}
+function closeStatsModal(){document.getElementById('stats-modal').classList.remove('active')}
+fetch('/api/health-check').then(function(r){return r.json()}).then(function(h){if(h.status==='degraded'||h.status==='critical'){var b=document.getElementById('health-banner'),t=document.getElementById('health-banner-text');if(h.status==='critical'){b.style.background='#fce8e6';b.style.borderColor='#d93025';b.style.color='#611a15'}t.textContent='Maintenance in progress. ('+h.success_rate+'%)';b.style.display='block';}}).catch(function(){});
+</script>
 </body>
 </html>
