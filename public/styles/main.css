@@ -256,11 +256,13 @@ h2 {
   line-height: normal;
   letter-spacing: -0.005rem;
   color: rgba(0, 0, 0, 0.78);
-  margin: 0 0 1.125rem;
+  margin: 1.5rem 0 0.5rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
+
+h1 + h2, .subtitle + h2 { margin-top: 0.75rem; }
 
 h2::after {
   content: "";
