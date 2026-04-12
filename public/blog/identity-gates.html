@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Cloudflare and GoDaddy launched Web Bot Auth. What this means for commerce AI agents and why ShopGraph pre-built the identity layer.">
+<title>The Open Web Got Identity Gates — ShopGraph</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="layout">
+  <div class="content">
+    <div class="content-inner">
+
+      <a href="/blog" style="font-size:0.75rem;color:var(--text-muted)">Back to Blog</a>
+
+      <h1>The Open Web Got Identity Gates. What Commerce AI Agents Need Now.</h1>
+      <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1.5rem">Krishna Brown · April 12, 2026</p>
+
+      <p>On April 7th, Cloudflare and GoDaddy announced a partnership to build identity infrastructure for AI agents on the open web. Web Bot Auth. Agent Networking Standard. RFC 9421 cryptographic signatures. The message was clear: anonymous access to the web is ending. Agents that can prove who they are get through. Agents that can't, don't.</p>
+
+      <p>I'd been building toward this for weeks.</p>
+
+      <h2>What changed</h2>
+
+      <p>ShopGraph started as an extraction tool. Pull product data from a URL, score how much to trust each field, return structured JSON. That's still what it does. But the problem underneath shifted.</p>
+
+      <p>When I launched in March, the extraction challenge was mostly about data quality. Could the system handle a JavaScript-rendered B2B catalog? Could it fill in missing Schema.org markup with LLM extraction? Could it score each field honestly so downstream agents knew what to trust?</p>
+
+      <p>By April, the challenge was also about access. CDN providers started deploying identity gates. Cloudflare's AI Bot Management. GoDaddy's Agent Networking Standard. Sites that were open last month now require cryptographic proof that you're a legitimate agent before they'll serve you data.</p>
+
+      <p>This is the right direction for the web. Commerce sites want agent traffic. Agents drive transactions. But sites need to distinguish trusted automation from anonymous bots. The infrastructure for making that distinction is being built right now.</p>
+
+      <h2>What I built</h2>
+
+      <p>ShopGraph v1.0.0 and v1.0.1 shipped in the first week of April. The build covered three layers.</p>
+
+      <p><strong>The trust layer.</strong> Per-field confidence scoring went from a useful feature to the core product. Every field in every response carries a score from 0 to 1. Your agent can route decisions per-field: act autonomously on high-confidence data, flag uncertain fields for human review, reject unreliable data entirely. The system is transparent about its own uncertainty. That's the design decision everything else is built on.</p>
+
+      <p><strong>The standards layer.</strong> UCP output format, validated against Google's ucp-schema v1.1.0. Stripe Machine-to-Machine Payments wired in so agents can pay per-extraction without a subscription. <a href="/features/agentready">AgentReady scoring</a> across six dimensions that tells your agent how suitable a target URL's data is for automated workflows before you commit pipeline resources.</p>
+
+      <p><strong>The identity layer.</strong> RFC 9421 signature compliance. ShopGraph acts as a trusted proxy, handling the cryptographic handshakes that CDN security gates require. Your agents inherit ShopGraph's verified identity at the CDN layer. You don't manage proxies, keys, or identity infrastructure.</p>
+
+      <p>The portfolio went from a single MCP server to: a REST API, an MCP server, n8n/Make.com/Power Automate integration nodes (in testing), a <a href="/leaderboard">public leaderboard</a> scoring how agent-ready commerce sites are, and framework PRs for Vercel AI SDK and LangChain shipping this week.</p>
+
+      <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <!-- Center node -->
+          <rect x="215" y="165" width="170" height="50" rx="10" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="300" y="195" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#111">ShopGraph Engine</text>
+
+          <!-- Spoke: REST API (top left) -->
+          <line x1="250" y1="165" x2="130" y2="75" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="60" y="50" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="120" y="73" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">REST API</text>
+
+          <!-- Spoke: MCP Server (top center) -->
+          <line x1="300" y1="165" x2="300" y2="85" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="240" y="50" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="300" y="73" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">MCP Server</text>
+
+          <!-- Spoke: n8n Node (top right) -->
+          <line x1="350" y1="165" x2="470" y2="75" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="420" y="50" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="480" y="73" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">n8n Node</text>
+
+          <!-- Spoke: Make.com Node (right) -->
+          <line x1="385" y1="190" x2="480" y2="190" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="480" y="172" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="540" y="195" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Make.com Node</text>
+
+          <!-- Spoke: Playground (bottom right) -->
+          <line x1="350" y1="215" x2="470" y2="305" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="420" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="480" y="317" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Playground</text>
+
+          <!-- Spoke: Leaderboard (bottom center) -->
+          <line x1="300" y1="215" x2="300" y2="295" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="240" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="300" y="317" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Leaderboard</text>
+
+          <!-- Spoke: Framework PRs (bottom left) -->
+          <line x1="250" y1="215" x2="130" y2="305" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <rect x="60" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="120" y="317" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Framework PRs</text>
+        </svg>
+      </div>
+
+      <h2>Why B2B</h2>
+
+      <p>The shift toward B2B industrial supply wasn't a pivot. It was following the problem to where it's hardest and most valuable.</p>
+
+      <p>B2C e-commerce is largely solved. Shopify stores have clean structured data. Amazon has an API. The extraction pipeline handles these sites on Tier 1 in under a second.</p>
+
+      <p>B2B procurement is different. A facilities manager at a hospital network needs pricing on industrial pumps from Grainger, air handling units from McMaster-Carr, electrical components from Digi-Key. Each supplier portal has a different data architecture. Some have structured markup. Many don't. Some require JavaScript rendering. Some are behind CDN gates.</p>
+
+      <p>The procurement teams that need reliable product data the most are working with suppliers whose sites are the hardest to extract from. And these are high-value transactions. A wrong price on an industrial component order isn't a $20 mistake. It's a $20,000 mistake.</p>
+
+      <p>ShopGraph's test corpus is 44% B2B, 56% B2C. The scoring system rewards B2B-specific fields: MOQ, lead time, bulk pricing tiers, manufacturer part numbers. The <a href="/leaderboard">leaderboard</a> tracks Grainger, McMaster-Carr, MSC Industrial, Fastenal, Digi-Key, and Mouser alongside the consumer sites.</p>
+
+      <h2>What I got wrong</h2>
+
+      <p>The initial site copy was fear-based. "Stop acting on probabilistic guesses." "Don't let your agent get blocked." Every feature section opened with what the developer should be afraid of instead of what ShopGraph enables. Technical builders see through that immediately. Capability-forward descriptions are more credible and more useful. I rewrote every page.</p>
+
+      <p>The MCP-only launch produced zero organic usage despite listings on every major directory. Directories confirm you exist. They don't create demand. The playground, the free API tier (500 calls, no signup), and the framework PRs are what create the evaluation path.</p>
+
+      <p>I also underestimated how much documentation consistency matters when you're building in public. Three pages on the site used different names for the same scoring dimensions. The API response example showed a different schema than the methodology page described. Framework reviewers will test your docs against your API. If those don't match, you've lost credibility before they've written a line of code.</p>
+
+      <h2>What's next</h2>
+
+      <p>The near-term build is distribution. Framework PRs for Vercel AI SDK and LangChain submit this week. These aren't just code contributions. They're the first time most developers will see confidence-aware extraction in a working example. An agent that checks the confidence score on every field and routes accordingly. That pattern doesn't exist in any framework cookbook yet.</p>
+
+      <p>The medium-term build is the access readiness dimension. ShopGraph already tracks whether target URLs require agent authentication, but the dimension is stubbed at weight 0.00 in the scoring system. It activates when Web Bot Auth adoption reaches detection threshold. When more than 10% of the test corpus requires cryptographic identity, access readiness becomes a scored dimension and the weights redistribute.</p>
+
+      <p>The longer-term build is CommerceFlow, a multi-step agent orchestration layer where extraction, scoring, and purchasing happen in a coordinated workflow. Stripe MPP handles the payment. ShopGraph handles the data and identity. The agent handles the decision logic. The human handles the exceptions.</p>
+
+      <p>The boundary between what the agent handles and what the human handles is the design problem I keep coming back to. Confidence scoring is how you draw that boundary with data instead of guessing.</p>
+
+      <h2>Build with me</h2>
+
+      <p>I'm looking for three design partners to integrate ShopGraph's authenticated pipeline before public launch. If you're building procurement agents, catalog automation, or any workflow where your agents need reliable product data from B2B suppliers, I want to hear from you. <a href="/">Try the playground</a>, check the <a href="/leaderboard">leaderboard</a>, and reach out.</p>
+
+      <p>hi@kb.computer</p>
+
+      <hr>
+      <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-top:1rem">
+        <a href="/blog/product-data-trust">&larr; Previous post</a>
+        <a href="/blog/confidence-boundary">Next post &rarr;</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/components/nav.js"></script>
+<script src="/components/code-highlight.js"></script>
+</body>
+</html>
