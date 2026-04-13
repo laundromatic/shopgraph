@@ -26,6 +26,9 @@
         <p style="margin-top:8px"><a href="https://www.npmjs.com/package/n8n-nodes-shopgraph" target="_blank" rel="noopener">View on npm</a></p>
       </div>
       <p>Install in n8n: go to <strong>Settings → Community Nodes → Install</strong> and enter <code>n8n-nodes-shopgraph</code>. Or use the HTTP Request node to call the <a href="/tools/api">REST API</a> directly:</p>
+      <div class="alert alert-info">
+        <strong>Note:</strong> The examples below use <code>/api/enrich/basic</code> (Schema.org only). The full pipeline is also available via <code>/api/enrich</code> on all tiers including free.
+      </div>
       <div class="code-header"><span>n8n HTTP Request configuration</span><button class="copy-btn">Copy</button></div>
       <pre data-lang="json"><code>{
   "method": "POST",

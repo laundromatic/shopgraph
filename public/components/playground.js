@@ -38,7 +38,7 @@
 
     var body = Object.assign({ url: url }, getOptions());
 
-    fetch('/api/enrich/basic', {
+    fetch('/api/playground', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -81,7 +81,14 @@
     if (!data || !container) return;
 
     if (data.error) {
-      container.innerHTML = '<div style="background:#fce8e6;border-radius:8px;padding:12px;color:#611a15;font-size:13px">' + data.error + ': ' + (data.message || '') + '</div>';
+      var msg = data.message || data.error;
+      var link = data.upgrade || data.signup || data.pricing || '';
+      var linkHtml = '';
+      if (link) {
+        var linkText = data.upgrade ? 'See pricing' : data.signup ? 'Get a Free API key' : 'See plans';
+        linkHtml = ' <a href="' + link + '" style="color:var(--link-color);font-weight:500">' + linkText + '</a>';
+      }
+      container.innerHTML = '<div style="background:rgba(0,0,0,0.03);border:1px solid var(--border-color);border-radius:0.375rem;padding:0.75rem 1rem;font-size:0.8125rem;color:var(--body-color)">' + escapeHtml(msg) + linkHtml + '</div>';
       var resultsWrap = $('pg-results');
       if (resultsWrap) resultsWrap.classList.add('visible');
       return;
@@ -180,6 +187,19 @@
     html += '</details>';
 
     container.innerHTML = html;
+
+    // After rendering results, show remaining runs
+    if (data.runs_remaining !== undefined) {
+      var quotaHtml = '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem">' + data.runs_remaining + ' / 5 runs left today</div>';
+      container.innerHTML += quotaHtml;
+    }
+
+    // Add post-extraction CTA
+    var ctaHtml = '<div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(0,0,0,0.03);border:1px solid var(--border-color);border-radius:0.375rem;font-size:0.8125rem;color:var(--text-secondary)">';
+    ctaHtml += 'Want to keep going? The Free API tier gives you 50 full-pipeline calls a month with your own key. ';
+    ctaHtml += '<a href="/dashboard" style="color:var(--link-color);font-weight:500">Get a Free API key</a>';
+    ctaHtml += '</div>';
+    container.innerHTML += ctaHtml;
 
     // Show the results container
     var resultsWrap = $('pg-results');
