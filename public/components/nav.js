@@ -163,7 +163,7 @@
     const logo = document.createElement('a');
     logo.href = '/';
     logo.className = 'sidebar-logo';
-    logo.innerHTML = '<span style="color:#007aff">Shop</span><span style="color:#f7c54b">Graph</span>';
+    logo.innerHTML = '<img src="/images/logo.svg" alt="ShopGraph" style="height:18px;width:auto">';
     sidebar.appendChild(logo);
 
     const nav = document.createElement('div');

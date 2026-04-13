@@ -146,12 +146,12 @@ a:hover { color: var(--link-hover); text-decoration: underline; }
 }
 
 .nav-subitem a:hover {
-  color: #0969da;
+  color: #007AFF;
   text-decoration: none;
 }
 
 .nav-subitem a.active {
-  color: #222;
+  color: #007AFF;
   font-weight: 600;
 }
 
@@ -162,7 +162,7 @@ a:hover { color: var(--link-hover); text-decoration: underline; }
   top: 0.25rem;
   bottom: 0.25rem;
   width: 1.5px;
-  background: rgba(0, 0, 0, 0.8);
+  background: #007AFF;
   border-radius: 1px;
 }
 
@@ -170,22 +170,22 @@ a:hover { color: var(--link-hover); text-decoration: underline; }
   display: block;
   padding: 0;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
-  line-height: 30px;
+  line-height: 28px;
   color: #222;
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .nav-item a:hover {
-  color: #0969da;
+  color: #007AFF;
   background: transparent;
   text-decoration: none;
 }
 
 .nav-item a.active {
-  color: #0969da;
+  color: #007AFF;
   font-weight: 600;
   background: transparent;
 }
