@@ -145,7 +145,7 @@
       observer.observe(h2);
     });
 
-    // Highlight on initial load if URL has a hash
+    // Highlight on initial load
     var hash = window.location.hash;
     if (hash) {
       subLinks.forEach(function (link) {
@@ -153,6 +153,27 @@
           link.classList.add('active');
         }
       });
+    } else {
+      // Find the section closest to the current scroll position
+      var closest = null;
+      var closestDist = Infinity;
+      h2s.forEach(function (h2) {
+        var rect = h2.getBoundingClientRect();
+        var dist = Math.abs(rect.top - 80);
+        if (rect.top <= 200 && dist < closestDist) {
+          closestDist = dist;
+          closest = h2.id;
+        }
+      });
+      // Default to first section if none are above fold
+      if (!closest && h2s.length) closest = h2s[0].id;
+      if (closest) {
+        subLinks.forEach(function (link) {
+          if (link.getAttribute('href') === '#' + closest) {
+            link.classList.add('active');
+          }
+        });
+      }
     }
   }
 
