@@ -66,18 +66,18 @@ describe('subscriptions', () => {
       const result = await checkLimit(mockRedis as never, 'cust-1', 'free');
       expect(result.allowed).toBe(true);
       expect(result.used).toBe(0);
-      expect(result.limit).toBe(500);
+      expect(result.limit).toBe(50);
     });
 
     it('denies usage at the limit', async () => {
       // Simulate being at the limit
       const month = new Date();
       const monthStr = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`;
-      mockRedis._store.set(`usage:cust-1:${monthStr}`, 500);
+      mockRedis._store.set(`usage:cust-1:${monthStr}`, 50);
 
       const result = await checkLimit(mockRedis as never, 'cust-1', 'free');
       expect(result.allowed).toBe(false);
-      expect(result.used).toBe(500);
+      expect(result.used).toBe(50);
     });
 
     it('uses correct limit per tier', async () => {
@@ -112,7 +112,7 @@ describe('subscriptions', () => {
       await incrementUsage(mockRedis as never, 'cust-1');
 
       const summary = await getUsageSummary(mockRedis as never, 'cust-1', 'free');
-      expect(summary).toEqual({ used: 3, limit: 500, remaining: 497 });
+      expect(summary).toEqual({ used: 3, limit: 50, remaining: 47 });
     });
 
     it('returns 0 remaining when over limit', async () => {
@@ -121,7 +121,7 @@ describe('subscriptions', () => {
       mockRedis._store.set(`usage:cust-1:${monthStr}`, 600);
 
       const summary = await getUsageSummary(mockRedis as never, 'cust-1', 'free');
-      expect(summary).toEqual({ used: 600, limit: 500, remaining: 0 });
+      expect(summary).toEqual({ used: 600, limit: 50, remaining: 0 });
     });
   });
 });
