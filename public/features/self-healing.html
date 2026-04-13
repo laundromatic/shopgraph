@@ -419,329 +419,7 @@
   transform: translateY(0);
 }
 
-/* === EXTRACTION PIPELINE DIAGRAM === */
-.pipeline-diagram {
-  width: 100%;
-  margin: 1rem 0 1.5rem;
-  font-family: var(--font-sans);
-  overflow: hidden;
-}
-
-.pipeline-diagram * { box-sizing: border-box; }
-
-.pd-input-box {
-  background: #f4f4f6;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 0.5rem;
-  padding: 0.625rem 1rem;
-  text-align: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--body-color);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.pd-columns {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0;
-}
-
-.pd-left { flex: 0 0 60%; min-width: 0; }
-.pd-right { flex: 0 0 38%; display: flex; flex-direction: column; min-width: 0; }
-
-/* Vertical arrow connector */
-.pd-arrow-down {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.375rem 0;
-  position: relative;
-}
-
-.pd-arrow-down .pd-arrow-line {
-  width: 2px;
-  height: 20px;
-  background: #d1d5db;
-}
-
-.pd-arrow-down .pd-arrow-head {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 6px solid #d1d5db;
-}
-
-.pd-arrow-down .pd-arrow-label {
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  margin-top: 2px;
-  text-align: center;
-}
-
-.pd-arrow-label.fail { color: #dc2626; }
-.pd-arrow-label.success { color: #16a34a; }
-
-/* Success arrow pointing right */
-.pd-success-arrow {
-  position: absolute;
-  right: -1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.pd-success-arrow .pd-sarrow-line {
-  width: 20px;
-  height: 2px;
-  background: #16a34a;
-}
-
-.pd-success-arrow .pd-sarrow-head {
-  width: 0;
-  height: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 6px solid #16a34a;
-}
-
-.pd-success-arrow .pd-sarrow-label {
-  font-size: 0.5625rem;
-  font-weight: 700;
-  color: #16a34a;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Tier box */
-.pd-tier {
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 0.5rem;
-  background: #fff;
-  overflow: hidden;
-  position: relative;
-}
-
-.pd-tier-header {
-  background: rgba(0,0,0,0.85);
-  color: #fff;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.pd-tier-body {
-  padding: 0.625rem 0.75rem;
-}
-
-.pd-tier-desc {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
-}
-
-.pd-tier-stats {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.pd-stat {
-  font-size: 0.6875rem;
-  color: var(--text-muted);
-}
-
-.pd-stat strong {
-  color: var(--body-color);
-  font-family: var(--font-mono);
-  font-weight: 600;
-}
-
-/* Confidence panel */
-.pd-confidence {
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 0.5rem;
-  background: #fff;
-  overflow: hidden;
-  flex: 1;
-}
-
-.pd-conf-header {
-  background: #92400e;
-  color: #fff;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.pd-conf-body {
-  padding: 0.625rem 0.75rem;
-  font-size: 0.6875rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
-}
-
-.pd-conf-body .pd-conf-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.pd-conf-body .pd-conf-field {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--body-color);
-}
-
-.pd-conf-body .pd-conf-val {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--body-color);
-}
-
-.pd-conf-divider {
-  border: none;
-  border-top: 1px solid rgba(0,0,0,0.06);
-  margin: 0.5rem 0;
-}
-
-.pd-conf-meta {
-  font-size: 0.625rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-
-.pd-conf-meta code {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  color: var(--body-color);
-}
-
-.pd-agent-score {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--body-color);
-}
-
-/* JSON response box */
-.pd-json-box {
-  background: rgba(0,0,0,0.85);
-  color: #fff;
-  border-radius: 0.5rem;
-  padding: 0.625rem 1rem;
-  text-align: center;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  letter-spacing: 0.03em;
-  margin-top: 0.5rem;
-}
-
-/* CAPTCHA failure box */
-.pd-captcha {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.625rem;
-  color: #dc2626;
-  font-weight: 600;
-  text-align: center;
-  margin-top: 0.25rem;
-}
-
-/* Agent routing section */
-.pd-agent-section {
-  margin-top: 1.25rem;
-  border-top: 2px dashed rgba(0,0,0,0.08);
-  padding-top: 1rem;
-}
-
-.pd-agent-label {
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin-bottom: 0.375rem;
-}
-
-.pd-agent-title {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: var(--body-color);
-  margin-bottom: 0.75rem;
-}
-
-.pd-routing-outcomes {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.pd-outcome {
-  flex: 1;
-  min-width: 140px;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  text-align: center;
-  font-size: 0.6875rem;
-  font-weight: 600;
-}
-
-.pd-outcome-green {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #16a34a;
-}
-
-.pd-outcome-amber {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  color: #d97706;
-}
-
-.pd-outcome-red {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-}
-
-.pd-outcome .pd-outcome-label {
-  display: block;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-.pd-outcome .pd-outcome-range {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-}
-
-/* Old tierPulse / fadeInUp / pd-anim-* removed — using global diagram-animations.css */
-
-/* Responsive: stack on mobile */
-@media (max-width: 768px) {
-  .pd-columns { flex-direction: column; }
-  .pd-left, .pd-right { flex: 1 1 100%; }
-  .pd-success-arrow { display: none; }
-  .pd-routing-outcomes { flex-direction: column; }
-}
+/* Old pd-* CSS removed — pipeline diagram is now inline SVG */
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -774,141 +452,172 @@
 
       <h2 class="fade-in-section">Extraction Pipeline Overview</h2>
 
-      <div class="pipeline-diagram dg-diagram" id="pipeline-diagram">
-        <!-- Product URL input -->
-        <div class="pd-input-box dg-hidden" data-dg-delay="0">Product URL</div>
+      <div class="dg-diagram" id="pipeline-diagram">
+      <svg viewBox="0 0 576 556" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+            text { font-family: 'Inter', sans-serif; }
+          </style>
+          <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+          </marker>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#16a34a"/>
+          </marker>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444"/>
+          </marker>
+          <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.06"/>
+          </filter>
+        </defs>
 
-        <div class="pd-arrow-down dg-hidden" data-dg-delay="100">
-          <div class="pd-arrow-line"></div>
-          <div class="pd-arrow-head"></div>
-        </div>
+        <!-- Product URL -->
+        <g class="dg-hidden" data-dg-delay="0">
+          <rect x="100" y="8" width="160" height="30" rx="6" fill="#f4f4f6" stroke="rgba(0,0,0,0.08)" stroke-width="1" filter="url(#shadow)"/>
+          <text x="180" y="27" text-anchor="middle" font-size="10" font-weight="700" fill="#111" letter-spacing="0.05em">PRODUCT URL</text>
+        </g>
 
-        <div class="pd-columns">
-          <!-- LEFT: Tier stack -->
-          <div class="pd-left">
-            <!-- Tier 1 -->
-            <div class="pd-tier dg-hidden dg-box dg-success" data-dg-delay="200" id="pd-tier1">
-              <div class="pd-tier-header">Tier 1: Schema.org Extraction</div>
-              <div class="pd-tier-body">
-                <div class="pd-tier-desc">Parses JSON-LD and microdata from the raw HTML response. No rendering or LLM needed.</div>
-                <div class="pd-tier-stats">
-                  <div class="pd-stat">Latency: <strong>&lt; 1s</strong></div>
-                  <div class="pd-stat">Cost: <strong>$0.000</strong></div>
-                  <div class="pd-stat">Confidence: <strong>0.90 - 0.98</strong></div>
-                </div>
-              </div>
-              <div class="pd-success-arrow dg-hidden" data-dg-delay="400">
-                <span class="pd-sarrow-label dg-label dg-label-green">Success</span>
-                <span class="pd-sarrow-line"></span>
-                <span class="pd-sarrow-head"></span>
-              </div>
-            </div>
+        <!-- Arrow: URL to Tier 1 -->
+        <line x1="180" y1="38" x2="180" y2="58" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-            <!-- Failure arrow 1 -->
-            <div class="pd-arrow-down dg-hidden" data-dg-delay="500">
-              <div class="pd-arrow-line"></div>
-              <div class="pd-arrow-label fail dg-label dg-label-red">MISSING / MALFORMED</div>
-              <div class="pd-arrow-head"></div>
-            </div>
+        <!-- Tier 1 -->
+        <g class="dg-hidden" data-dg-delay="200">
+          <rect x="20" y="60" width="320" height="62" rx="7" fill="#fff" stroke="rgba(0,0,0,0.08)" stroke-width="1" filter="url(#shadow)"/>
+          <rect x="20" y="60" width="320" height="22" rx="7" fill="rgba(0,0,0,0.85)"/>
+          <rect x="20" y="72" width="320" height="10" fill="rgba(0,0,0,0.85)"/>
+          <text x="32" y="77" font-size="9" font-weight="700" fill="#fff" letter-spacing="0.05em">TIER 1: SCHEMA.ORG</text>
+          <text x="32" y="100" font-size="9" fill="#6b7280">&lt; 1s  |  $0.000  |  Conf: 0.90 - 0.98</text>
+        </g>
 
-            <!-- Tier 2 -->
-            <div class="pd-tier dg-hidden dg-box dg-warning" data-dg-delay="600" id="pd-tier2">
-              <div class="pd-tier-header">Tier 2: LLM Extraction</div>
-              <div class="pd-tier-body">
-                <div class="pd-tier-desc">Passes raw DOM to the LLM for structured extraction via the Universal Commerce Protocol.</div>
-                <div class="pd-tier-stats">
-                  <div class="pd-stat">Latency: <strong>~3s</strong></div>
-                  <div class="pd-stat">Cost: <strong>$0.001</strong></div>
-                  <div class="pd-stat">Confidence: <strong>0.75 - 0.88</strong></div>
-                </div>
-              </div>
-              <div class="pd-success-arrow dg-hidden" data-dg-delay="800">
-                <span class="pd-sarrow-label dg-label dg-label-green">Success</span>
-                <span class="pd-sarrow-line"></span>
-                <span class="pd-sarrow-head"></span>
-              </div>
-            </div>
+        <!-- Success arrow: Tier 1 to Confidence -->
+        <g class="dg-hidden" data-dg-delay="200">
+          <line x1="340" y1="91" x2="370" y2="91" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+          <text x="345" y="85" font-size="8" font-weight="700" fill="#16a34a">SUCCESS</text>
+        </g>
 
-            <!-- Failure arrow 2 -->
-            <div class="pd-arrow-down dg-hidden" data-dg-delay="900">
-              <div class="pd-arrow-line"></div>
-              <div class="pd-arrow-label fail dg-label dg-label-red">403 / JS-RENDERED</div>
-              <div class="pd-arrow-head"></div>
-            </div>
+        <!-- Fail arrow: Tier 1 to Tier 2 -->
+        <g class="dg-hidden" data-dg-delay="200">
+          <line x1="180" y1="122" x2="180" y2="152" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="192" y="140" font-size="8" font-weight="700" fill="#ef4444">FAIL</text>
+        </g>
 
-            <!-- Tier 3 -->
-            <div class="pd-tier dg-hidden dg-box dg-error" data-dg-delay="1000" id="pd-tier3">
-              <div class="pd-tier-header">Tier 3: Playwright Rendering + LLM</div>
-              <div class="pd-tier-body">
-                <div class="pd-tier-desc">Launches headless Chrome to solve bot protection, then passes rendered DOM to the LLM.</div>
-                <div class="pd-tier-stats">
-                  <div class="pd-stat">Latency: <strong>5 - 10s</strong></div>
-                  <div class="pd-stat">Cost: <strong>$0.005</strong></div>
-                  <div class="pd-stat">Confidence: <strong>0.68 - 0.80</strong></div>
-                </div>
-              </div>
-              <div class="pd-success-arrow dg-hidden" data-dg-delay="1200">
-                <span class="pd-sarrow-label dg-label dg-label-green">Success</span>
-                <span class="pd-sarrow-line"></span>
-                <span class="pd-sarrow-head"></span>
-              </div>
-            </div>
+        <!-- Tier 2 -->
+        <g class="dg-hidden" data-dg-delay="600">
+          <rect x="20" y="154" width="320" height="62" rx="7" fill="#fff" stroke="rgba(0,0,0,0.08)" stroke-width="1" filter="url(#shadow)"/>
+          <rect x="20" y="154" width="320" height="22" rx="7" fill="rgba(0,0,0,0.85)"/>
+          <rect x="20" y="166" width="320" height="10" fill="rgba(0,0,0,0.85)"/>
+          <text x="32" y="171" font-size="9" font-weight="700" fill="#fff" letter-spacing="0.05em">TIER 2: LLM EXTRACTION</text>
+          <text x="32" y="194" font-size="9" fill="#6b7280">~3s  |  $0.001  |  Conf: 0.60 - 0.85</text>
+        </g>
 
-            <!-- CAPTCHA failure -->
-            <div class="pd-captcha dg-hidden" data-dg-delay="1100">Unsolvable CAPTCHA: returns 403 + captcha_required</div>
-          </div>
+        <!-- Success arrow: Tier 2 to Confidence -->
+        <g class="dg-hidden" data-dg-delay="600">
+          <line x1="340" y1="185" x2="370" y2="185" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+          <text x="345" y="179" font-size="8" font-weight="700" fill="#16a34a">SUCCESS</text>
+        </g>
 
-          <!-- RIGHT: Confidence panel -->
-          <div class="pd-right">
-            <div class="pd-confidence dg-hidden dg-box dg-warning" data-dg-delay="400">
-              <div class="pd-conf-header">Confidence</div>
-              <div class="pd-conf-body">
-                <div class="pd-conf-row"><span class="pd-conf-field">product_name</span><span class="pd-conf-val">0.98</span></div>
-                <div class="pd-conf-row"><span class="pd-conf-field">price</span><span class="pd-conf-val">0.93</span></div>
-                <div class="pd-conf-row"><span class="pd-conf-field">brand</span><span class="pd-conf-val">0.94</span></div>
-                <div class="pd-conf-row"><span class="pd-conf-field">availability</span><span class="pd-conf-val">0.83</span></div>
+        <!-- Fail arrow: Tier 2 to Tier 3 -->
+        <g class="dg-hidden" data-dg-delay="600">
+          <line x1="180" y1="216" x2="180" y2="246" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="192" y="234" font-size="8" font-weight="700" fill="#ef4444">FAIL</text>
+        </g>
 
-                <hr class="pd-conf-divider">
+        <!-- Tier 3 -->
+        <g class="dg-hidden" data-dg-delay="1000">
+          <rect x="20" y="248" width="320" height="62" rx="7" fill="#fff" stroke="rgba(0,0,0,0.08)" stroke-width="1" filter="url(#shadow)"/>
+          <rect x="20" y="248" width="320" height="22" rx="7" fill="rgba(0,0,0,0.85)"/>
+          <rect x="20" y="260" width="320" height="10" fill="rgba(0,0,0,0.85)"/>
+          <text x="32" y="265" font-size="9" font-weight="700" fill="#fff" letter-spacing="0.05em">TIER 3: BROWSER RENDERING</text>
+          <text x="32" y="288" font-size="9" fill="#6b7280">5-10s  |  $0.005  |  Conf: variable</text>
+        </g>
 
-                <div class="pd-conf-meta">
-                  <code>extraction_method</code>: schema_org<br>
-                  <code>confidence_method</code>: tier_baseline<br>
-                  <code>latency_ms</code>: 340
-                </div>
+        <!-- Success arrow: Tier 3 to Confidence -->
+        <g class="dg-hidden" data-dg-delay="1000">
+          <line x1="340" y1="279" x2="370" y2="279" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+          <text x="345" y="273" font-size="8" font-weight="700" fill="#16a34a">SUCCESS</text>
+        </g>
 
-                <hr class="pd-conf-divider">
+        <!-- CAPTCHA failure box -->
+        <g class="dg-hidden" data-dg-delay="1000">
+          <rect x="40" y="318" width="280" height="26" rx="5" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+          <text x="180" y="335" text-anchor="middle" font-size="8" font-weight="600" fill="#dc2626">Unsolvable CAPTCHA: 403 + captcha_required</text>
+        </g>
 
-                <div class="pd-agent-score">
-                  AgentReady Score<br>
-                  <span style="font-weight:400;font-size:0.625rem;color:var(--text-muted)">6 dimensions, 5 active, 1 stub</span>
-                </div>
-              </div>
-            </div>
+        <!-- Confidence Panel -->
+        <g class="dg-hidden" data-dg-delay="300">
+          <rect x="382" y="60" width="180" height="252" rx="7" fill="#fff" stroke="rgba(0,0,0,0.08)" stroke-width="1" filter="url(#shadow)"/>
+          <!-- Header -->
+          <rect x="382" y="60" width="180" height="24" rx="7" fill="#92400e"/>
+          <rect x="382" y="74" width="180" height="10" fill="#92400e"/>
+          <text x="472" y="77" text-anchor="middle" font-size="9" font-weight="700" fill="#fff" letter-spacing="0.05em">CONFIDENCE</text>
+          <!-- Field scores -->
+          <text x="396" y="104" font-size="9" fill="#111" font-family="'Inter', sans-serif">product_name</text>
+          <text x="548" y="104" text-anchor="end" font-size="9" font-weight="600" fill="#111">0.98</text>
+          <text x="396" y="120" font-size="9" fill="#111">price</text>
+          <text x="548" y="120" text-anchor="end" font-size="9" font-weight="600" fill="#111">0.93</text>
+          <text x="396" y="136" font-size="9" fill="#111">brand</text>
+          <text x="548" y="136" text-anchor="end" font-size="9" font-weight="600" fill="#111">0.94</text>
+          <text x="396" y="152" font-size="9" fill="#111">availability</text>
+          <text x="548" y="152" text-anchor="end" font-size="9" font-weight="600" fill="#111">0.83</text>
+          <!-- Divider -->
+          <line x1="396" y1="162" x2="548" y2="162" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <!-- Metadata -->
+          <text x="396" y="180" font-size="8" fill="#6b7280">extraction_method: <tspan fill="#111" font-weight="500">schema_org</tspan></text>
+          <text x="396" y="194" font-size="8" fill="#6b7280">confidence_method: <tspan fill="#111" font-weight="500">tier_baseline</tspan></text>
+          <!-- Divider -->
+          <line x1="396" y1="204" x2="548" y2="204" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <!-- AgentReady Score -->
+          <text x="396" y="222" font-size="9" font-weight="600" fill="#111">AgentReady Score</text>
+          <text x="396" y="236" font-size="8" fill="#6b7280">6 dimensions, 5 active</text>
+        </g>
 
-            <!-- JSON Response -->
-            <div class="pd-json-box dg-hidden" data-dg-delay="1400">JSON Response</div>
-          </div>
-        </div>
+        <!-- JSON Response box -->
+        <g class="dg-hidden" data-dg-delay="1200">
+          <rect x="400" y="322" width="144" height="30" rx="6" fill="rgba(0,0,0,0.85)"/>
+          <text x="472" y="341" text-anchor="middle" font-size="9" font-weight="600" fill="#fff" letter-spacing="0.03em">JSON Response</text>
+        </g>
 
-        <!-- Agent routing section -->
-        <div class="pd-agent-section dg-hidden" data-dg-delay="1600">
-          <div class="pd-agent-label">Your Agent Decides</div>
-          <div class="pd-agent-title">Per-Field Confidence Routing</div>
-          <div class="pd-routing-outcomes">
-            <div class="pd-outcome pd-outcome-green dg-box dg-success">
-              <span class="pd-outcome-label">Autonomous</span>
-              <span class="pd-outcome-range">&gt;= 0.85</span>
-            </div>
-            <div class="pd-outcome pd-outcome-amber dg-box dg-warning">
-              <span class="pd-outcome-label">Human Review</span>
-              <span class="pd-outcome-range">0.60 - 0.84</span>
-            </div>
-            <div class="pd-outcome pd-outcome-red dg-box dg-error">
-              <span class="pd-outcome-label">Escalate / Manual</span>
-              <span class="pd-outcome-range">&lt; 0.60</span>
-            </div>
-          </div>
-        </div>
+        <!-- Arrow: Confidence panel to JSON Response -->
+        <line x1="472" y1="312" x2="472" y2="322" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Arrow: JSON Response down to boundary -->
+        <line x1="472" y1="352" x2="472" y2="390" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- System boundary dashed line -->
+        <line x1="20" y1="400" x2="556" y2="400" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="8,4"/>
+        <rect x="168" y="390" width="240" height="20" rx="3" fill="#fff"/>
+        <text x="288" y="404" text-anchor="middle" font-size="9" font-weight="700" fill="#6b7280" letter-spacing="0.08em">YOUR AGENT DECIDES</text>
+
+        <!-- Arrow: boundary to routing -->
+        <line x1="288" y1="410" x2="288" y2="440" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Routing section -->
+        <g class="dg-hidden" data-dg-delay="1400">
+          <text x="288" y="458" text-anchor="middle" font-size="10" font-weight="700" fill="#111">Per-Field Confidence Routing</text>
+
+          <!-- Routing lines from center down to boxes -->
+          <line x1="288" y1="464" x2="100" y2="488" stroke="#9ca3af" stroke-width="1"/>
+          <line x1="288" y1="464" x2="288" y2="488" stroke="#9ca3af" stroke-width="1"/>
+          <line x1="288" y1="464" x2="476" y2="488" stroke="#9ca3af" stroke-width="1"/>
+
+          <!-- Auto-use box (green) -->
+          <rect x="30" y="490" width="140" height="44" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+          <text x="100" y="508" text-anchor="middle" font-size="9" font-weight="700" fill="#16a34a" letter-spacing="0.03em">AUTO-USE</text>
+          <text x="100" y="524" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a" font-family="'Inter', sans-serif">&gt;= 0.85</text>
+
+          <!-- Flag box (amber) -->
+          <rect x="218" y="490" width="140" height="44" rx="6" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+          <text x="288" y="508" text-anchor="middle" font-size="9" font-weight="700" fill="#d97706" letter-spacing="0.03em">FLAG</text>
+          <text x="288" y="524" text-anchor="middle" font-size="10" font-weight="600" fill="#d97706">0.60 - 0.84</text>
+
+          <!-- Omit box (red) -->
+          <rect x="406" y="490" width="140" height="44" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+          <text x="476" y="508" text-anchor="middle" font-size="9" font-weight="700" fill="#ef4444" letter-spacing="0.03em">OMIT</text>
+          <text x="476" y="524" text-anchor="middle" font-size="10" font-weight="600" fill="#ef4444">&lt; 0.60</text>
+        </g>
+      </svg>
       </div>
 
       <!-- HERO: Interactive Routing Engine Dashboard -->
