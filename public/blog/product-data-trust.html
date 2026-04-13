@@ -20,76 +20,108 @@
       <h1>Product Data for AI Agents: Why Extraction Isn't the Hard Part</h1>
       <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1.5rem">Krishna Brown &middot; March 24, 2026</p>
 
-      <p>I'm building a personal, very niche hybrid agentic commerce platform as a way to learn how to build with AI. The platform uses agents to find, compare, and purchase products on my behalf. It started as a weekend project and turned into something much more instructive than I expected.</p>
+      <p>Your agent can extract product data from any URL in a few lines of code. Point an LLM at a product page, ask for the price, title, and availability. You'll get something back. But you won't know if any of it is right.</p>
 
-      <p>The first thing I needed was product data. Not curated feeds or affiliate APIs, but real-time structured data from any product page on the open web. So I built an extraction engine. It parsed Schema.org markup when available, fell back to LLM-based extraction when it wasn't, and returned clean JSON for every URL I threw at it.</p>
+      <p>The LLM will confidently return a wrong price. It will hallucinate availability. It will confuse a variant title with the product name. If a procurement agent trusts that data and issues a purchase order, that's a real cost. Not a hypothetical. A line item on someone's books.</p>
 
-      <p>Extraction worked. Within a few days I had structured product data flowing through my agents. But I immediately hit a wall that had nothing to do with parsing HTML or prompting language models. The wall was trust. My agents were making decisions (adding items to carts, comparing prices, triggering purchase flows) based on data they couldn't evaluate. A price field extracted by an LLM from a cluttered product page carried the same weight as a price pulled directly from Schema.org markup. My agents treated both as equally reliable, and they were not.</p>
-
-      <p>LLMs returned wrong prices. They hallucinated availability. They confused variant titles with product names. Not often, but often enough that an autonomous agent acting on that data would make costly mistakes. The extraction was working. The trust layer was missing.</p>
+      <p>Extraction is a solved problem. Trust is not. This isn't unique to commerce. Any system where an agent acts on externally sourced data faces the same question: how confident should you be in what came back, and does that confidence vary by field? ShopGraph solves this for product data: extract from any commerce URL, score every field for confidence, and return structured JSON where your agent knows exactly how much to trust each data point.</p>
 
       <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
-        <svg viewBox="0 0 780 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-          <!-- Raw HTML box -->
-          <rect x="20" y="20" width="280" height="160" rx="6" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="40" y="50" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#111">Raw HTML</text>
-          <text x="40" y="80" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.4)">&lt;div class="product-title"&gt;</text>
-          <text x="40" y="100" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.4)">  &lt;span&gt;Nike Air Max&lt;/span&gt;</text>
-          <text x="40" y="120" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.4)">&lt;/div&gt;</text>
-          <text x="40" y="140" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.4)">&lt;span class="price"&gt;$129&lt;/span&gt;</text>
-          <text x="40" y="160" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.4)">&lt;meta itemprop="sku" ...&gt;</text>
+        <svg viewBox="0 0 780 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <!-- Left panel: Raw extraction -->
+          <rect x="20" y="20" width="350" height="170" rx="6" fill="white" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="40" y="50" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#111">Raw extraction</text>
+          <text x="40" y="82" font-family="SF Mono, SFMono-Regular, monospace" font-size="12" fill="rgba(0,0,0,0.4)">price: $49.99</text>
+          <text x="40" y="112" font-family="SF Mono, SFMono-Regular, monospace" font-size="12" fill="rgba(0,0,0,0.4)">availability: In Stock</text>
+          <text x="40" y="142" font-family="SF Mono, SFMono-Regular, monospace" font-size="12" fill="rgba(0,0,0,0.4)">brand: Grainger</text>
 
-          <!-- Arrow -->
-          <line x1="320" y1="100" x2="440" y2="100" stroke="rgba(0,0,0,0.4)" stroke-width="1.5"/>
-          <polygon points="440,95 450,100 440,105" fill="rgba(0,0,0,0.4)"/>
-          <text x="355" y="88" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500" fill="#111" text-anchor="middle">ShopGraph</text>
+          <!-- Right panel: ShopGraph extraction -->
+          <rect x="410" y="20" width="350" height="170" rx="6" fill="white" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="430" y="50" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#111">ShopGraph extraction</text>
+          <text x="430" y="82" font-family="SF Mono, SFMono-Regular, monospace" font-size="12" fill="#16a34a">price: $49.99 | 0.93 | schema.org</text>
+          <text x="430" y="112" font-family="SF Mono, SFMono-Regular, monospace" font-size="12" fill="#d97706">availability: In Stock | 0.55 | LLM</text>
+          <text x="430" y="142" font-family="SF Mono, SFMono-Regular, monospace" font-size="12" fill="#16a34a">brand: Grainger | 0.97 | schema.org</text>
 
-          <!-- Structured JSON box -->
-          <rect x="470" y="20" width="290" height="160" rx="6" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="490" y="50" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#111">Structured JSON</text>
-          <text x="490" y="80" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.55)">brand: "Nike"</text>
-          <text x="490" y="100" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.55)">name: "Air Max 90"</text>
-          <text x="490" y="120" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.55)">price: 129.00</text>
-          <text x="490" y="140" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.55)">availability: "InStock"</text>
-          <text x="490" y="160" font-family="SF Mono, SFMono-Regular, monospace" font-size="11" fill="rgba(0,0,0,0.55)">confidence: 0.93</text>
+          <!-- Caption -->
+          <text x="390" y="210" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(0,0,0,0.4)" text-anchor="middle">Same data. Now your agent knows what to trust.</text>
         </svg>
       </div>
 
-      <h2>From any URL to scored, structured product data</h2>
+      <h2>How it works</h2>
 
-      <p>That experience became the foundation of ShopGraph. The core idea: extraction is a solved problem in most cases. Schema.org gives you structured data when it exists. LLMs can extract from raw HTML when it doesn't. The unsolved problem is telling the consumer of that data how much to trust each field.</p>
+      <p>ShopGraph uses a tiered extraction strategy. Instead of sending every page through the same pipeline, it tries the cheapest and most reliable method first, then falls back only when needed. Each tier carries a different confidence baseline, so the score your agent receives reflects not just what was extracted but how it was extracted.</p>
 
-      <p>ShopGraph returns per-field confidence scores alongside every extraction. A price pulled from Schema.org markup gets a baseline confidence of 0.93. The same field extracted by an LLM from unstructured HTML might score 0.70. When both sources agree, the hybrid score rises to 0.85 or higher. The agent consuming this data can then decide: is 0.70 confidence on a price good enough to show a comparison, or should it flag the result for human review before adding to a cart?</p>
+      <p>The three tiers work as a waterfall. Each one only fires if the previous tier couldn't produce a complete result.</p>
 
-      <p>This is not a cosmetic addition. It changes what agents can do. Without confidence scores, agents either trust everything (and make mistakes) or trust nothing (and require constant human oversight). With field-level confidence, agents can be selective. They can trust the brand name at 0.95 while flagging a price at 0.68 for verification. They can set thresholds per field, per use case, per risk tolerance.</p>
+      <p><strong>Tier 1: Schema.org markup.</strong> Parse structured data directly from the page. Most major retailers embed product metadata in JSON-LD or microdata format. When this markup exists and covers the fields you need, it's the fastest and most reliable source. Confidence scores from this tier start at 0.90 or higher.</p>
 
-      <h2>What I learned immediately</h2>
+      <p><strong>Tier 2: LLM extraction.</strong> When structured markup isn't there, or when it's incomplete, ShopGraph sends the page content to a language model with a structured extraction prompt. The model returns typed fields, but because LLMs can misinterpret ambiguous layouts or confuse similar-looking elements, confidence scores from this tier are lower, typically in the 0.50 to 0.75 range.</p>
 
-      <p>The first thing I learned is that <strong>Schema.org adoption is uneven</strong>. Large retailers tend to have thorough structured data markup. Smaller shops, marketplaces, and niche categories often have partial or outdated Schema.org. This means any production system needs the LLM fallback, and that fallback needs to be clearly labeled as lower confidence.</p>
+      <p><strong>Tier 3: Headless browser rendering.</strong> When the page requires JavaScript execution to display product data, ShopGraph renders it in a headless browser before attempting extraction. This is the slowest and most expensive tier, and confidence varies depending on the complexity of the rendered page.</p>
 
-      <p>The second thing: <strong>field-level granularity matters more than document-level scoring</strong>. A product page might have perfect Schema.org for the name and brand but completely miss availability or shipping details. A single confidence score for the whole extraction hides exactly the information an agent needs to make decisions.</p>
+      <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
+        <svg viewBox="0 0 780 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <!-- Tier 1 -->
+          <rect x="40" y="20" width="560" height="50" rx="6" fill="#16a34a" opacity="0.12"/>
+          <rect x="40" y="20" width="560" height="50" rx="6" fill="none" stroke="#16a34a" stroke-width="1" opacity="0.3"/>
+          <text x="60" y="42" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#16a34a">Tier 1: Schema.org</text>
+          <text x="60" y="58" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(0,0,0,0.4)">&lt; 1 second | Highest confidence | Lowest cost</text>
 
-      <p>The third: <strong>agents need the score at call time, not as a separate lookup</strong>. If you have to make a second API call to check confidence, most integrations won't bother. The score has to ship inline with the data, in the same response, in the same object. That's why ShopGraph returns confidence as a sibling field to every extracted value.</p>
+          <!-- Arrow 1 -->
+          <line x1="320" y1="70" x2="320" y2="100" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+          <polygon points="315,98 320,106 325,98" fill="rgba(0,0,0,0.2)"/>
+          <text x="330" y="92" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(0,0,0,0.4)">markup missing or incomplete</text>
 
-      <p>The fourth: <strong>MCP directories don't drive adoption</strong>. I listed ShopGraph on every MCP directory I could find: Glama, Smithery, mcpservers.org, MCP Market, the Official MCP Registry. Zero usage. Not low usage. Zero. But even if they had driven traffic, there is a paradigm mismatch. MCP is currently indexed heavily toward desktop chat clients (Claude Desktop, Cursor). The B2B data teams who need this infrastructure build headless, server-side pipelines. The REST API had to become the primary integration surface. The MCP server now acts as a wrapper around the same engine for developers already in that ecosystem. A playground where someone can paste a URL and see results without signing up. That's the conversion path. Directory listings just confirm you exist.</p>
+          <!-- Tier 2 -->
+          <rect x="40" y="110" width="560" height="50" rx="6" fill="#d97706" opacity="0.12"/>
+          <rect x="40" y="110" width="560" height="50" rx="6" fill="none" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+          <text x="60" y="132" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#d97706">Tier 2: LLM extraction</text>
+          <text x="60" y="148" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(0,0,0,0.4)">2-5 seconds | Moderate confidence | Moderate cost</text>
+
+          <!-- Arrow 2 -->
+          <line x1="320" y1="160" x2="320" y2="190" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+          <polygon points="315,188 320,196 325,188" fill="rgba(0,0,0,0.2)"/>
+          <text x="330" y="182" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(0,0,0,0.4)">page too complex or ambiguous</text>
+
+          <!-- Tier 3 -->
+          <rect x="40" y="200" width="560" height="50" rx="6" fill="#ef4444" opacity="0.12"/>
+          <rect x="40" y="200" width="560" height="50" rx="6" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.3"/>
+          <text x="60" y="222" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#ef4444">Tier 3: Headless browser</text>
+          <text x="60" y="238" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(0,0,0,0.4)">5-15 seconds | Variable confidence | Highest cost</text>
+
+          <!-- Right annotation -->
+          <text x="640" y="140" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="rgba(0,0,0,0.4)" text-anchor="start">Cheapest and</text>
+          <text x="640" y="156" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="rgba(0,0,0,0.4)" text-anchor="start">most reliable first.</text>
+        </svg>
+      </div>
+
+      <p>The system tries the cheapest, most reliable method first and only escalates when it has to. This keeps latency low and confidence high for the majority of requests, since most major commerce sites do have structured markup for core product fields.</p>
+
+      <h2>The scoring layer</h2>
+
+      <p>Every field in the response carries a confidence score between 0 and 1. The score reflects both the extraction method and the internal consistency of the result. A price parsed from Schema.org JSON-LD scores differently than the same price extracted by an LLM from a page that also displays sale prices, bundle prices, and per-unit prices in close proximity.</p>
+
+      <p>This per-field granularity is what makes the system useful for agents. A product page might have perfect structured markup for the name and brand but no availability signal at all. A single document-level confidence score hides that distinction. Field-level scoring exposes it, so your agent can trust the brand at 0.97 while treating availability at 0.55 as provisional.</p>
+
+      <p>Without confidence scores, agents either trust everything (and make mistakes) or trust nothing (and require constant human oversight). With field-level scoring, agents can be selective. They can set thresholds per field, per use case, per risk tolerance. A comparison tool might accept 0.60 on price. A procurement agent issuing purchase orders might require 0.90. <a href="/">Try it in the playground.</a></p>
+
+      <h2>What I learned building this</h2>
+
+      <p>I listed ShopGraph on every MCP directory I could find: Glama, Smithery, mcpservers.org, MCP Market, the Official MCP Registry. Zero usage. Not low usage. Zero.</p>
+
+      <p>Even if they had driven traffic, there is a paradigm mismatch. MCP is currently indexed toward desktop chat clients like Claude Desktop and Cursor. The B2B data teams who need product data infrastructure build headless, server-side pipelines. They don't install MCP servers. They call REST APIs.</p>
+
+      <p>The REST API had to become the primary integration surface. The MCP server now acts as a wrapper around the same engine for developers already in that ecosystem. The playground, where someone can paste a URL and see results without signing up, turned out to be the real conversion path. Directory listings just confirm you exist.</p>
+
+      <p>B2B is harder and more valuable than consumer use cases. In consumer shopping, a wrong price is annoying. In B2B procurement, a wrong price or an incorrect MOQ (minimum order quantity) is a line item on a purchase order. These teams don't treat confidence scores as a nice-to-have. They need them as a hard requirement before their agents can operate autonomously.</p>
 
       <h2>What the market is telling me</h2>
 
-      <p>I started building ShopGraph for myself. The commerce platform is still running, still using ShopGraph as its data layer. But as I talked to other developers building agent-based systems, a pattern emerged: everyone has an extraction step, and everyone hits the same trust problem.</p>
+      <p>Google's <a href="https://github.com/universal-commerce-protocol/ucp-spec">Universal Commerce Protocol</a>, Stripe's Merchant Product Pages, Shopify's AI Toolkit. The infrastructure layer for agent-to-commerce interaction is forming. These aren't competing with ShopGraph. They're validating the problem space. If every major platform is building structured product interfaces for AI, the need for a trust layer on top of that data only grows.</p>
 
-      <p>Travel agents pulling hotel prices. Research agents comparing B2B supplier specs. Shopping assistants aggregating deals across dozens of retailers. The domain varies but the problem is identical. The data comes back structured, but the agent has no way to know which fields to trust.</p>
+      <h2>Try it</h2>
 
-      <p>The conversations that surprised me most were with teams building B2B procurement agents. In B2B, a wrong price or an incorrect MOQ (minimum order quantity) has real financial consequences. These teams weren't just interested in confidence scores as a nice-to-have. They needed them as a hard requirement before their agents could operate autonomously.</p>
-
-      <h2>What's next</h2>
-
-      <p>ShopGraph is live today as a REST API and an MCP server. You send a product URL (or raw HTML), and you get back structured product data with per-field confidence scores. The output is compatible with the <a href="https://github.com/universal-commerce-protocol/ucp-spec">Universal Commerce Protocol</a> spec, so it plugs directly into agent frameworks that speak UCP.</p>
-
-      <p>The <a href="/">playground</a> is the fastest way to see it in action. Paste any product URL and you'll get the full scored response.</p>
-
-      <p>I'm currently working on an <strong>AgentReady scoring</strong> system that evaluates product data across multiple dimensions: structured data completeness, semantic richness, UCP compatibility, pricing clarity, inventory signal quality, and access readiness. The goal is to give a holistic view of how well a product page serves agent-based consumers, not just whether the data can be extracted.</p>
-
-      <p>If you're building agents that consume product data, I'd like to hear what trust problems you're running into. The patterns I've seen so far suggest this is a shared infrastructure problem, not something every team should solve independently.</p>
+      <p>ShopGraph is live as a REST API. Send any product URL and get back structured data with per-field confidence scores. The <a href="/">playground</a> is the fastest way to see it. If you're building agents that consume product data and running into trust problems, I'd like to hear about it: <a href="mailto:krishna@shopgraph.ai">krishna@shopgraph.ai</a></p>
 
       <hr>
       <div style="display:flex;justify-content:flex-end;font-size:0.75rem;margin-top:1rem">

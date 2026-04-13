@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Cloudflare and GoDaddy launched Web Bot Auth. What this means for commerce AI agents and why ShopGraph pre-built the identity layer.">
-<title>The Open Web Got Identity Gates — ShopGraph</title>
+<title>The Open Web Got Identity Gates - ShopGraph</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -18,108 +18,144 @@
       <a href="/blog" style="font-size:0.75rem;color:var(--text-muted)">Back to Blog</a>
 
       <h1>The Open Web Got Identity Gates. What Commerce AI Agents Need Now.</h1>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1.5rem">Krishna Brown · April 12, 2026</p>
+      <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1.5rem">Krishna Brown &middot; April 12, 2026</p>
 
-      <p>On April 7th, Cloudflare and GoDaddy announced a partnership to build identity infrastructure for AI agents on the open web. Web Bot Auth. Agent Networking Standard. RFC 9421 cryptographic signatures. The message was clear: anonymous access to the web is ending. Agents that can prove who they are get through. Agents that can't, don't.</p>
+      <p>On April 7th, Cloudflare and GoDaddy announced a partnership to build identity infrastructure for AI agents on the open web. Web Bot Auth. Agent Networking Standard. RFC 9421 cryptographic signatures. The message was clear: anonymous access to the web is ending. Agents that can prove who they are get through. Agents that cannot get blocked.</p>
 
-      <p>I'd been building toward this for weeks.</p>
+      <p>This matters for anyone building agents that need third-party data. If your agent calls an external API, reads a product page, or pulls pricing from a supplier portal, the rules just changed. The sites your agent accessed last month may now require cryptographic proof of identity before serving a response.</p>
+
+      <div style="max-width:780px;margin:1.5rem 0">
+        <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" role="img" aria-label="Access flow diagram showing blocked path versus ShopGraph proxy path">
+          <!-- Top path: blocked -->
+          <rect x="10" y="20" width="120" height="40" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <text x="70" y="44" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="500" fill="#111">Your Agent</text>
+          <line x1="130" y1="40" x2="250" y2="40" stroke="rgba(0,0,0,0.15)" stroke-width="1" marker-end="url(#arrowGray)"/>
+          <rect x="250" y="20" width="140" height="40" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <text x="320" y="44" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="500" fill="#111">Commerce Site</text>
+          <line x1="390" y1="40" x2="510" y2="40" stroke="rgba(0,0,0,0.15)" stroke-width="1" marker-end="url(#arrowGray)"/>
+          <rect x="510" y="20" width="140" height="40" rx="8" fill="rgba(239,68,68,0.06)" stroke="#ef4444" stroke-width="1"/>
+          <text x="560" y="38" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="600" fill="#ef4444">403 Blocked</text>
+          <text x="625" y="48" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="16" fill="#ef4444">&#x2717;</text>
+
+          <!-- Bottom path: success -->
+          <rect x="10" y="110" width="120" height="40" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <text x="70" y="134" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="500" fill="#111">Your Agent</text>
+          <line x1="130" y1="130" x2="200" y2="130" stroke="rgba(0,0,0,0.15)" stroke-width="1" marker-end="url(#arrowGray)"/>
+          <rect x="200" y="105" width="140" height="50" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <text x="270" y="127" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="600" fill="#111">ShopGraph</text>
+          <text x="270" y="143" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.4)">RFC 9421 proxy</text>
+          <line x1="340" y1="130" x2="410" y2="130" stroke="rgba(0,0,0,0.15)" stroke-width="1" marker-end="url(#arrowGray)"/>
+          <rect x="410" y="110" width="140" height="40" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <text x="480" y="134" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="500" fill="#111">Commerce Site</text>
+          <line x1="550" y1="130" x2="570" y2="130" stroke="rgba(0,0,0,0.15)" stroke-width="1" marker-end="url(#arrowGray)"/>
+          <rect x="570" y="110" width="120" height="40" rx="8" fill="rgba(22,163,106,0.06)" stroke="#16a34a" stroke-width="1"/>
+          <text x="615" y="128" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="600" fill="#16a34a">Scored JSON</text>
+          <text x="660" y="140" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="16" fill="#16a34a">&#x2713;</text>
+
+          <!-- Arrow marker -->
+          <defs>
+            <marker id="arrowGray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+            </marker>
+          </defs>
+        </svg>
+        <p style="font-size:0.6875rem;color:var(--text-muted);margin-top:0.5rem">ShopGraph handles the identity handshake. Your agent gets scored data.</p>
+      </div>
+
+      <p>I built ShopGraph to solve this exact problem. It is an authenticated product data extraction service. You send a URL. ShopGraph handles the identity negotiation with the CDN layer, extracts the product data, scores every field for confidence, and returns structured JSON. Your agent never touches the identity infrastructure.</p>
 
       <h2>What changed</h2>
 
-      <p>ShopGraph started as an extraction tool. Pull product data from a URL, score how much to trust each field, return structured JSON. That's still what it does. But the problem underneath shifted.</p>
+      <p>When ShopGraph launched in March, the extraction challenge was mostly about data quality. Could the system handle a JavaScript-rendered B2B catalog? Could it fill in missing Schema.org markup with LLM extraction? Could it score each field honestly so downstream agents knew what to trust?</p>
 
-      <p>When I launched in March, the extraction challenge was mostly about data quality. Could the system handle a JavaScript-rendered B2B catalog? Could it fill in missing Schema.org markup with LLM extraction? Could it score each field honestly so downstream agents knew what to trust?</p>
-
-      <p>By April, the challenge was also about access. CDN providers started deploying identity gates. Cloudflare's AI Bot Management. GoDaddy's Agent Networking Standard. Sites that were open last month now require cryptographic proof that you're a legitimate agent before they'll serve you data.</p>
-
-      <p>This is the right direction for the web. Commerce sites want agent traffic. Agents drive transactions. But sites need to distinguish trusted automation from anonymous bots. The infrastructure for making that distinction is being built right now.</p>
+      <p>By April, the challenge was also about access. CDN providers started deploying identity gates. Cloudflare's AI Bot Management. GoDaddy's Agent Networking Standard. Sites that were open last month now require cryptographic proof that you are a legitimate agent before they will serve you data. This is the right direction for the web. Commerce sites want agent traffic because agents drive transactions. But sites need to distinguish trusted automation from anonymous bots. The infrastructure for making that distinction is being built right now.</p>
 
       <h2>What I built</h2>
 
       <p>ShopGraph v1.0.0 and v1.0.1 shipped in the first week of April. The build covered three layers.</p>
 
-      <p><strong>The trust layer.</strong> Per-field confidence scoring went from a useful feature to the core product. Every field in every response carries a score from 0 to 1. Your agent can route decisions per-field: act autonomously on high-confidence data, flag uncertain fields for human review, reject unreliable data entirely. The system is transparent about its own uncertainty. That's the design decision everything else is built on.</p>
+      <p><strong>The trust layer.</strong> Per-field confidence scoring went from a useful feature to the core product. Every field in every response carries a score from 0 to 1. Your agent can route decisions per-field: act autonomously on high-confidence data, flag uncertain fields for human review, reject unreliable data entirely. The system is transparent about its own uncertainty. That is the design decision everything else is built on.</p>
 
       <p><strong>The standards layer.</strong> UCP output format, validated against Google's ucp-schema v1.1.0. Stripe Machine-to-Machine Payments wired in so agents can pay per-extraction without a subscription. <a href="/features/agentready">AgentReady scoring</a> across six dimensions that tells your agent how suitable a target URL's data is for automated workflows before you commit pipeline resources.</p>
 
-      <p><strong>The identity layer.</strong> RFC 9421 signature compliance. ShopGraph acts as a trusted proxy, handling the cryptographic handshakes that CDN security gates require. Your agents inherit ShopGraph's verified identity at the CDN layer. You don't manage proxies, keys, or identity infrastructure.</p>
+      <p><strong>The identity layer.</strong> RFC 9421 signature compliance. ShopGraph acts as a trusted proxy, handling the cryptographic handshakes that CDN security gates require. Your agents inherit ShopGraph's verified identity at the CDN layer. You do not manage proxies, keys, or identity infrastructure.</p>
 
-      <p>Because ShopGraph's verified identity is the shared resource, it is also the shared liability. One bad actor abusing the proxy would burn the reputation for every legitimate user. The system enforces per-agent rate limits, monitors for usage anomalies, and isolates tenant traffic so that one integration's behavior doesn't degrade access for others.</p>
+      <p>Because ShopGraph's verified identity is the shared resource, it is also the shared liability. One bad actor abusing the proxy would burn the reputation for every legitimate user. The system enforces per-agent rate limits, monitors for usage anomalies, and isolates tenant traffic so that one integration's behavior does not degrade access for others.</p>
 
-      <p>The portfolio went from a single MCP server to: a REST API, an MCP server, n8n/Make.com/Power Automate integration nodes (in testing), a <a href="/leaderboard">public leaderboard</a> scoring how agent-ready commerce sites are, and framework PRs for Vercel AI SDK and LangChain shipping this week.</p>
+      <p>The portfolio went from a single MCP server to: a REST API, an MCP server, n8n and Make.com integration nodes (in testing), a <a href="/">playground</a>, a <a href="/leaderboard">public leaderboard</a> scoring how agent-ready commerce sites are, and framework PRs for Vercel AI SDK and LangChain shipping this week.</p>
 
-      <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
-        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <div style="max-width:780px;margin:1.5rem 0">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" role="img" aria-label="Hub and spoke diagram showing ShopGraph Extraction Engine at center with eight integration surfaces">
           <!-- Center node -->
-          <rect x="215" y="165" width="170" height="50" rx="10" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="300" y="195" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#111">ShopGraph Engine</text>
+          <rect x="190" y="165" width="220" height="50" rx="10" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <text x="300" y="189" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="12" font-weight="600" fill="#111">ShopGraph Extraction Engine</text>
 
-          <!-- Spoke: REST API (top left) -->
-          <line x1="250" y1="165" x2="130" y2="75" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <rect x="60" y="50" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="120" y="73" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">REST API</text>
+          <!-- Spoke: REST API (top-left) -->
+          <line x1="230" y1="165" x2="120" y2="80" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <rect x="50" y="55" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="110" y="78" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">REST API</text>
 
-          <!-- Spoke: MCP Server (top center) -->
-          <line x1="300" y1="165" x2="300" y2="85" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <rect x="240" y="50" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="300" y="73" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">MCP Server</text>
+          <!-- Spoke: MCP Server (top) -->
+          <line x1="300" y1="165" x2="300" y2="90" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <rect x="240" y="55" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="300" y="78" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">MCP Server</text>
 
-          <!-- Spoke: n8n Node (top right) -->
-          <line x1="350" y1="165" x2="470" y2="75" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <rect x="420" y="50" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="480" y="73" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">n8n Node</text>
+          <!-- Spoke: n8n Node (top-right) -->
+          <line x1="370" y1="165" x2="480" y2="80" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <rect x="430" y="55" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="490" y="78" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">n8n Node</text>
 
           <!-- Spoke: Make.com Node (right) -->
-          <line x1="385" y1="190" x2="480" y2="190" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <line x1="410" y1="190" x2="480" y2="190" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
           <rect x="480" y="172" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="540" y="195" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Make.com Node</text>
+          <text x="540" y="195" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">Make.com Node</text>
 
-          <!-- Spoke: Playground (bottom right) -->
-          <line x1="350" y1="215" x2="470" y2="305" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <rect x="420" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="480" y="317" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Playground</text>
+          <!-- Spoke: Playground (bottom-right) -->
+          <line x1="370" y1="215" x2="480" y2="305" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <rect x="430" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="490" y="317" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">Playground</text>
 
-          <!-- Spoke: Leaderboard (bottom center) -->
-          <line x1="300" y1="215" x2="300" y2="295" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <!-- Spoke: Leaderboard (bottom) -->
+          <line x1="300" y1="215" x2="300" y2="295" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
           <rect x="240" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="300" y="317" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Leaderboard</text>
+          <text x="300" y="317" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">Leaderboard</text>
 
-          <!-- Spoke: Framework PRs (bottom left) -->
-          <line x1="250" y1="215" x2="130" y2="305" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <rect x="60" y="294" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <text x="120" y="317" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#111">Framework PRs</text>
+          <!-- Spoke: Vercel AI SDK (bottom-left) -->
+          <line x1="230" y1="215" x2="120" y2="305" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <rect x="40" y="294" width="140" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="110" y="317" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" fill="#111">Vercel AI SDK</text>
+
+          <!-- Spoke: LangChain Cookbook (left) -->
+          <line x1="190" y1="190" x2="120" y2="190" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <rect x="0" y="172" width="120" height="36" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <text x="60" y="189" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="10" fill="#111">LangChain Cookbook</text>
         </svg>
+        <p style="font-size:0.6875rem;color:var(--text-muted);margin-top:0.5rem">One engine. Multiple integration surfaces.</p>
       </div>
 
       <h2>Why B2B</h2>
 
-      <p>The shift toward B2B industrial supply wasn't a pivot. It was following the problem to where it's hardest and most valuable.</p>
-
       <p>B2C e-commerce is largely solved. Shopify stores have clean structured data. Amazon has an API. The extraction pipeline handles these sites on Tier 1 in under a second.</p>
 
-      <p>B2B procurement is different. A facilities manager at a hospital network needs pricing on industrial pumps from Grainger, air handling units from McMaster-Carr, electrical components from Digi-Key. Each supplier portal has a different data architecture. Some have structured markup. Many don't. Some require JavaScript rendering. Some are behind CDN gates.</p>
-
-      <p>The procurement teams that need reliable product data the most are working with suppliers whose sites are the hardest to extract from. And these are high-value transactions. A wrong price on an industrial component order isn't a $20 mistake. It's a $20,000 mistake.</p>
+      <p>B2B procurement is different. A facilities manager at a hospital network needs pricing on industrial pumps from Grainger, air handling units from McMaster-Carr, electrical components from Digi-Key. Each supplier portal has a different data architecture. Some have structured markup. Many do not. Some require JavaScript rendering. Some are behind CDN gates. The procurement teams that need reliable product data the most are working with suppliers whose sites are the hardest to extract from. And these are high-value transactions. A wrong price on an industrial component order is not a $20 mistake. It is a $20,000 mistake.</p>
 
       <p>ShopGraph's test corpus is 44% B2B, 56% B2C. The scoring system rewards B2B-specific fields: MOQ, lead time, bulk pricing tiers, manufacturer part numbers. The <a href="/leaderboard">leaderboard</a> tracks Grainger, McMaster-Carr, MSC Industrial, Fastenal, Digi-Key, and Mouser alongside the consumer sites.</p>
 
       <h2>What I got wrong</h2>
 
-      <p>The MCP-only launch produced zero organic usage despite listings on every major directory. Directories confirm you exist. They don't create demand. The playground, the free API tier (500 calls, no signup), and the framework PRs are what create the evaluation path.</p>
+      <p>Every system designed for a stable environment breaks when the environment shifts. I did not build the identity layer first. ShopGraph launched as a pure extraction and scoring service. The RFC 9421 proxy came later, after Cloudflare and GoDaddy announced their partnership, after sites in the test corpus started returning 403s that had returned 200s the week before. The conditions changed, and the system had to change with them. If I were starting today, the identity layer would be the foundation, not the addition.</p>
 
       <h2>What's next</h2>
 
-      <p>The near-term build is distribution. Framework PRs for Vercel AI SDK and LangChain submit this week. These aren't just code contributions. They're the first time most developers will see confidence-aware extraction in a working example. An agent that checks the confidence score on every field and routes accordingly. That pattern doesn't exist in any framework cookbook yet.</p>
+      <p>The near-term build is distribution. Framework PRs for Vercel AI SDK and LangChain submit this week. These are not just code contributions. They are the first time most developers will see confidence-aware extraction in a working example. An agent that checks the confidence score on every field and routes accordingly. That pattern does not exist in any framework cookbook yet.</p>
 
       <p>The medium-term build is the access readiness dimension. ShopGraph already tracks whether target URLs require agent authentication, but the dimension is stubbed at weight 0.00 in the scoring system. It activates when Web Bot Auth adoption reaches detection threshold. When more than 10% of the test corpus requires cryptographic identity, access readiness becomes a scored dimension and the weights redistribute.</p>
 
       <p>The longer-term build is CommerceFlow, a multi-step agent orchestration layer where extraction, scoring, and purchasing happen in a coordinated workflow. Stripe MPP handles the payment. ShopGraph handles the data and identity. The agent handles the decision logic. The human handles the exceptions.</p>
 
-      <p>The boundary between what the agent handles and what the human handles is the design problem I keep coming back to. Confidence scoring is how you draw that boundary with data instead of guessing.</p>
-
       <h2>Build with me</h2>
 
-      <p>I'm looking for three design partners to integrate ShopGraph's authenticated pipeline before public launch. If you're building procurement agents, catalog automation, or any workflow where your agents need reliable product data from B2B suppliers, I want to hear from you. <a href="/">Try the playground</a>, check the <a href="/leaderboard">leaderboard</a>, and reach out.</p>
+      <p>I am looking for three design partners to integrate ShopGraph's authenticated pipeline before public launch. If you are building procurement agents, catalog automation, or any workflow where your agents need reliable product data from B2B suppliers, I want to hear from you. <a href="/">Try the playground</a>, check the <a href="/leaderboard">leaderboard</a>, and reach out.</p>
 
       <p>hi@kb.computer</p>
 
