@@ -9,6 +9,133 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles/main.css">
+<style>
+  /* Figma design overrides */
+  .hero h1 {
+    font-family: var(--font-sans) !important;
+    font-size: 32px !important;
+    font-weight: 400 !important;
+    color: #007AFF !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+  .hero .subtitle {
+    font-size: 18px !important;
+    line-height: 26px !important;
+    color: #222 !important;
+    font-variation-settings: "wght" 400 !important;
+  }
+  .playground {
+    border: 1px dashed #007AFF !important;
+    background: transparent !important;
+  }
+  .playground-label {
+    font-family: var(--font-sans) !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    color: #000 !important;
+    margin-bottom: 0.75rem;
+  }
+  .playground #pg-url {
+    background: #f3f8ff !important;
+    border: 1px solid #0969da !important;
+    border-radius: 16px !important;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: 10px 14px !important;
+  }
+  #pg-extract-btn {
+    background: #007AFF !important;
+    color: #fff !important;
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border-radius: 40px !important;
+    padding: 10px 16px !important;
+    border: none;
+    cursor: pointer;
+  }
+  #pg-extract-btn:hover {
+    background: #0062d6 !important;
+  }
+  .two-col-layout {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  .two-col-layout .col-features {
+    flex: 1;
+  }
+  .two-col-layout .col-principles {
+    flex: 0 0 267px;
+  }
+  .col-features .feature-item {
+    margin-bottom: 1.25rem;
+  }
+  .col-features .feature-item h3 {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: #222;
+    margin: 0 0 0.25rem;
+    line-height: normal;
+  }
+  .col-features .feature-item p {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: #222;
+    line-height: 20px;
+    margin: 0;
+  }
+  .col-principles h2.principles-header {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #222;
+    margin: 0 0 1rem;
+    display: block;
+  }
+  .col-principles h2.principles-header::after {
+    display: none;
+  }
+  .principle-item {
+    margin-bottom: 1rem;
+  }
+  .principle-item .principle-title {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    display: inline;
+    background: #FFDB11;
+    padding: 0 2px;
+    line-height: 1.6;
+  }
+  .principle-item p {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: #222;
+    line-height: 20px;
+    margin: 0.25rem 0 0;
+  }
+  .controls-row label {
+    font-size: 12px !important;
+    color: var(--text-secondary) !important;
+  }
+  @media (max-width: 768px) {
+    .two-col-layout {
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .two-col-layout .col-principles {
+      flex: 1;
+    }
+  }
+</style>
 </head>
 <body>
 <div class="layout">
@@ -16,44 +143,45 @@
     <div class="content-inner">
 
       <div class="hero">
-        <h1><strong>ShopGraph.</strong> Authenticated product data extraction.</h1>
+        <h1>Authenticated<br>product data extraction.</h1>
         <p class="subtitle">ShopGraph handles the identity handshakes and returns UCP-compliant product data with transparent confidence scores, so your pipelines keep moving.</p>
       </div>
 
       <!-- Playground -->
       <div class="playground">
         <div class="playground-header">
-          <span class="playground-label">Paste a product URL. See what your agent would see.</span>
+          <span class="playground-label">Try it. 50 free calls/month · No signup. Your quota resets every month.</span>
         </div>
 
         <div class="playground-inputs" style="display:flex;gap:12px;align-items:flex-end">
           <div class="playground-field" style="flex:1">
-            <input id="pg-url" type="url" value="https://www.homedepot.com/p/Milwaukee-M18-FUEL-18V-Lithium-Ion-Brushless-Cordless-Hammer-Drill-and-Impact-Driver-Combo-Kit-2-Tool-with-2-Batteries/312667940" placeholder="Paste any product URL" style="width:100%;padding:10px 12px;border:1px solid var(--border-color);border-radius:6px;font-size:14px;font-family:var(--font-mono)">
+            <input id="pg-url" type="url" value="https://www.homedepot.com/p/Milwaukee-M18-FUEL-18V-Lithium-Ion-Brushless-Cordless-Hammer-Drill-and-Impact-Driver-Combo-Kit-2-Tool-with-2-Batteries/312667940" placeholder="Paste any product URL" style="width:100%">
           </div>
-          <button id="pg-extract-btn" class="btn btn-primary">Extract</button>
+          <button id="pg-extract-btn">Extract</button>
         </div>
         <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.375rem">Try a B2B supplier SKU, an Amazon product page, or a Shopify store.</div>
 
         <!-- Execution flags -->
-        <div style="margin-top:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <div class="controls-row" style="margin-top:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:4px">
             <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--border-color);border-radius:4px 0 0 4px;background:rgba(255,255,255,0.05)">
-              <input type="radio" name="pg-fetch-mode" value="standard" checked style="accent-color:#111">
+              <input type="radio" name="pg-fetch-mode" value="standard" checked style="accent-color:#007AFF">
               Standard (Cache Allowed)
             </label>
             <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;border:1px solid var(--border-color);border-radius:0 4px 4px 0;border-left:0">
-              <input type="radio" name="pg-fetch-mode" value="force_live" style="accent-color:#111">
-              Force Live Fetch <span style="color:#111;font-weight:600">(3x)</span>
+              <input type="radio" name="pg-fetch-mode" value="force_live" style="accent-color:#007AFF">
+              Force Live Fetch <span style="color:#0969da;font-weight:600">(3X)</span>
             </label>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <label for="pg-threshold" style="font-size:12px;color:var(--text-secondary);white-space:nowrap">Confidence threshold</label>
-            <input id="pg-threshold" type="range" min="0" max="1" step="0.05" value="0.70" style="width:100px;accent-color:#111">
-            <span id="pg-threshold-val" style="font-size:12px;font-family:var(--font-mono);color:#111;min-width:32px">70%</span>
+            <label for="pg-threshold" style="font-size:12px;color:var(--text-secondary);white-space:nowrap">Confidence:</label>
+            <span id="pg-threshold-val" style="font-size:12px;font-family:var(--font-mono);color:#111;min-width:32px">0.70</span>
+            <input id="pg-threshold" type="range" min="0" max="1" step="0.05" value="0.70" style="width:100px;accent-color:#007AFF">
           </div>
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);cursor:pointer">
+            <input type="checkbox" checked style="accent-color:#007AFF"> UCP format
+          </label>
         </div>
-
-
 
         <div id="pg-results" class="playground-results">
           <div id="pg-loading" style="display:none;text-align:center;padding:20px;color:#111">
@@ -64,35 +192,55 @@
         </div>
       </div>
 
-      <h2>Design Principles</h2>
-      <ul>
-        <li><strong>Transparent uncertainty.</strong> Every field tells you how confident the system is. You decide what to trust.</li>
-        <li><strong>Access without infrastructure.</strong> Your agents reach product data behind CDN security gates. You don't manage proxies or identity stacks.</li>
-        <li><strong>One schema, any merchant.</strong> Every response follows the same structure regardless of the source site. Write one parser, use it everywhere.</li>
-        <li><strong>Full provenance.</strong> Every response shows which extraction method produced each field. Your downstream systems make informed decisions.</li>
-        <li><strong>Your threshold, your rules.</strong> All data comes back with quality signals attached. You set the bar for what's trusted, flagged, or rejected.</li>
-      </ul>
+      <hr>
 
-      <div class="feature-list">
-        <div class="feature-list-item">
-          <h3>Confidence Scoring</h3>
-          <p>Every extracted field includes a confidence score from 0.0 to 1.0 showing how it was derived. Set a threshold (e.g., 0.85) and the engine filters fields that fall below it. Your agents act on data they can verify, not data they have to trust.</p>
+      <!-- Two-column layout: features + design principles -->
+      <div class="two-col-layout">
+        <div class="col-features">
+          <div class="feature-item">
+            <h3>Confidence Scoring</h3>
+            <p>Every extracted field includes a confidence score from 0.0 to 1.0 showing how it was derived. Set a threshold (e.g., 0.85) and the engine filters fields that fall below it. Your agents act on data they can verify, not data they have to trust.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Native UCP Output</h3>
+            <p>Standardize your entire catalog pipeline. ShopGraph extracts complex variant matrices and instantly normalizes them into Universal Commerce Protocol JSON, strictly validated against the official ucp-schema. One schema for every merchant.</p>
+          </div>
+          <div class="feature-item">
+            <h3>AgentReady Scoring</h3>
+            <p>Deploy your agents with complete environmental awareness. ShopGraph evaluates target URLs across 6 dimensions of machine-readability and access readiness, providing a comprehensive 0-100 score on extraction viability.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Self-Healing Fallbacks</h3>
+            <p>Maintain reliable data pipelines across complex B2B portals. ShopGraph automatically routes requests through an authenticated pipeline: Schema.org &rarr; LLM extraction &rarr; Headless Playwright rendering, ensuring maximum data retrieval while respecting CDN access protocols.</p>
+          </div>
+          <div class="feature-item">
+            <h3>RFC 9421 Signature Compliance</h3>
+            <p>ShopGraph acts as an authenticated proxy, handling the cryptographic handshakes required by modern Cloudflare and GoDaddy AI security gates. Your agents present a verified RFC 9421 identity at the CDN layer. The same protocol commerce sites use to distinguish trusted automation from anonymous traffic.</p>
+          </div>
         </div>
-        <div class="feature-list-item">
-          <h3>Native UCP Output</h3>
-          <p>Standardize your entire catalog pipeline. ShopGraph extracts complex variant matrices and instantly normalizes them into Universal Commerce Protocol JSON, strictly validated against the official ucp-schema. One schema for every merchant.</p>
-        </div>
-        <div class="feature-list-item">
-          <h3>AgentReady Scoring</h3>
-          <p>Deploy your agents with complete environmental awareness. ShopGraph evaluates target URLs across 6 dimensions of machine-readability and access readiness, providing a comprehensive 0-100 score on extraction viability.</p>
-        </div>
-        <div class="feature-list-item">
-          <h3>Self-Healing Fallbacks</h3>
-          <p>Maintain reliable data pipelines across complex B2B portals. ShopGraph automatically routes requests through an authenticated pipeline: Schema.org &rarr; LLM extraction &rarr; Headless Playwright rendering, ensuring maximum data retrieval while respecting CDN access protocols.</p>
-        </div>
-        <div class="feature-list-item">
-          <h3>RFC 9421 Signature Compliance</h3>
-          <p>ShopGraph acts as an authenticated proxy, handling the cryptographic handshakes required by modern Cloudflare and GoDaddy AI security gates. Your agents present a verified RFC 9421 identity at the CDN layer. The same protocol commerce sites use to distinguish trusted automation from anonymous traffic.</p>
+
+        <div class="col-principles">
+          <h2 class="principles-header">Design Principles</h2>
+          <div class="principle-item">
+            <span class="principle-title">Transparent uncertainty.</span>
+            <p>Every field tells you how confident the system is. You decide what to trust.</p>
+          </div>
+          <div class="principle-item">
+            <span class="principle-title">Access without infrastructure.</span>
+            <p>Your agents reach product data behind CDN security gates. You don't manage proxies or identity stacks.</p>
+          </div>
+          <div class="principle-item">
+            <span class="principle-title">One schema, any merchant.</span>
+            <p>Every response follows the same structure regardless of the source site. Write one parser, use it everywhere.</p>
+          </div>
+          <div class="principle-item">
+            <span class="principle-title">Full provenance.</span>
+            <p>Every response shows which extraction method produced each field. Your downstream systems make informed decisions.</p>
+          </div>
+          <div class="principle-item">
+            <span class="principle-title">Your threshold, your rules.</span>
+            <p>All data comes back with quality signals attached. You set the bar for what's trusted, flagged, or rejected.</p>
+          </div>
         </div>
       </div>
 

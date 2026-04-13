@@ -215,7 +215,7 @@
     var display = $('pg-threshold-val');
     if (el && display) {
       var val = parseFloat(el.value);
-      display.textContent = val > 0 ? (val * 100).toFixed(0) + '%' : 'Off';
+      display.textContent = val > 0 ? val.toFixed(2) : 'Off';
     }
   }
 
