@@ -9,6 +9,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles/main.css">
+<link rel="stylesheet" href="/styles/diagram-animations.css">
 <style>
 /* === ROUTING ENGINE DASHBOARD === */
 .routing-dashboard {
@@ -727,31 +728,7 @@
   font-size: 0.6875rem;
 }
 
-/* Pipeline animation states */
-@keyframes tierPulse {
-  0% { border-color: rgba(0,0,0,0.08); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
-  25% { border-color: rgba(96,165,250,0.376); box-shadow: rgba(96,165,250,0.145) 0px 0px 12px 4px, rgba(96,165,250,0.125) 0px 0px 4px 1px; }
-  60% { border-color: rgba(96,165,250,0.376); box-shadow: rgba(96,165,250,0.145) 0px 0px 12px 4px, rgba(96,165,250,0.125) 0px 0px 4px 1px; }
-  100% { border-color: rgba(0,0,0,0.08); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.pd-anim-hidden {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.pd-anim-visible {
-  animation: fadeInUp 0.4s ease forwards;
-}
-
-.pd-tier.pd-tier-pulsed {
-  animation: tierPulse 1.2s ease forwards;
-}
+/* Old tierPulse / fadeInUp / pd-anim-* removed — using global diagram-animations.css */
 
 /* Responsive: stack on mobile */
 @media (max-width: 768px) {
@@ -792,11 +769,11 @@
 
       <h2 class="fade-in-section">Extraction Pipeline Overview</h2>
 
-      <div class="pipeline-diagram" id="pipeline-diagram">
+      <div class="pipeline-diagram dg-diagram" id="pipeline-diagram">
         <!-- Product URL input -->
-        <div class="pd-input-box pd-anim-hidden" data-pd-delay="0">Product URL</div>
+        <div class="pd-input-box dg-hidden" data-dg-delay="0">Product URL</div>
 
-        <div class="pd-arrow-down pd-anim-hidden" data-pd-delay="100">
+        <div class="pd-arrow-down dg-hidden" data-dg-delay="100">
           <div class="pd-arrow-line"></div>
           <div class="pd-arrow-head"></div>
         </div>
@@ -805,7 +782,7 @@
           <!-- LEFT: Tier stack -->
           <div class="pd-left">
             <!-- Tier 1 -->
-            <div class="pd-tier pd-anim-hidden" data-pd-delay="200" id="pd-tier1">
+            <div class="pd-tier dg-hidden dg-box dg-success" data-dg-delay="200" id="pd-tier1">
               <div class="pd-tier-header">Tier 1: Schema.org Extraction</div>
               <div class="pd-tier-body">
                 <div class="pd-tier-desc">Parses JSON-LD and microdata from the raw HTML response. No rendering or LLM needed.</div>
@@ -815,22 +792,22 @@
                   <div class="pd-stat">Confidence: <strong>0.90 - 0.98</strong></div>
                 </div>
               </div>
-              <div class="pd-success-arrow pd-anim-hidden" data-pd-delay="400">
-                <span class="pd-sarrow-label">Success</span>
+              <div class="pd-success-arrow dg-hidden" data-dg-delay="400">
+                <span class="pd-sarrow-label dg-label dg-label-green">Success</span>
                 <span class="pd-sarrow-line"></span>
                 <span class="pd-sarrow-head"></span>
               </div>
             </div>
 
             <!-- Failure arrow 1 -->
-            <div class="pd-arrow-down pd-anim-hidden" data-pd-delay="500">
+            <div class="pd-arrow-down dg-hidden" data-dg-delay="500">
               <div class="pd-arrow-line"></div>
-              <div class="pd-arrow-label fail">MISSING / MALFORMED</div>
+              <div class="pd-arrow-label fail dg-label dg-label-red">MISSING / MALFORMED</div>
               <div class="pd-arrow-head"></div>
             </div>
 
             <!-- Tier 2 -->
-            <div class="pd-tier pd-anim-hidden" data-pd-delay="600" id="pd-tier2">
+            <div class="pd-tier dg-hidden dg-box dg-warning" data-dg-delay="600" id="pd-tier2">
               <div class="pd-tier-header">Tier 2: LLM Extraction</div>
               <div class="pd-tier-body">
                 <div class="pd-tier-desc">Passes raw DOM to the LLM for structured extraction via the Universal Commerce Protocol.</div>
@@ -840,22 +817,22 @@
                   <div class="pd-stat">Confidence: <strong>0.75 - 0.88</strong></div>
                 </div>
               </div>
-              <div class="pd-success-arrow pd-anim-hidden" data-pd-delay="800">
-                <span class="pd-sarrow-label">Success</span>
+              <div class="pd-success-arrow dg-hidden" data-dg-delay="800">
+                <span class="pd-sarrow-label dg-label dg-label-green">Success</span>
                 <span class="pd-sarrow-line"></span>
                 <span class="pd-sarrow-head"></span>
               </div>
             </div>
 
             <!-- Failure arrow 2 -->
-            <div class="pd-arrow-down pd-anim-hidden" data-pd-delay="900">
+            <div class="pd-arrow-down dg-hidden" data-dg-delay="900">
               <div class="pd-arrow-line"></div>
-              <div class="pd-arrow-label fail">403 / JS-RENDERED</div>
+              <div class="pd-arrow-label fail dg-label dg-label-red">403 / JS-RENDERED</div>
               <div class="pd-arrow-head"></div>
             </div>
 
             <!-- Tier 3 -->
-            <div class="pd-tier pd-anim-hidden" data-pd-delay="1000" id="pd-tier3">
+            <div class="pd-tier dg-hidden dg-box dg-error" data-dg-delay="1000" id="pd-tier3">
               <div class="pd-tier-header">Tier 3: Playwright Rendering + LLM</div>
               <div class="pd-tier-body">
                 <div class="pd-tier-desc">Launches headless Chrome to solve bot protection, then passes rendered DOM to the LLM.</div>
@@ -865,20 +842,20 @@
                   <div class="pd-stat">Confidence: <strong>0.68 - 0.80</strong></div>
                 </div>
               </div>
-              <div class="pd-success-arrow pd-anim-hidden" data-pd-delay="1200">
-                <span class="pd-sarrow-label">Success</span>
+              <div class="pd-success-arrow dg-hidden" data-dg-delay="1200">
+                <span class="pd-sarrow-label dg-label dg-label-green">Success</span>
                 <span class="pd-sarrow-line"></span>
                 <span class="pd-sarrow-head"></span>
               </div>
             </div>
 
             <!-- CAPTCHA failure -->
-            <div class="pd-captcha pd-anim-hidden" data-pd-delay="1100">Unsolvable CAPTCHA: returns 403 + captcha_required</div>
+            <div class="pd-captcha dg-hidden" data-dg-delay="1100">Unsolvable CAPTCHA: returns 403 + captcha_required</div>
           </div>
 
           <!-- RIGHT: Confidence panel -->
           <div class="pd-right">
-            <div class="pd-confidence pd-anim-hidden" data-pd-delay="400">
+            <div class="pd-confidence dg-hidden dg-box dg-warning" data-dg-delay="400">
               <div class="pd-conf-header">Confidence</div>
               <div class="pd-conf-body">
                 <div class="pd-conf-row"><span class="pd-conf-field">product_name</span><span class="pd-conf-val">0.98</span></div>
@@ -904,24 +881,24 @@
             </div>
 
             <!-- JSON Response -->
-            <div class="pd-json-box pd-anim-hidden" data-pd-delay="1400">JSON Response</div>
+            <div class="pd-json-box dg-hidden" data-dg-delay="1400">JSON Response</div>
           </div>
         </div>
 
         <!-- Agent routing section -->
-        <div class="pd-agent-section pd-anim-hidden" data-pd-delay="1600">
+        <div class="pd-agent-section dg-hidden" data-dg-delay="1600">
           <div class="pd-agent-label">Your Agent Decides</div>
           <div class="pd-agent-title">Per-Field Confidence Routing</div>
           <div class="pd-routing-outcomes">
-            <div class="pd-outcome pd-outcome-green">
+            <div class="pd-outcome pd-outcome-green dg-box dg-success">
               <span class="pd-outcome-label">Autonomous</span>
               <span class="pd-outcome-range">&gt;= 0.85</span>
             </div>
-            <div class="pd-outcome pd-outcome-amber">
+            <div class="pd-outcome pd-outcome-amber dg-box dg-warning">
               <span class="pd-outcome-label">Human Review</span>
               <span class="pd-outcome-range">0.60 - 0.84</span>
             </div>
-            <div class="pd-outcome pd-outcome-red">
+            <div class="pd-outcome pd-outcome-red dg-box dg-error">
               <span class="pd-outcome-label">Escalate / Manual</span>
               <span class="pd-outcome-range">&lt; 0.60</span>
             </div>
@@ -1402,42 +1379,6 @@ console.log(result._shopgraph.extraction_method);
   sections.forEach(function(s) { observer.observe(s); });
 })();
 </script>
-<script>
-// Pipeline diagram scroll-triggered animations
-(function() {
-  var diagram = document.getElementById('pipeline-diagram');
-  if (!diagram) return;
-
-  var animated = false;
-  var elements = diagram.querySelectorAll('.pd-anim-hidden');
-  var tiers = diagram.querySelectorAll('.pd-tier');
-
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting && !animated) {
-        animated = true;
-        observer.unobserve(entry.target);
-
-        elements.forEach(function(el) {
-          var delay = parseInt(el.getAttribute('data-pd-delay') || '0', 10);
-          setTimeout(function() {
-            el.classList.remove('pd-anim-hidden');
-            el.classList.add('pd-anim-visible');
-          }, delay);
-        });
-
-        tiers.forEach(function(tier) {
-          var delay = parseInt(tier.getAttribute('data-pd-delay') || '0', 10);
-          setTimeout(function() {
-            tier.classList.add('pd-tier-pulsed');
-          }, delay);
-        });
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-  observer.observe(diagram);
-})();
-</script>
+<script src="/components/diagram-animations.js"></script>
 </body>
 </html>

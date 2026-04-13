@@ -9,6 +9,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles/main.css">
+<link rel="stylesheet" href="/styles/diagram-animations.css">
 </head>
 <body>
 <div class="layout">
@@ -27,8 +28,8 @@
       <p>ShopGraph's approach is to make the boundary explicit, configurable, and visible. Every field in every API response carries its own confidence score. The system never hides uncertainty behind a single document-level number. And it gives you two distinct strategies for acting on that uncertainty: evaluate each field yourself, or set a threshold and let the server enforce it. The rest of this post explains the five design decisions behind that approach and why each one exists.</p>
 
       <!-- VISUAL 1: Agent Decision Layer -->
-      <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
-        <svg viewBox="0 0 900 920" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <div class="dg-diagram" style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
+        <svg class="dg-hidden" data-dg-delay="0" viewBox="0 0 900 920" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
           <defs>
             <filter id="shadow1" x="-4%" y="-4%" width="108%" height="108%">
               <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
@@ -166,8 +167,8 @@
       <p>ShopGraph scores every field independently. A response might come back with price at 0.93, brand at 0.94, availability at 0.72, and description at 0.48. A document-level confidence score of 0.77 (the average) would be useless for routing. It tells the agent nothing about which fields to trust. The price is reliable. The description is not. A procurement agent can act on the price immediately, flag the availability for human verification, and drop the description entirely. Each field carries its own trust signal. The agent makes a different decision for each one.</p>
 
       <!-- VISUAL 2: Per-field vs per-document -->
-      <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
-        <svg viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <div class="dg-diagram" style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
+        <svg class="dg-hidden" data-dg-delay="0" viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
           <!-- Left panel: Document Score -->
           <rect x="20" y="20" width="350" height="210" rx="6" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
           <text x="40" y="50" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#111">Document Score</text>
@@ -222,8 +223,8 @@
       <p>Redundant systems in engineering are layered by reliability and cost. A hospital does not start with an MRI for every patient. It starts with a physical exam, escalates to bloodwork, and orders imaging only when the cheaper diagnostics are inconclusive. A data center does not fail over to a backup region on the first dropped packet. It retries locally, checks the load balancer, and escalates only when the evidence warrants the cost. The principle is the same in extraction: start with the method that is cheapest and most reliable, and escalate only on failure.</p>
 
       <!-- VISUAL 3: Three-tier waterfall -->
-      <div style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
-        <svg viewBox="0 0 780 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <div class="dg-diagram" style="width:780px;max-width:calc(100vw - 2rem);margin:1.5rem 0">
+        <svg class="dg-hidden" data-dg-delay="0" viewBox="0 0 780 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
           <!-- Tier 1 -->
           <rect x="40" y="20" width="440" height="50" rx="6" fill="rgba(22,163,74,0.08)" stroke="#16a34a" stroke-width="1.5"/>
           <text x="60" y="42" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="550" fill="#16a34a">Tier 1: Schema.org Markup</text>
@@ -308,5 +309,6 @@
 </div>
 <script src="/components/nav.js"></script>
 <script src="/components/code-highlight.js"></script>
+<script src="/components/diagram-animations.js"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles/main.css">
+<link rel="stylesheet" href="/styles/diagram-animations.css">
 </head>
 <body>
 <div class="layout">
@@ -24,8 +25,8 @@
 
       <p>This matters for anyone building agents that need third-party data. If your agent calls an external API, reads a product page, or pulls pricing from a supplier portal, the rules just changed. The sites your agent accessed last month may now require cryptographic proof of identity before serving a response.</p>
 
-      <div style="max-width:780px;margin:1.5rem 0">
-        <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" role="img" aria-label="Access flow diagram showing blocked path versus ShopGraph proxy path">
+      <div class="dg-diagram" style="max-width:780px;margin:1.5rem 0">
+        <svg class="dg-hidden" data-dg-delay="0" viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" role="img" aria-label="Access flow diagram showing blocked path versus ShopGraph proxy path">
           <!-- Top path: blocked -->
           <rect x="10" y="20" width="120" height="40" rx="8" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
           <text x="70" y="44" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="11" font-weight="500" fill="#111">Your Agent</text>
@@ -84,8 +85,8 @@
 
       <p>The portfolio went from a single MCP server to: a REST API, an MCP server, n8n and Make.com integration nodes (in testing), a <a href="/">playground</a>, a <a href="/leaderboard">public leaderboard</a> scoring how agent-ready commerce sites are, and framework PRs for Vercel AI SDK and LangChain shipping this week.</p>
 
-      <div style="max-width:780px;margin:1.5rem 0">
-        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" role="img" aria-label="Hub and spoke diagram showing ShopGraph Extraction Engine at center with eight integration surfaces">
+      <div class="dg-diagram" style="max-width:780px;margin:1.5rem 0">
+        <svg class="dg-hidden" data-dg-delay="0" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto" role="img" aria-label="Hub and spoke diagram showing ShopGraph Extraction Engine at center with eight integration surfaces">
           <!-- Center node -->
           <rect x="190" y="165" width="220" height="50" rx="10" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
           <text x="300" y="189" text-anchor="middle" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="12" font-weight="600" fill="#111">ShopGraph Extraction Engine</text>
@@ -170,5 +171,6 @@
 </div>
 <script src="/components/nav.js"></script>
 <script src="/components/code-highlight.js"></script>
+<script src="/components/diagram-animations.js"></script>
 </body>
 </html>
