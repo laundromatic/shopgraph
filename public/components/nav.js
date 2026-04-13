@@ -36,7 +36,6 @@
         { label: 'Methodology', href: '/methodology' },
         { label: 'Blog', href: '/blog' },
         { label: 'FAQ', href: '/faq' },
-        { label: 'Health Check', href: '/api/health-check' },
         { label: 'Pricing', href: '/pricing' },
       ],
     },
