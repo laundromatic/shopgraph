@@ -17,7 +17,7 @@
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 0.5rem;
   padding: 1.25rem;
-  margin: 1rem 0 2rem;
+  margin: 3rem 0 2rem;
   width: 780px;
   max-width: calc(100vw - 2rem);
 }
@@ -34,6 +34,11 @@
   font-weight: 700;
   color: var(--body-color);
   letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.routing-header-title::after {
+  display: none;
 }
 
 .routing-metrics {
@@ -690,7 +695,7 @@
   flex: 1;
   min-width: 140px;
   border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
+  padding: 0.5rem 1rem;
   text-align: center;
   font-size: 0.6875rem;
   font-weight: 600;
@@ -909,7 +914,7 @@
       <!-- HERO: Interactive Routing Engine Dashboard -->
       <div class="routing-dashboard fade-in-section" id="routing-dashboard" style="transition-delay:0.2s">
         <div class="routing-header">
-          <div class="routing-header-title">ShopGraph Routing Engine</div>
+          <h2 class="routing-header-title">ShopGraph Routing Engine</h2>
           <div class="routing-metrics">
             <div class="metric-badge" id="badge-method">
               <span class="metric-label">Method</span>

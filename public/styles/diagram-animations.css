@@ -169,10 +169,10 @@
 }
 
 /* Animated states — applied by JS */
-.dg-box.dg-animate { animation: dgPulseBlue 1.4s ease-in-out forwards; }
-.dg-box.dg-success.dg-animate { animation: dgPulseGreen 1.4s ease-in-out forwards; }
-.dg-box.dg-error.dg-animate { animation: dgPulseRed 1.4s ease-in-out forwards; }
-.dg-box.dg-warning.dg-animate { animation: dgPulseAmber 1.4s ease-in-out forwards; }
+.dg-box.dg-animate { animation: dgPulseBlue 4.2s ease-in-out infinite; }
+.dg-box.dg-success.dg-animate { animation: dgPulseGreen 4.2s ease-in-out infinite; }
+.dg-box.dg-error.dg-animate { animation: dgPulseRed 4.2s ease-in-out infinite; }
+.dg-box.dg-warning.dg-animate { animation: dgPulseAmber 4.2s ease-in-out infinite; }
 
 /* Label base */
 .dg-label {
@@ -180,18 +180,18 @@
   transition: color 0.3s ease;
 }
 
-.dg-label.dg-animate { animation: dgLabelBlue 1.4s ease-in-out forwards; }
-.dg-label.dg-label-green.dg-animate { animation: dgLabelGreen 1.4s ease-in-out forwards; }
-.dg-label.dg-label-red.dg-animate { animation: dgLabelRed 1.4s ease-in-out forwards; }
-.dg-label.dg-label-amber.dg-animate { animation: dgLabelAmber 1.4s ease-in-out forwards; }
+.dg-label.dg-animate { animation: dgLabelBlue 4.2s ease-in-out infinite; }
+.dg-label.dg-label-green.dg-animate { animation: dgLabelGreen 4.2s ease-in-out infinite; }
+.dg-label.dg-label-red.dg-animate { animation: dgLabelRed 4.2s ease-in-out infinite; }
+.dg-label.dg-label-amber.dg-animate { animation: dgLabelAmber 4.2s ease-in-out infinite; }
 
 /* SVG label base (uses fill instead of color) */
-.dg-fill.dg-animate { animation: dgFillBlue 1.4s ease-in-out forwards; }
-.dg-fill.dg-fill-green.dg-animate { animation: dgFillGreen 1.4s ease-in-out forwards; }
-.dg-fill.dg-fill-red.dg-animate { animation: dgFillRed 1.4s ease-in-out forwards; }
+.dg-fill.dg-animate { animation: dgFillBlue 4.2s ease-in-out infinite; }
+.dg-fill.dg-fill-green.dg-animate { animation: dgFillGreen 4.2s ease-in-out infinite; }
+.dg-fill.dg-fill-red.dg-animate { animation: dgFillRed 4.2s ease-in-out infinite; }
 
 /* Connector */
-.dg-connector.dg-animate { animation: dgConnectorPulse 2s ease-in-out; }
+.dg-connector.dg-animate { animation: dgConnectorPulse 2s ease-in-out infinite; }
 
 /* Reduce motion preference */
 @media (prefers-reduced-motion: reduce) {

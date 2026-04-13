@@ -58,6 +58,7 @@
     'Latency & Cost Tradeoffs': 'Latency & Cost',
     'Payload Transparency': 'Payload',
     'Continuous Calibration': 'Calibration',
+    'ShopGraph Routing Engine': 'Routing Engine',
     // Confidence
     'How It Works': 'How It Works',
     'Tier Baselines': 'Baselines',
