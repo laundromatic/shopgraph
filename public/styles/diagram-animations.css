@@ -1,0 +1,207 @@
+/* ShopGraph Diagram Animations
+   Global animation system for all diagrams across the site.
+   Based on Agentation's schema/mcp diagram patterns.
+
+   Usage:
+   - Add class="dg-box" to diagram boxes (gets blue glow pulse)
+   - Add class="dg-box dg-success" for green glow
+   - Add class="dg-box dg-error" for red glow
+   - Add class="dg-box dg-warning" for amber glow
+   - Add class="dg-label" to text labels (gets color flash)
+   - Add class="dg-label dg-label-green" for green flash
+   - Add class="dg-label dg-label-red" for red flash
+   - Add class="dg-label dg-label-amber" for amber flash
+   - Add class="dg-connector" to connector lines (gets opacity pulse)
+   - Add class="dg-hidden" to elements that should fade in on scroll
+   - Add data-dg-delay="200" for staggered animation delays (ms)
+   - Wrap diagram in a container with class="dg-diagram" and an id
+
+   All animations trigger via IntersectionObserver when the
+   .dg-diagram container scrolls into view.
+
+   Class reference:
+
+   | Class                    | Element   | Effect                        |
+   |--------------------------|-----------|-------------------------------|
+   | dg-diagram               | Container | IntersectionObserver target    |
+   | dg-box                   | Box/card  | Blue glow pulse on scroll     |
+   | dg-box dg-success        | Box       | Green glow pulse              |
+   | dg-box dg-error          | Box       | Red glow pulse                |
+   | dg-box dg-warning        | Box       | Amber glow pulse              |
+   | dg-label                 | HTML text | Color flash gray->blue->gray  |
+   | dg-label dg-label-green  | HTML text | Color flash gray->green->gray |
+   | dg-label dg-label-red    | HTML text | Color flash gray->red->gray   |
+   | dg-label dg-label-amber  | HTML text | Color flash gray->amber->gray |
+   | dg-fill                  | SVG text  | Fill flash (use in SVG)       |
+   | dg-fill dg-fill-green    | SVG text  | Fill flash green              |
+   | dg-fill dg-fill-red      | SVG text  | Fill flash red                |
+   | dg-connector             | Lines     | Opacity + scale pulse         |
+   | dg-hidden                | Any       | Starts invisible, fades in    |
+   | data-dg-delay="N"        | Any       | Stagger delay in ms           |
+*/
+
+/* === KEYFRAMES === */
+
+/* Box glow — blue (default) */
+@keyframes dgPulseBlue {
+  0% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+  17% { border-color: rgba(96,165,250,0.376); box-shadow: rgba(96,165,250,0.145) 0px 0px 12px 4px, rgba(96,165,250,0.125) 0px 0px 4px 1px; }
+  50% { border-color: rgba(96,165,250,0.376); box-shadow: rgba(96,165,250,0.145) 0px 0px 12px 4px, rgba(96,165,250,0.125) 0px 0px 4px 1px; }
+  100% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+}
+
+/* Box glow — green (success) */
+@keyframes dgPulseGreen {
+  0% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+  17% { border-color: rgba(22,163,74,0.376); box-shadow: rgba(22,163,74,0.145) 0px 0px 12px 4px, rgba(22,163,74,0.125) 0px 0px 4px 1px; }
+  50% { border-color: rgba(22,163,74,0.376); box-shadow: rgba(22,163,74,0.145) 0px 0px 12px 4px, rgba(22,163,74,0.125) 0px 0px 4px 1px; }
+  100% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+}
+
+/* Box glow — red (error) */
+@keyframes dgPulseRed {
+  0% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+  17% { border-color: rgba(239,68,68,0.376); box-shadow: rgba(239,68,68,0.145) 0px 0px 12px 4px, rgba(239,68,68,0.125) 0px 0px 4px 1px; }
+  50% { border-color: rgba(239,68,68,0.376); box-shadow: rgba(239,68,68,0.145) 0px 0px 12px 4px, rgba(239,68,68,0.125) 0px 0px 4px 1px; }
+  100% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+}
+
+/* Box glow — amber (warning) */
+@keyframes dgPulseAmber {
+  0% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+  17% { border-color: rgba(245,158,11,0.376); box-shadow: rgba(245,158,11,0.145) 0px 0px 12px 4px, rgba(245,158,11,0.125) 0px 0px 4px 1px; }
+  50% { border-color: rgba(245,158,11,0.376); box-shadow: rgba(245,158,11,0.145) 0px 0px 12px 4px, rgba(245,158,11,0.125) 0px 0px 4px 1px; }
+  100% { border-color: rgba(0,0,0,0.1); box-shadow: rgba(0,0,0,0.04) 0px 1px 3px; }
+}
+
+/* Label color flash — blue (default) */
+@keyframes dgLabelBlue {
+  0% { color: rgba(0,0,0,0.45); }
+  17% { color: rgb(96,165,250); }
+  50% { color: rgb(96,165,250); }
+  100% { color: rgba(0,0,0,0.45); }
+}
+
+/* Label color flash — green */
+@keyframes dgLabelGreen {
+  0% { color: rgba(0,0,0,0.45); }
+  17% { color: #16a34a; }
+  50% { color: #16a34a; }
+  100% { color: rgba(0,0,0,0.45); }
+}
+
+/* Label color flash — red */
+@keyframes dgLabelRed {
+  0% { color: rgba(0,0,0,0.45); }
+  17% { color: #ef4444; }
+  50% { color: #ef4444; }
+  100% { color: rgba(0,0,0,0.45); }
+}
+
+/* Label color flash — amber */
+@keyframes dgLabelAmber {
+  0% { color: rgba(0,0,0,0.45); }
+  17% { color: #d97706; }
+  50% { color: #d97706; }
+  100% { color: rgba(0,0,0,0.45); }
+}
+
+/* SVG label fill flash — blue (for SVG text elements) */
+@keyframes dgFillBlue {
+  0% { fill: rgba(0,0,0,0.45); }
+  17% { fill: rgb(96,165,250); }
+  50% { fill: rgb(96,165,250); }
+  100% { fill: rgba(0,0,0,0.45); }
+}
+
+/* SVG label fill flash — green */
+@keyframes dgFillGreen {
+  0% { fill: rgba(0,0,0,0.45); }
+  17% { fill: #16a34a; }
+  50% { fill: #16a34a; }
+  100% { fill: rgba(0,0,0,0.45); }
+}
+
+/* SVG label fill flash — red */
+@keyframes dgFillRed {
+  0% { fill: rgba(0,0,0,0.45); }
+  17% { fill: #ef4444; }
+  50% { fill: #ef4444; }
+  100% { fill: rgba(0,0,0,0.45); }
+}
+
+/* Connector pulse */
+@keyframes dgConnectorPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.97); }
+}
+
+/* Fade in + slide up */
+@keyframes dgFadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Opacity fade */
+@keyframes dgFade {
+  0% { opacity: 0; }
+  17% { opacity: 0.7; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+
+/* === UTILITY CLASSES === */
+
+.dg-hidden {
+  opacity: 0;
+}
+
+.dg-visible {
+  animation: dgFadeInUp 0.5s ease forwards;
+}
+
+/* Box base */
+.dg-box {
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.5rem;
+  background: #fff;
+  box-shadow: rgba(0,0,0,0.04) 0px 1px 3px;
+}
+
+/* Animated states — applied by JS */
+.dg-box.dg-animate { animation: dgPulseBlue 1.4s ease-in-out forwards; }
+.dg-box.dg-success.dg-animate { animation: dgPulseGreen 1.4s ease-in-out forwards; }
+.dg-box.dg-error.dg-animate { animation: dgPulseRed 1.4s ease-in-out forwards; }
+.dg-box.dg-warning.dg-animate { animation: dgPulseAmber 1.4s ease-in-out forwards; }
+
+/* Label base */
+.dg-label {
+  color: rgba(0,0,0,0.45);
+  transition: color 0.3s ease;
+}
+
+.dg-label.dg-animate { animation: dgLabelBlue 1.4s ease-in-out forwards; }
+.dg-label.dg-label-green.dg-animate { animation: dgLabelGreen 1.4s ease-in-out forwards; }
+.dg-label.dg-label-red.dg-animate { animation: dgLabelRed 1.4s ease-in-out forwards; }
+.dg-label.dg-label-amber.dg-animate { animation: dgLabelAmber 1.4s ease-in-out forwards; }
+
+/* SVG label base (uses fill instead of color) */
+.dg-fill.dg-animate { animation: dgFillBlue 1.4s ease-in-out forwards; }
+.dg-fill.dg-fill-green.dg-animate { animation: dgFillGreen 1.4s ease-in-out forwards; }
+.dg-fill.dg-fill-red.dg-animate { animation: dgFillRed 1.4s ease-in-out forwards; }
+
+/* Connector */
+.dg-connector.dg-animate { animation: dgConnectorPulse 2s ease-in-out; }
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .dg-box.dg-animate,
+  .dg-label.dg-animate,
+  .dg-fill.dg-animate,
+  .dg-connector.dg-animate,
+  .dg-visible {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
