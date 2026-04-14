@@ -28,6 +28,7 @@ import { verifyUrl } from '../src/verify-url.js';
 import { getRedis } from '../src/redis.js';
 import { createAuthMiddleware } from '../src/auth-middleware.js';
 import { checkLimit, incrementUsage, getUsageSummary } from '../src/subscriptions.js';
+import { getLeaderboardEntries, logSubmission, tryIngestToLeaderboard, isProductUrl } from '../src/leaderboard.js';
 import { checkRateLimit } from '../src/rate-limiter.js';
 import { createMagicLink, verifyMagicLink, findOrCreateCustomer } from '../src/auth.js';
 import { generateApiKey, hashApiKey, storeApiKey, revokeApiKey } from '../src/api-keys.js';
@@ -428,6 +429,13 @@ app.get('/api/stats/methods', async (_req, res) => {
   res.json(methodRatio ?? { schema_org: 0, llm: 0, hybrid: 0, unknown: 0, total: 0, estimated_cost_cents: 0 });
 });
 
+// GET /api/leaderboard — public leaderboard entries from Redis
+app.get('/api/leaderboard', async (_req, res) => {
+  const redis = getRedis();
+  const entries = await getLeaderboardEntries(redis);
+  res.json({ entries, count: entries.length });
+});
+
 // GET /api/stats/calibration — confidence calibration report
 app.get('/api/stats/calibration', async (_req, res) => {
   const redis = getRedis();
@@ -808,6 +816,12 @@ app.post('/api/playground', async (req, res) => {
     return res.status(400).json({ error: 'invalid_url', message: 'Invalid URL format' });
   }
 
+  // Validate it looks like a product page
+  const urlCheck = isProductUrl(url);
+  if (!urlCheck.valid) {
+    return res.status(400).json({ error: 'not_product_url', message: urlCheck.reason });
+  }
+
   // Require Redis for playground IP tracking
   if (!redis) {
     return res.status(500).json({ error: 'service_unavailable', message: 'Playground requires Redis' });
@@ -855,6 +869,12 @@ app.post('/api/playground', async (req, res) => {
     const product = await extractProduct(url, options);
     cache.set(url, product);
 
+    // Log submission and try leaderboard ingestion (fire-and-forget)
+    logSubmission(redis, url, ip, product, null).catch(() => {});
+    if (product.product_name) {
+      tryIngestToLeaderboard(redis, url, product).catch(() => {});
+    }
+
     // Detect non-product pages: if all core fields are null/empty, the URL likely isn't a product page
     const hasProductData = product.product_name || product.brand || (product.price && product.price.amount);
     if (!hasProductData) {
@@ -878,6 +898,8 @@ app.post('/api/playground', async (req, res) => {
     res.json({ product, ...scoreData, playground: true, runs_remaining: limit.limit - limit.used, cached: false });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Extraction failed';
+    // Log failed submission
+    logSubmission(redis, url, ip, null, message).catch(() => {});
     res.status(500).json({ error: 'extraction_failed', message: 'This site blocked the extraction request. Try a different URL, or try again in a few minutes.', playground: true, runs_remaining: limit.limit - limit.used });
   }
 });
