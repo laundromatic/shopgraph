@@ -94,6 +94,14 @@
       return;
     }
 
+    // Warning: no product data found (category page, non-product URL)
+    if (data.warning === 'no_product_data') {
+      container.innerHTML = '<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:0.375rem;padding:0.75rem 1rem;font-size:0.8125rem;color:#92400e">' + escapeHtml(data.warning_message) + '</div>';
+      var resultsWrap = $('pg-results');
+      if (resultsWrap) resultsWrap.classList.add('visible');
+      return;
+    }
+
     var product = data.product || {};
     var shopgraph = product._shopgraph || {};
     var confidence = product.confidence || {};

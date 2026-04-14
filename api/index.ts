@@ -855,6 +855,19 @@ app.post('/api/playground', async (req, res) => {
     const product = await extractProduct(url, options);
     cache.set(url, product);
 
+    // Detect non-product pages: if all core fields are null/empty, the URL likely isn't a product page
+    const hasProductData = product.product_name || product.brand || (product.price && product.price.amount);
+    if (!hasProductData) {
+      return res.json({
+        product,
+        playground: true,
+        runs_remaining: limit.limit - limit.used,
+        cached: false,
+        warning: 'no_product_data',
+        warning_message: 'No product data found on this page. This might be a category page, search results, or a non-product URL. ShopGraph extracts from individual product pages. Try pasting a URL for a specific product.'
+      });
+    }
+
     const scoreData = includeScore ? { score: scoreAgentReadiness(product) } : {};
 
     if (format === 'ucp') {
