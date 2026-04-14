@@ -85,7 +85,7 @@
       var link = data.upgrade || data.signup || data.pricing || '';
       var linkHtml = '';
       if (link) {
-        var linkText = data.upgrade ? 'See pricing' : data.signup ? 'Get a Free API key' : 'See plans';
+        var linkText = 'See pricing';
         linkHtml = ' <a href="' + link + '" style="color:var(--link-color);font-weight:500">' + linkText + '</a>';
       }
       container.innerHTML = '<div style="background:rgba(0,0,0,0.03);border:1px solid var(--border-color);border-radius:0.375rem;padding:0.75rem 1rem;font-size:0.8125rem;color:var(--body-color)">' + escapeHtml(msg) + linkHtml + '</div>';
