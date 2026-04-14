@@ -1,11 +1,11 @@
 /* ShopGraph Documentation — Agentation-aligned Design System */
-/* Inter (variable) + IBM Plex Serif (h1) + SF Mono (code) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+/* Inter (variable) + IBM Plex Sans (h1) + SF Mono (code) */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@100..900&display=swap');
 
 :root {
   --content-max: 36rem;
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+  --font-heading: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
   --font-mono: 'SF Mono', 'SFMono-Regular', ui-monospace, Consolas, monospace;
   --body-bg: #fdfdfc;
   --body-color: #111;
@@ -267,7 +267,7 @@ a:hover { color: var(--link-hover); text-decoration: underline; }
 
 /* === TYPOGRAPHY === */
 h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1.4;
@@ -548,7 +548,7 @@ tr:hover td { background: var(--card-bg); }
 }
 
 .hero h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 500;
   color: var(--heading-color);
@@ -557,7 +557,7 @@ tr:hover td { background: var(--card-bg); }
 }
 
 .hero h1 strong {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-weight: 500;
 }
 
@@ -905,7 +905,7 @@ tr:hover td { background: var(--card-bg); }
   display: inline-block;
   background: transparent;
   color: var(--heading-color);
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-weight: 500;
   font-size: 0.875rem;
   padding: 0;
