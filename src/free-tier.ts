@@ -13,7 +13,7 @@ export async function checkPlaygroundLimit(ip: string, redis: Redis): Promise<{ 
   if (used === 1) {
     await redis.expire(key, 86400); // 24 hour TTL
   }
-  const PLAYGROUND_DAILY_LIMIT = 20;
+  const PLAYGROUND_DAILY_LIMIT = 100;
   return { allowed: used <= PLAYGROUND_DAILY_LIMIT, used, limit: PLAYGROUND_DAILY_LIMIT };
 }
 
