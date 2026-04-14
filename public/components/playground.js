@@ -202,12 +202,6 @@
       container.innerHTML += quotaHtml;
     }
 
-    // Add post-extraction CTA
-    var ctaHtml = '<div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(0,0,0,0.03);border:1px solid var(--border-color);border-radius:0.375rem;font-size:0.8125rem;color:var(--text-secondary)">';
-    ctaHtml += 'Want to keep going? The Free API tier gives you 50 full-pipeline calls a month with your own key. ';
-    ctaHtml += '<a href="/dashboard" style="color:var(--link-color);font-weight:500">Get a Free API key</a>';
-    ctaHtml += '</div>';
-    container.innerHTML += ctaHtml;
 
     // Show the results container
     var resultsWrap = $('pg-results');
