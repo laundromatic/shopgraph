@@ -177,7 +177,7 @@ a:hover { color: var(--link-hover); text-decoration: underline; }
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 30px;
   color: #222;
   text-decoration: none;
   transition: color 0.15s ease;

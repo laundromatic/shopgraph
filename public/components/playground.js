@@ -212,6 +212,16 @@
     // Show the results container
     var resultsWrap = $('pg-results');
     if (resultsWrap) resultsWrap.classList.add('visible');
+
+    // Add close/clear button at top of results
+    var closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Clear results';
+    closeBtn.style.cssText = 'background:none;border:1px solid var(--border-color);border-radius:0.375rem;padding:0.25rem 0.75rem;font-size:0.75rem;color:var(--text-secondary);cursor:pointer;margin-bottom:0.75rem;font-family:var(--font-sans)';
+    closeBtn.addEventListener('click', function () {
+      container.innerHTML = '';
+      if (resultsWrap) resultsWrap.classList.remove('visible');
+    });
+    container.insertBefore(closeBtn, container.firstChild);
   }
 
   function escapeHtml(str) {
