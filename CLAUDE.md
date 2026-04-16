@@ -7,13 +7,13 @@ The free tier's only job is to eliminate the buyer's objection "does this work o
 
 Current state: Playground now uses `/api/playground` (full pipeline, 100/day IP throttle for testing). Free tier changed from 500 Schema.org-only to 50 full-pipeline calls/month.
 
-### B2B Extraction — Verified Working Sites
-8 sites verified live on leaderboard: moglix.com, haastooling.com, amleo.com, allbirds.com, discountcomputerdepot.com, uline.com, cpooutlets.com, maritool.com. These work today.
+### Extraction — Verified Working Sites
+30 sites verified live on leaderboard (18 B2B + 12 B2C) across 17 verticals. Playground auto-ingests new domains to leaderboard via `src/leaderboard.ts`.
 
 Sites like Grainger, Home Depot, Amazon, McMaster-Carr block serverless IPs. These have been REMOVED from the leaderboard. Do NOT add sites to the leaderboard unless extraction is verified via /api/playground. Do NOT claim RFC 9421 or Cloudflare registration will fix blocked sites — we have no evidence.
 
-LAU-307: Apply to Cloudflare Signed Agents directory (high priority, unverified outcome)
-LAU-308: Find and verify more B2B sites across verticals
+LAU-296: RFC 9421 identity (includes Cloudflare Signed Agents registration, formerly LAU-307)
+LAU-308: B2B vertical coverage — 30 sites verified so far
 
 ### Banned Terms
 Never use in any customer-facing copy: deterministic, guaranteed, scraping/scraper, bypass/circumvent, unblock, fighting, toll roads (commerce context), identity broker, OV identity, trust score, "the first" (unqualified)
@@ -75,13 +75,14 @@ When work is verified complete: move to Done.
 When a ticket is superseded: move to Canceled with a comment explaining what replaced it.
 
 ### Active Tickets
-- LAU-307: Cloudflare Signed Agents application — P1, due 2026-04-14
-- LAU-285: Make.com app — Todo, needs scenario testing
-- LAU-280: Framework PRs — Todo, submission Apr 15
-- LAU-306: Leaderboard status column — P1 Todo
-- LAU-308: B2B vertical coverage — Todo, 8 sites verified so far
-- LAU-303: Diagram animations — Todo
-- LAU-259: MCP directory registration — In Progress
+- LAU-280: Framework PRs — In Progress, Vercel AI SDK + LangChain PRs submitted Apr 14
+- LAU-285: Make.com app — In Progress, needs scenario testing with sg_live_ API key
+- LAU-287: Confidence scoring — In Progress, Phase 1 shipped, calibration needs ENABLE_LLM_VALIDATION
+- LAU-296: RFC 9421 identity — In Progress, infra shipped, registry registration pending (includes old LAU-307)
+- LAU-275: AgentReady scoring — In Progress, scoring API shipped, leaderboard/correlation pending
+- LAU-308: B2B vertical coverage — In Progress, 30 sites verified
+- LAU-309: Leaderboard v2 — In Progress, Phases 1-3 shipped, Phase 4 (metrics) pending
+- LAU-259: MCP directory registration — In Progress, P3
 
 ## n8n Safety Rules
 See ~/.claude/CLAUDE.md for n8n execution budget rules and workflow safety protocol.
