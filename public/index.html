@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ShopGraph handles the identity handshakes and returns UCP-compliant product data with transparent confidence scores, so your pipelines keep moving.">
-<title>ShopGraph — Authenticated Product Data Extraction</title>
+<meta name="description" content="Product data extraction that tells agents what to trust. Per-field confidence scores, server-side threshold enforcement, and multi-method calibration for commerce data.">
+<title>ShopGraph — Product Data Extraction That Tells You When It's Guessing</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -143,8 +143,8 @@
     <div class="content-inner">
 
       <div class="hero">
-        <h1>Authenticated<br>product data extraction.</h1>
-        <p class="subtitle">ShopGraph handles the identity handshakes and returns UCP-compliant product data with transparent confidence scores, so your pipelines keep moving.</p>
+        <h1>Product data extraction<br>that tells you when it's guessing.</h1>
+        <p class="subtitle">Extract product data from any commerce URL. Every field comes with a confidence score so your agents know what to act on and what to verify.</p>
       </div>
 
       <!-- Playground -->
@@ -209,11 +209,11 @@
           </div>
           <div class="feature-item">
             <h3>Self-Healing Fallbacks</h3>
-            <p>Maintain reliable data pipelines across complex B2B portals. ShopGraph automatically routes requests through an authenticated pipeline: <span style="background:#FFDB11;padding:0 2px">Schema.org &rarr; LLM extraction &rarr; Headless Playwright rendering,</span> ensuring maximum data retrieval while respecting CDN access protocols.</p>
+            <p>Three extraction methods cross-check each other. When two tiers agree on a price and one dissents, the confidence score reflects that signal. The pipeline: <span style="background:#FFDB11;padding:0 2px">Schema.org &rarr; LLM extraction &rarr; Headless Playwright rendering.</span> Self-healing means the confidence contract is calibrated, not just the extraction.</p>
           </div>
           <div class="feature-item">
             <h3>RFC 9421 Signature Compliance</h3>
-            <p>ShopGraph acts as an authenticated proxy, handling the cryptographic handshakes required by modern Cloudflare and GoDaddy AI security gates. Your agents present a verified RFC 9421 identity at the CDN layer. The same protocol commerce sites use to distinguish trusted automation from anonymous traffic.</p>
+            <p>ShopGraph signs outbound requests with RFC 9421 (Ed25519). Commerce sites in the Cloudflare Signed Agents directory can verify ShopGraph as a registered agent, enabling fast-lane access past bot detection. This does not bypass account authentication or commercial agreements.</p>
           </div>
         </div>
 
@@ -225,7 +225,7 @@
           </div>
           <div class="principle-item">
             <span class="principle-title">Access without infrastructure.</span>
-            <p>Your agents reach product data behind CDN security gates. You don't manage proxies or identity stacks.</p>
+            <p>ShopGraph handles the extraction pipeline. Your agents get structured data with confidence scores. You don't manage proxies or identity stacks.</p>
           </div>
           <div class="principle-item">
             <span class="principle-title">One schema, any merchant.</span>

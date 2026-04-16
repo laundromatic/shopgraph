@@ -46,7 +46,7 @@
       </div>
 
       <h2>Access Gateway</h2>
-      <p>Before any extraction, ShopGraph negotiates access through the identity handshake:</p>
+      <p>Before any extraction, ShopGraph evaluates access and selects the extraction method:</p>
       <ol style="margin:16px 0;padding-left:24px;line-height:2">
         <li><strong>RFC 9421 signature</strong> — Every outbound request is signed with ShopGraph's Ed25519 keypair (method, target URI, timestamp).</li>
         <li><strong>Agent identity</strong> — Requests carry the <code>ShopGraph/1.0</code> user agent backed by a Signature Agent Card at <code>/.well-known/agent-card.json</code>.</li>

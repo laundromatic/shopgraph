@@ -98,7 +98,7 @@
       </ul>
 
       <h3>6. Access Readiness (weight: 0.00)</h3>
-      <p>Evaluates whether the target URL requires agent-specific authentication or identity handshakes. Scores on a 0-100 scale. Currently inactive (weight 0.00). All URLs in the test corpus are openly accessible. This dimension activates when Web Bot Auth adoption reaches detection threshold (&gt;10% of test URLs returning Web Bot Auth headers). When active, weights will be redistributed across all six dimensions.</p>
+      <p>Evaluates whether the target URL requires agent-specific authentication or RFC 9421 signed identity verification. Scores on a 0-100 scale. Currently inactive (weight 0.00). All URLs in the test corpus are openly accessible. This dimension activates when Web Bot Auth adoption reaches detection threshold (&gt;10% of test URLs returning Web Bot Auth headers). When active, weights will be redistributed across all six dimensions.</p>
 
       <h2>Calibration Approach</h2>
       <p>Scores are calibrated against a 208-URL ground-truth dataset:</p>
