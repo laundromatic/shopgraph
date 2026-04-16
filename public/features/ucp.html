@@ -39,6 +39,40 @@
 }</code></pre>
 
       <h2>UCP Line Item Output</h2>
+
+      <h3>Interface</h3>
+      <div class="code-header"><span>UcpLineItem</span><button class="copy-btn">Copy</button></div>
+      <pre data-lang="ts"><code>interface UcpLineItem {
+  id: string;                    // Stable identifier (shopgraph::domain::slug)
+  name: string;                  // Product name
+  description: string | null;    // Product description
+  unit_price: {
+    amount: number;              // Price in smallest currency unit (cents)
+    currency: string;            // ISO 4217 currency code
+  } | null;
+  quantity: number;              // Always 1 for single product extraction
+  sku: string | null;            // Product SKU
+  brand: string | null;          // Brand name
+  category: string | null;       // Product category
+  image_url: string | null;      // Primary image URL
+  product_url: string;           // Canonical product URL
+  availability: string | null;   // in_stock, out_of_stock, pre_order
+  _extensions: {
+    shopgraph: {
+      extraction_method: string;
+      confidence_score: number;
+      field_confidence: Record<string, number>;
+    };
+    b2b?: {                      // Present for B2B products
+      moq: number | null;
+      lead_time: string | null;
+      bulk_pricing: BulkTier[];
+      manufacturer_part_number: string | null;
+    };
+  };
+}</code></pre>
+
+      <h3>Response</h3>
       <div class="code-header"><span>UCP Response</span><button class="copy-btn">Copy</button></div>
       <pre data-lang="json"><code>{
   "line_item": {
@@ -93,6 +127,52 @@
         </tbody>
       </table>
 
+      <h2>Field Mapping</h2>
+      <p>Every field from the standard <code>ProductData</code> response maps to a UcpLineItem field:</p>
+      <table>
+        <thead>
+          <tr><th>ProductData</th><th>UcpLineItem</th><th>Transformation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>title</code></td><td><code>name</code></td><td>Direct</td></tr>
+          <tr><td><code>price</code></td><td><code>unit_price.amount</code></td><td>Multiplied by 100 (dollars to cents)</td></tr>
+          <tr><td><code>currency</code></td><td><code>unit_price.currency</code></td><td>Direct</td></tr>
+          <tr><td><code>description</code></td><td><code>description</code></td><td>Direct</td></tr>
+          <tr><td><code>sku</code></td><td><code>sku</code></td><td>Direct</td></tr>
+          <tr><td><code>brand</code></td><td><code>brand</code></td><td>Direct</td></tr>
+          <tr><td><code>category</code></td><td><code>category</code></td><td>Direct</td></tr>
+          <tr><td><code>image</code></td><td><code>image_url</code></td><td>Direct</td></tr>
+          <tr><td><code>url</code></td><td><code>product_url</code></td><td>Direct</td></tr>
+          <tr><td><code>availability</code></td><td><code>availability</code></td><td>Normalized to lowercase with underscores</td></tr>
+          <tr><td><code>moq</code></td><td><code>_extensions.b2b.moq</code></td><td>Moved to B2B extension</td></tr>
+          <tr><td><code>lead_time</code></td><td><code>_extensions.b2b.lead_time</code></td><td>Moved to B2B extension</td></tr>
+          <tr><td><code>bulk_pricing</code></td><td><code>_extensions.b2b.bulk_pricing</code></td><td>Moved to B2B extension</td></tr>
+          <tr><td><code>mpn</code></td><td><code>_extensions.b2b.manufacturer_part_number</code></td><td>Moved to B2B extension</td></tr>
+        </tbody>
+      </table>
+
+      <h2>B2B Extensions</h2>
+      <p>When B2B fields are detected (MOQ, lead time, bulk pricing, MPN), they are placed in the <code>_extensions.b2b</code> namespace:</p>
+      <div class="code-header"><span>B2B extensions example</span><button class="copy-btn">Copy</button></div>
+      <pre data-lang="json"><code>{
+  "_extensions": {
+    "shopgraph": {
+      "extraction_method": "hybrid",
+      "confidence_score": 0.85
+    },
+    "b2b": {
+      "moq": 10,
+      "lead_time": "3-5 business days",
+      "bulk_pricing": [
+        { "min_quantity": 10, "price": 135.00 },
+        { "min_quantity": 50, "price": 128.50 },
+        { "min_quantity": 100, "price": 122.00 }
+      ],
+      "manufacturer_part_number": "4M206"
+    }
+  }
+}</code></pre>
+
       <h2>Extraction Status</h2>
       <p>When extraction is partial, the <code>_extraction_status</code> field indicates quality:</p>
       <table>
@@ -131,10 +211,6 @@ await catalog.upsert(data.line_item);  // Same shape for every merchant</code></
 
       <div class="alert alert-info">
         <strong>What this unlocks:</strong> One integration for every merchant. Your pipeline consumes UCP line_items regardless of whether the source is Shopify, Uline, or McMaster-Carr. No per-supplier mappers. No custom parsers.
-      </div>
-
-      <div class="alert alert-info">
-        See the full <a href="/output/ucp-line-item">UCP Line Item schema reference</a> for all fields and types.
       </div>
 
     </div>
