@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ShopGraph integration nodes for n8n, Make.com, and Power Automate.">
+<meta name="description" content="n8n product extraction node and connectors for Make.com and Power Automate. Per-field confidence scoring and threshold filtering for automated workflow routing.">
 <title>Nodes — ShopGraph</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -16,15 +16,16 @@
     <div class="content-inner">
 
       <h1>Nodes</h1>
-      <p class="subtitle">Pre-built integration nodes for workflow automation platforms.</p>
+      <p class="subtitle">Pre-built integration nodes for workflow automation platforms. Every extraction returns per-field confidence scores so you can branch your workflow on data quality.</p>
 
       <h2>n8n Community Node</h2>
       <div class="card" style="margin:16px 0">
         <h3>n8n-nodes-shopgraph</h3>
-        <p>Community node for n8n workflow automation. Extract product data and score agent readiness directly in your workflows.</p>
+        <p>n8n product extraction node with per-field confidence scoring. Supports <code>strict_confidence_threshold</code> for automated workflow routing — branch on confidence, filter uncertain fields server-side, or route low-confidence extractions to human review.</p>
         <p style="margin-top:12px"><span class="badge badge-green">Published</span></p>
         <p style="margin-top:8px"><a href="https://www.npmjs.com/package/n8n-nodes-shopgraph" target="_blank" rel="noopener">View on npm</a></p>
       </div>
+      <p><strong>Common use cases:</strong> price monitoring workflows, catalog sync automation, procurement data validation, marketplace listing automation, and supply chain product data pipelines.</p>
       <p>Install in n8n: go to <strong>Settings → Community Nodes → Install</strong> and enter <code>n8n-nodes-shopgraph</code>. Or use the HTTP Request node to call the <a href="/tools/api">REST API</a> directly:</p>
       <div class="alert alert-info">
         <strong>Note:</strong> The examples below use <code>/api/enrich/basic</code> (Schema.org only). The full pipeline is also available via <code>/api/enrich</code> on all tiers including free.

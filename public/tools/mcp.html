@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ShopGraph MCP server configuration and tool reference for Claude, Cursor, and other MCP clients.">
+<meta name="description" content="MCP product data server that shows which extraction method produced each field. Returns UCP-compliant JSON with per-field confidence scores. Set a threshold and uncertain fields are removed before they reach your agent.">
 <title>MCP Server — ShopGraph</title>
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -16,10 +16,10 @@
     <div class="content-inner">
 
       <h1>MCP Server</h1>
-      <p class="subtitle">Connect ShopGraph to any MCP-compatible AI client with one line of config.</p>
+      <p class="subtitle">MCP product data server for product data extraction that shows which extraction method produced each field. Returns UCP-compliant JSON with per-field confidence scores. Set a threshold and uncertain fields are removed before they reach your agent.</p>
 
       <blockquote style="border-left:2px solid rgba(0,0,0,0.08);padding-left:1rem;margin:1rem 0;font-size:0.8125rem;color:var(--text-secondary)">
-        <strong>Design Principle:</strong> Access without infrastructure. ShopGraph handles the extraction pipeline. Your agents get structured data with confidence scores. You don't manage proxies or identity stacks.
+        <strong>Design Principle:</strong> Access without infrastructure. ShopGraph handles the extraction pipeline. Your agents get structured data with confidence scores. You don't manage proxies or extraction infrastructure.
       </blockquote>
 
       <h2>Configuration</h2>
@@ -75,7 +75,7 @@
       <h2>Tool Reference</h2>
 
       <h3><code>enrich_product</code></h3>
-      <p>Full product extraction with all features enabled.</p>
+      <p>Full product extraction with all features enabled. Returns per-field confidence scores and extraction provenance metadata (which tier produced each field).</p>
       <table>
         <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
         <tbody>
