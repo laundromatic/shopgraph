@@ -27,7 +27,7 @@
             <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
           </button>
           <div class="accordion-content">
-            <p>ShopGraph is a product data extraction API that takes any product URL and returns structured, confidence-scored product data. It works with both B2C (e-commerce) and B2B (industrial supply) websites. Available as a REST API and MCP server.</p>
+            <p>ShopGraph is a product data extraction API that shows which extraction method produced each field. Every URL returns structured product data with per-field confidence scoring and extraction provenance metadata. It supports B2C extraction and B2B product data extraction. Available as a REST API and MCP server.</p>
           </div>
         </div>
 
@@ -68,6 +68,56 @@
           </button>
           <div class="accordion-content">
             <p>AgentReady scoring evaluates extracted product data across six dimensions — completeness (<code>structured_data_completeness</code>), semantic richness (<code>semantic_richness</code>), UCP compatibility (<code>ucp_compatibility</code>), pricing clarity (<code>pricing_clarity</code>), inventory signals (<code>inventory_signal_quality</code>), and access readiness (<code>access_readiness</code>) — with 5 currently active (access_readiness stubbed at weight 0.00) to produce a single 0-100 score indicating how suitable the data is for autonomous agent workflows. See <a href="/features/agentready">AgentReady Scoring</a>.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Who should use ShopGraph?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Anyone whose automation writes product data into a downstream system: procurement agents populating purchase orders (procurement automation), price monitoring pipelines updating dashboards (price monitoring API), catalog sync jobs feeding marketplace listings (catalog sync API), competitive intelligence tools comparing specifications (competitive intelligence API), product comparison engines aggregating across retailers, supply chain visibility platforms tracking supplier inventory (supply chain product data, inventory management API), and marketplace listing automation services normalizing product data across channels.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What would make an extraction API "guess"?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>ShopGraph uses a three-tier extraction pipeline. Tier 1 reads Schema.org structured markup — data the merchant placed intentionally. Tier 2 uses an LLM to interpret page text. Tier 3 executes JavaScript in a headless browser, then interprets the rendered result. Tiers 2 and 3 involve inference. When a field's value comes only from inference (no structured markup confirmation), the confidence score reflects that. A "guess" is any field where the extraction method required interpretation rather than reading explicit structured data.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What makes ShopGraph's confidence scores credible?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Three things. First, scores are calibrated against a 208-URL ground-truth dataset across 22 product verticals. Second, cross-tier agreement is built into the score: when two extraction methods agree and one dissents, the confidence reflects the disagreement, not just the majority. Third, every field includes its extraction provenance — you can see which method produced the value and verify it yourself. The scores are not a black box opinion. Honest limitation: confidence is only as good as the calibration dataset. We publish the <a href="/methodology">methodology</a>.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Why per-field confidence instead of one score per document?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>A product page can have a price extracted from Schema.org markup (0.93 confidence) and an availability status inferred from body text (0.55 confidence). A single document-level score averages these into something meaningless. Per-field confidence scoring preserves the actionable signal: auto-fill the price, route the availability to human review.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            How is ShopGraph different from Diffbot, Firecrawl, or Jina?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Extraction provenance. Those tools extract product data (some very well). ShopGraph also extracts product data, but returns the extraction method and confidence for every field. No incumbent offers per-field confidence on product extraction, cross-tier validation, or server-side threshold enforcement (<code>strict_confidence_threshold</code>). If your workflow just needs JSON from a product URL, any extractor works. If your workflow needs to know which fields are reliable enough for autonomous action — for example, marketplace listing automation or price monitoring — that is what ShopGraph adds.</p>
           </div>
         </div>
       </div>
@@ -118,7 +168,37 @@
         <div class="accordion-item">
           <button class="accordion-trigger">How fast is extraction? <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
           <div class="accordion-content">
-            <p>Latency varies by endpoint, site complexity, and cache state. Cached responses return in under 200ms. Full extraction times depend on whether the site requires JavaScript rendering or authentication handshakes.</p>
+            <p>Latency varies by endpoint, site complexity, and cache state. Cached responses return in under 200ms. Full extraction times depend on whether the site requires JavaScript rendering or RFC 9421 identity signing.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Why does ShopGraph use an LLM (Tier 2) if it introduces uncertainty?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Because not every product page has Schema.org markup. Tier 1 (structured data) is the most reliable, but coverage varies: some merchants mark up price and name but not availability or specifications. Tier 2 (LLM) extracts fields that structured markup misses. The key is that the confidence score reflects which tier produced the value. You know when you're getting structured-data-backed extraction vs. LLM inference, and you can threshold accordingly.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            Why use a headless browser (Tier 3)?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Some product pages render critical data (price, availability, variants) via client-side JavaScript. The raw HTML contains none of it. Tier 3 executes the JavaScript and extracts from the rendered DOM. This is the most expensive tier (slowest, most resource-intensive) and ShopGraph only routes to it when Tiers 1 and 2 cannot produce the field. The confidence score for browser-extracted fields reflects the additional inference step.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+            What does <code>strict_confidence_threshold</code> do?
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>It is a parameter you pass with your extraction request. Any field with a confidence score below your threshold is removed from the response before it reaches your agent. This means uncertain data never enters the agent's context window. Instead of asking the agent to check scores and decide, you enforce the quality gate server-side. This is designed for autonomous write workflows like procurement automation or catalog sync API pipelines where the agent auto-fills forms or purchase orders.</p>
           </div>
         </div>
       </div>
