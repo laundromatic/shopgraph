@@ -1,14 +1,17 @@
 {
   "name": "n8n-nodes-shopgraph",
   "version": "1.0.0",
-  "description": "n8n community node for ShopGraph — product data extraction with confidence scores",
+  "description": "n8n community node for product data extraction with per-field confidence scoring and extraction provenance. Returns UCP-compliant JSON.",
   "keywords": [
     "n8n-community-node-package",
     "n8n",
     "shopgraph",
     "product-data",
     "extraction",
-    "commerce"
+    "commerce",
+    "confidence-scoring",
+    "ucp",
+    "agent"
   ],
   "license": "MIT",
   "homepage": "https://shopgraph.dev",
