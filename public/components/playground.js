@@ -179,11 +179,21 @@
       if (scrubbed) {
         displayVal = '<span style="color:#ef4444;font-style:italic">scrubbed (below threshold)</span>';
       } else if (val === null || val === undefined) {
-        displayVal = '<span style="color:#666">--</span>';
+        displayVal = '<span style="color:#666">—</span>';
       } else if (typeof val === 'object' && val.amount !== undefined) {
         displayVal = (val.currency || '') + ' ' + val.amount;
       } else if (Array.isArray(val)) {
-        displayVal = val.length + ' items';
+        if (val.length === 0) {
+          displayVal = '<span style="color:#666">—</span>';
+        } else if (f === 'image_urls') {
+          // URL arrays stay as a count — rendering the hrefs inline is noise.
+          displayVal = val.length + ' URLs';
+        } else if (val.every(function (item) { return typeof item === 'string'; })) {
+          var joined = val.join(', ');
+          displayVal = joined.length > 80 ? escapeHtml(joined.substring(0, 80)) + '…' : escapeHtml(joined);
+        } else {
+          displayVal = val.length + ' items';
+        }
       } else if (typeof val === 'string' && val.length > 80) {
         displayVal = escapeHtml(val.substring(0, 80)) + '...';
       } else {
@@ -193,7 +203,7 @@
       var conf = fieldConf[f];
       var hasConf = conf !== undefined && conf !== null;
       var confStr = hasConf ? (conf * 100).toFixed(1) + '%' : '';
-      var cc = confColor(conf);
+      var confPillClass = hasConf ? confBadgeClass(conf) : '';
       var source = hasConf ? sourceLabel(fieldSource(shopgraph, method, f)) : '—';
 
       var freshness = fieldFreshness[f];
@@ -215,7 +225,7 @@
       html += '<td style="padding:6px 8px;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text-secondary);width:140px">' + f + '</td>';
       html += '<td class="pg-value-cell" style="padding:6px 8px;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + displayVal + '</td>';
       html += '<td style="padding:6px 8px;font-size:11px;color:var(--text-secondary)">' + source + '</td>';
-      html += '<td style="padding:6px 8px;text-align:right;font-weight:600;font-size:11px;width:70px"><span style="color:' + cc + '">' + confStr + '</span></td>';
+      html += '<td style="padding:6px 8px;text-align:right;width:80px">' + (hasConf ? '<span class="badge ' + confPillClass + '">' + confStr + '</span>' : '') + '</td>';
       html += '<td style="padding:6px 8px;text-align:right;font-size:11px;width:70px">' + freshnessStr + '</td>';
       html += '</tr>';
 
@@ -234,11 +244,11 @@
     html += '<span id="pg-filter-val" style="font-family:var(--font-mono);color:#111;min-width:40px">0.00</span>';
     html += '<input id="pg-filter-slider" type="range" min="0" max="1" step="0.05" value="0" style="flex:1;max-width:240px;accent-color:#007AFF">';
     html += '</label>';
-    html += '<p style="font-size:11px;color:var(--text-muted);margin:8px 0 0">This slider simulates the <code>strict_confidence_threshold</code> API parameter. In production, filtered fields are removed server-side before reaching your agent.</p>';
+    html += '<p style="font-size:11px;color:#222222;margin:8px 0 0">This slider simulates the <code style="font-size:11px">strict_confidence_threshold</code> API parameter. In production, filtered fields are removed server-side before reaching your agent.</p>';
     html += '</div>';
 
     // Cross-link: back to How Extraction Works
-    html += '<div style="margin-top:12px;font-size:12px"><a href="/features/self-healing" style="color:var(--text-muted);text-decoration:underline">Want to understand the pipeline? &rarr; How Extraction Works</a></div>';
+    html += '<div style="margin-top:12px;font-size:12px"><a href="/features/self-healing" style="color:#222222;text-decoration:underline">Want to understand the pipeline? &rarr; How Extraction Works</a></div>';
 
     // Full JSON toggle
     html += '<details style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--link-color)">View full JSON response</summary>';
