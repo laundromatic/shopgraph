@@ -1,4 +1,4 @@
-import type { ProductData } from './types.js';
+import type { ProductData, ExtractionMethod } from './types.js';
 import { extractSchemaOrg } from './schema-org.js';
 import { extractWithLlm } from './llm-extract.js';
 import chromium from '@sparticuz/chromium';
@@ -21,6 +21,28 @@ const USER_AGENTS = [
 
 function randomUserAgent(): string {
   return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+}
+
+/**
+ * Retag a confidence block's per-field method as `playwright`. The
+ * rendered-HTML path re-runs schema.org / llm extractors on content
+ * that was only obtainable via browser rendering, so the source tier is
+ * effectively `playwright` for every produced field.
+ */
+function retagForPlaywright(confidence: {
+  overall: number;
+  per_field: Record<string, number>;
+  per_field_method?: Record<string, ExtractionMethod>;
+}) {
+  const perFieldMethod: Record<string, ExtractionMethod> = {};
+  for (const field of Object.keys(confidence.per_field)) {
+    perFieldMethod[field] = 'playwright';
+  }
+  return {
+    overall: confidence.overall,
+    per_field: confidence.per_field,
+    per_field_method: perFieldMethod,
+  };
 }
 
 /**
@@ -73,6 +95,7 @@ export async function extractWithBrowser(url: string): Promise<ProductData> {
     // Run the same extraction pipeline on rendered HTML
     const schemaResult = extractSchemaOrg(html);
     if (schemaResult && schemaResult.product_name) {
+      const base = schemaResult.confidence ?? { overall: 0, per_field: {} };
       return {
         url,
         extracted_at: now,
@@ -89,13 +112,14 @@ export async function extractWithBrowser(url: string): Promise<ProductData> {
         material: schemaResult.material ?? [],
         dimensions: schemaResult.dimensions ?? null,
         schema_org_raw: schemaResult.schema_org_raw ?? null,
-        confidence: schemaResult.confidence ?? { overall: 0, per_field: {} },
+        confidence: retagForPlaywright(base),
       };
     }
 
     // Fall back to LLM extraction on rendered HTML
     const llmResult = await extractWithLlm(html, url);
     if (llmResult && llmResult.product_name) {
+      const base = llmResult.confidence ?? { overall: 0, per_field: {} };
       return {
         url,
         extracted_at: now,
@@ -112,7 +136,7 @@ export async function extractWithBrowser(url: string): Promise<ProductData> {
         material: llmResult.material ?? [],
         dimensions: llmResult.dimensions ?? null,
         schema_org_raw: null,
-        confidence: llmResult.confidence ?? { overall: 0, per_field: {} },
+        confidence: retagForPlaywright(base),
       };
     }
 

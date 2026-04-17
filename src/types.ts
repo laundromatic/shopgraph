@@ -1,4 +1,10 @@
 /**
+ * Extraction tier enum used by both document-level `extraction_method`
+ * and per-field `_shopgraph.field_method` attribution.
+ */
+export type ExtractionMethod = 'schema_org' | 'llm' | 'llm_boosted' | 'hybrid' | 'playwright';
+
+/**
  * Core product data interface returned by the enrichment engine.
  */
 export interface ProductData {
@@ -31,6 +37,8 @@ export interface PriceData {
 export interface ConfidenceData {
   overall: number;
   per_field: Record<string, number>;
+  /** Per-field attribution: which extraction tier produced each value. */
+  per_field_method?: Record<string, ExtractionMethod>;
 }
 
 /**
@@ -227,6 +235,7 @@ export interface ShopGraphMetadata {
   extraction_method: string;
   data_source: 'live' | 'cache';
   field_confidence: Record<string, number>;
+  field_method?: Record<string, ExtractionMethod>;
   field_freshness?: Record<string, FieldFreshness>;
   confidence_method: string;
 }

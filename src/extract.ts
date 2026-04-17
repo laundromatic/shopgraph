@@ -1,4 +1,4 @@
-import type { ProductData, EnrichmentOptions, ShopGraphMetadata, ExtractionStatus, FieldFreshness } from './types.js';
+import type { ProductData, EnrichmentOptions, ShopGraphMetadata, ExtractionStatus, FieldFreshness, ExtractionMethod } from './types.js';
 import { buildFieldFreshness, applyDecay } from './types.js';
 import { extractSchemaOrg } from './schema-org.js';
 import { extractWithLlm } from './llm-extract.js';
@@ -74,6 +74,10 @@ export function applyThresholdAndMetadata(
       ? buildFieldFreshness(originalConfidence, ageSeconds)
       : undefined;
 
+  // Promote per-field method attribution from the extraction result up
+  // to the response-level _shopgraph block.
+  const perFieldMethod = product.confidence.per_field_method;
+
   // Always attach _shopgraph metadata
   const metadata: ShopGraphMetadata = {
     source_url: product.url,
@@ -82,6 +86,7 @@ export function applyThresholdAndMetadata(
     extraction_method: product.extraction_method,
     data_source: fromCache ? 'cache' : 'live',
     field_confidence: effectiveConfidence,
+    ...(perFieldMethod && Object.keys(perFieldMethod).length > 0 ? { field_method: perFieldMethod } : {}),
     ...(fieldFreshness ? { field_freshness: fieldFreshness } : {}),
     confidence_method: product.extraction_method === 'hybrid' ? 'cross_signal' : 'tier_baseline',
   };
@@ -259,9 +264,57 @@ async function extractFromHtml(url: string, options?: EnrichmentOptions): Promis
 /**
  * Merge two extraction results. Primary fields win on conflict;
  * secondary fills null/empty fields from primary.
+ *
+ * Per-field method attribution:
+ *  - If both tiers produced a non-null value and they AGREE → 'hybrid'
+ *  - If both produced non-null and they DISAGREE → winning tier's method
+ *  - If only one tier produced a value → that tier's method
  */
 function mergeResults(primary: ProductData, secondary: Partial<ProductData>): ProductData {
   const merged = { ...primary };
+
+  // Track which fields both tiers produced (non-null/non-empty) for
+  // hybrid-vs-disagreement attribution below.
+  const primaryHas: Record<string, boolean> = {
+    product_name: primary.product_name !== null && primary.product_name !== '',
+    brand: primary.brand !== null && primary.brand !== '',
+    description: primary.description !== null && primary.description !== '',
+    price: primary.price !== null && primary.price.amount !== null,
+    availability: primary.availability !== 'unknown',
+    categories: primary.categories.length > 0,
+    image_urls: primary.image_urls.length > 0,
+    primary_image_url: primary.primary_image_url !== null,
+    color: primary.color.length > 0,
+    material: primary.material.length > 0,
+    dimensions: primary.dimensions !== null,
+  };
+  const secondaryHas: Record<string, boolean> = {
+    product_name: !!secondary.product_name,
+    brand: !!secondary.brand,
+    description: !!secondary.description,
+    price: !!secondary.price && secondary.price.amount !== null,
+    availability: !!secondary.availability && secondary.availability !== 'unknown',
+    categories: !!secondary.categories && secondary.categories.length > 0,
+    image_urls: !!secondary.image_urls && secondary.image_urls.length > 0,
+    primary_image_url: !!secondary.primary_image_url,
+    color: !!secondary.color && secondary.color.length > 0,
+    material: !!secondary.material && secondary.material.length > 0,
+    dimensions: !!secondary.dimensions,
+  };
+
+  // Track which fields AGREE (both tiers produced the same value) for
+  // 'hybrid' method attribution and Cross-validation ledger deltas.
+  const agree: Record<string, boolean> = {};
+  agree.product_name = primaryHas.product_name && secondaryHas.product_name &&
+    primary.product_name === secondary.product_name;
+  agree.brand = primaryHas.brand && secondaryHas.brand && primary.brand === secondary.brand;
+  agree.description = primaryHas.description && secondaryHas.description &&
+    primary.description === secondary.description;
+  agree.price = primaryHas.price && secondaryHas.price &&
+    primary.price?.amount === secondary.price?.amount &&
+    primary.price?.currency === secondary.price?.currency;
+  agree.availability = primaryHas.availability && secondaryHas.availability &&
+    primary.availability === secondary.availability;
 
   // Fill null/empty fields from secondary
   if (!merged.product_name && secondary.product_name) {
@@ -300,12 +353,40 @@ function mergeResults(primary: ProductData, secondary: Partial<ProductData>): Pr
 
   // Merge confidence: use the source that provided each field
   const mergedPerField = { ...primary.confidence.per_field };
+  const primaryMethod = primary.confidence.per_field_method ?? {};
+  const secondaryMethod = secondary.confidence?.per_field_method ?? {};
+
+  const mergedPerFieldMethod: Record<string, ExtractionMethod> = { ...primaryMethod };
+
+  // Fill in fields only produced by secondary. A field counts as "only
+  // secondary-produced" when either the primary lacked a per_field entry
+  // for it, OR the primary had an entry but its actual value was null /
+  // empty (e.g. schema.org records availability='unknown' with a
+  // per_field score even when no availability was actually extracted).
   if (secondary.confidence?.per_field) {
     for (const [field, conf] of Object.entries(secondary.confidence.per_field)) {
-      if (mergedPerField[field] === undefined) {
+      const primaryProducedValue = primaryHas[field];
+      const secondaryProducedValue = secondaryHas[field];
+      if (!primaryProducedValue && secondaryProducedValue) {
         mergedPerField[field] = conf;
+        if (secondaryMethod[field]) {
+          mergedPerFieldMethod[field] = secondaryMethod[field];
+        }
+      } else if (mergedPerField[field] === undefined) {
+        // Fields outside the primaryHas map (e.g. image_urls) — fall through.
+        mergedPerField[field] = conf;
+        if (secondaryMethod[field]) {
+          mergedPerFieldMethod[field] = secondaryMethod[field];
+        }
       }
     }
+  }
+
+  // For fields both tiers produced AND agreed on, tag as 'hybrid'.
+  // Disagreement keeps the primary tier's method (primary wins the merge).
+  for (const field of Object.keys(agree)) {
+    if (!agree[field]) continue;
+    mergedPerFieldMethod[field] = 'hybrid';
   }
 
   const fieldCount = Object.keys(mergedPerField).length;
@@ -313,7 +394,11 @@ function mergeResults(primary: ProductData, secondary: Partial<ProductData>): Pr
     ? Object.values(mergedPerField).reduce((a, b) => a + b, 0) / fieldCount
     : 0;
 
-  merged.confidence = { overall, per_field: mergedPerField };
+  merged.confidence = {
+    overall,
+    per_field: mergedPerField,
+    per_field_method: mergedPerFieldMethod,
+  };
   merged.extraction_method = 'hybrid';
 
   return merged;

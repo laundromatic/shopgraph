@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { ProductData } from './types.js';
+import type { ProductData, ExtractionMethod } from './types.js';
 import { LLM_BASE_BASELINE, LLM_LOW_BASELINE, LLM_BOOSTED_BASELINE, getFieldConfidence } from './types.js';
 import { cleanHtml, type PriceHints } from './html-cleaner.js';
 
@@ -117,6 +117,7 @@ export async function extractWithLlm(
   }
 
   const perField: Record<string, number> = {};
+  const perFieldMethod: Record<string, ExtractionMethod> = {};
   const hasPriceHints = priceHints.prices.length > 0 || priceHints.metaPriceAmount !== null;
   const hasAvailHints = priceHints.availabilitySignals.length > 0 || priceHints.metaAvailability !== null;
 
@@ -124,9 +125,11 @@ export async function extractWithLlm(
     if (value !== null && value !== undefined && value !== '') {
       const base = boosted ? LLM_BOOSTED_BASELINE : LLM_BASE_BASELINE;
       perField[name] = getFieldConfidence(base, name);
+      perFieldMethod[name] = boosted ? 'llm_boosted' : 'llm';
       return true;
     }
     perField[name] = getFieldConfidence(LLM_LOW_BASELINE, name);
+    perFieldMethod[name] = 'llm';
     return false;
   };
 
@@ -188,7 +191,11 @@ export async function extractWithLlm(
     material,
     dimensions,
     schema_org_raw: null,
-    confidence: { overall, per_field: perField },
+    confidence: {
+      overall,
+      per_field: perField,
+      per_field_method: perFieldMethod,
+    },
   };
 }
 

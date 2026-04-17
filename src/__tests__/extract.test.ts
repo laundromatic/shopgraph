@@ -426,3 +426,123 @@ describe('strict_confidence_threshold', () => {
     expect(result.availability).toBe('in_stock');
   });
 });
+
+describe('_shopgraph.field_method (per-field extraction tier)', () => {
+  it('tags every confidence-scored field as schema_org for a pure Schema.org extraction', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
+
+    const result = await extractProduct('https://example.com/product');
+    const fieldMethod = result._shopgraph!.field_method;
+    const fieldConfidence = result._shopgraph!.field_confidence;
+
+    expect(fieldMethod).toBeDefined();
+    // Every key in field_confidence must have a matching key in field_method
+    for (const key of Object.keys(fieldConfidence)) {
+      expect(fieldMethod![key]).toBe('schema_org');
+    }
+    expect(fieldMethod!.product_name).toBe('schema_org');
+    expect(fieldMethod!.price).toBe('schema_org');
+  });
+
+  it('tags every confidence-scored field as llm for a pure LLM extraction', async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(noSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'LLM-Only Product',
+      brand: 'LlmBrand',
+      description: 'A fine product',
+      price: { amount: 12.34, currency: 'USD', sale_price: null },
+      availability: 'in_stock',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: {
+        overall: 0.70,
+        per_field: {
+          product_name: 0.75,
+          brand: 0.70,
+          description: 0.65,
+          price: 0.70,
+          availability: 0.60,
+        },
+        per_field_method: {
+          product_name: 'llm',
+          brand: 'llm',
+          description: 'llm',
+          price: 'llm',
+          availability: 'llm',
+        },
+      },
+    });
+
+    const result = await extractProduct('https://example.com/llm-only');
+    const fieldMethod = result._shopgraph!.field_method!;
+    expect(Object.keys(fieldMethod).length).toBeGreaterThan(0);
+    for (const method of Object.values(fieldMethod)) {
+      expect(['llm', 'llm_boosted']).toContain(method);
+    }
+    expect(fieldMethod.product_name).toBe('llm');
+  });
+
+  it('tags agreed-on fields as hybrid and disagreed fields with the winning tier for a merge', async () => {
+    // Primary (schema.org) has partial data — product_name and price ONLY.
+    // Partial schema triggers LLM auto-heal. LLM returns product_name that
+    // AGREES with schema.org, plus brand/description/availability that schema
+    // didn't have. After merge, product_name should be tagged 'hybrid';
+    // brand/description/availability should be tagged 'llm'.
+    const partialSchemaHtml = `<script type="application/ld+json">
+      {"@type": "Product", "name": "Agreed Product Name"}
+    </script>`;
+    mockFetch.mockResolvedValueOnce(mockResponse(partialSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce({
+      extraction_method: 'llm',
+      product_name: 'Agreed Product Name', // AGREES with schema.org
+      brand: 'LlmBrand',
+      description: 'LLM description',
+      price: { amount: 99.99, currency: 'USD', sale_price: null },
+      availability: 'in_stock',
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: {
+        overall: 0.70,
+        per_field: {
+          product_name: 0.75,
+          brand: 0.70,
+          description: 0.65,
+          price: 0.70,
+          availability: 0.60,
+        },
+        per_field_method: {
+          product_name: 'llm',
+          brand: 'llm',
+          description: 'llm',
+          price: 'llm',
+          availability: 'llm',
+        },
+      },
+    });
+
+    const result = await extractProduct('https://example.com/hybrid');
+    const fieldMethod = result._shopgraph!.field_method!;
+
+    expect(result.extraction_method).toBe('hybrid');
+    // product_name: both produced the same value → hybrid
+    expect(fieldMethod.product_name).toBe('hybrid');
+    // brand: only LLM produced → llm
+    expect(fieldMethod.brand).toBe('llm');
+    // description: only LLM produced → llm
+    expect(fieldMethod.description).toBe('llm');
+    // availability: only LLM produced → llm
+    expect(fieldMethod.availability).toBe('llm');
+  });
+});
+

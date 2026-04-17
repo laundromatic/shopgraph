@@ -1,4 +1,4 @@
-import type { ProductData, PriceData } from './types.js';
+import type { ProductData, PriceData, ExtractionMethod } from './types.js';
 import { SCHEMA_ORG_BASELINE, getFieldConfidence } from './types.js';
 
 /**
@@ -12,9 +12,11 @@ export function extractSchemaOrg(html: string): Partial<ProductData> | null {
   if (!product) return null;
 
   const perField: Record<string, number> = {};
+  const perFieldMethod: Record<string, ExtractionMethod> = {};
   const setField = (name: string, value: unknown): boolean => {
     if (value !== null && value !== undefined && value !== '') {
       perField[name] = getFieldConfidence(SCHEMA_ORG_BASELINE, name);
+      perFieldMethod[name] = 'schema_org';
       return true;
     }
     return false;
@@ -66,7 +68,11 @@ export function extractSchemaOrg(html: string): Partial<ProductData> | null {
     material,
     dimensions: null,
     schema_org_raw: product as Record<string, unknown>,
-    confidence: { overall, per_field: perField },
+    confidence: {
+      overall,
+      per_field: perField,
+      per_field_method: perFieldMethod,
+    },
   };
 }
 

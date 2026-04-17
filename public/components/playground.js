@@ -76,10 +76,7 @@
     return 'badge-red';
   }
 
-  // Map API extraction_method value to human-readable SOURCE column label.
-  // Per-field source attribution is not in the API response today — we use
-  // the document-level extraction_method as the source for every field.
-  // TODO: per-field source requires backend work on _shopgraph.field_method.
+  // Map an extraction tier enum value to a human-readable SOURCE label.
   function sourceLabel(method) {
     if (!method) return '—';
     if (method === 'schema_org') return 'Schema.org';
@@ -88,6 +85,16 @@
     if (method === 'hybrid') return 'Schema.org + LLM';
     if (method === 'playwright') return 'Browser rendering';
     return method;
+  }
+
+  // Resolve the per-field source: prefer _shopgraph.field_method[f] (per-field
+  // attribution), fall back to the document-level extraction_method when the
+  // per-field map is absent (e.g. older cached responses during rollout).
+  function fieldSource(shopgraph, documentMethod, field) {
+    if (shopgraph && shopgraph.field_method && shopgraph.field_method[field]) {
+      return shopgraph.field_method[field];
+    }
+    return documentMethod;
   }
 
   // Tier baseline confidence per extraction method (matches src/types.ts).
@@ -187,7 +194,7 @@
       var hasConf = conf !== undefined && conf !== null;
       var confStr = hasConf ? (conf * 100).toFixed(1) + '%' : '';
       var cc = confColor(conf);
-      var source = hasConf ? sourceLabel(method) : '—';
+      var source = hasConf ? sourceLabel(fieldSource(shopgraph, method, f)) : '—';
 
       var freshness = fieldFreshness[f];
       var freshnessStr = '';
@@ -214,7 +221,7 @@
 
       // Detail row (collapsed by default)
       html += '<tr class="pg-field-detail" id="pg-detail-' + f + '" style="display:none"><td colspan="6" style="padding:12px 16px;background:rgba(0,0,0,0.02);border-bottom:1px solid rgba(0,0,0,0.06)">';
-      html += buildBreakdownHtml(f, conf, method);
+      html += buildBreakdownHtml(f, conf, fieldSource(shopgraph, method, f));
       html += '<div style="margin-top:8px;font-size:11px"><a href="/features/confidence" style="color:var(--link-color)">How scores are calculated &rarr;</a></div>';
       html += '</td></tr>';
     });
@@ -276,7 +283,6 @@
   // Modifier-level detail is not exposed by the API today — we show the
   // tier baseline, the delta to the final score, and link out to
   // /features/confidence for the full methodology.
-  // TODO: richer breakdown requires backend support in _shopgraph metadata.
   function buildBreakdownHtml(field, conf, method) {
     if (conf === undefined || conf === null) {
       return '<div style="font-family:var(--font-mono);font-size:11px;color:var(--body-color)">' +
