@@ -169,10 +169,13 @@
       var confStr = conf !== undefined ? (conf * 100).toFixed(1) + '%' : '';
       var cc = confColor(conf);
 
-      // Freshness indicator
+      // Freshness indicator: "Live" for just-extracted data,
+      // fresh/decayed for cached data based on backend field_freshness.
       var freshness = fieldFreshness[f];
       var freshnessStr = '';
-      if (freshness) {
+      if (dataSource === 'live') {
+        freshnessStr = '<span style="color:#22c55e">Live</span>';
+      } else if (freshness) {
         if (freshness.decayed) {
           freshnessStr = '<span style="color:#ef4444" title="Original: ' + ((freshness.original_confidence || 0) * 100).toFixed(1) + '%">decayed</span>';
         } else {
