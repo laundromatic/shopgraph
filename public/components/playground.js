@@ -187,12 +187,12 @@
           displayVal = '<span style="color:#666">—</span>';
         } else if (f === 'image_urls') {
           // URL arrays stay as a count — rendering the hrefs inline is noise.
-          displayVal = val.length + ' URLs';
+          displayVal = val.length + (val.length === 1 ? ' URL' : ' URLs');
         } else if (val.every(function (item) { return typeof item === 'string'; })) {
           var joined = val.join(', ');
           displayVal = joined.length > 80 ? escapeHtml(joined.substring(0, 80)) + '…' : escapeHtml(joined);
         } else {
-          displayVal = val.length + ' items';
+          displayVal = val.length + (val.length === 1 ? ' item' : ' items');
         }
       } else if (typeof val === 'string' && val.length > 80) {
         displayVal = escapeHtml(val.substring(0, 80)) + '...';
