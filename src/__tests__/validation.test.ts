@@ -4,11 +4,11 @@ import type { ProductData } from '../types.js';
 // Mock the Google Generative AI module
 const mockGenerateContent = vi.fn();
 vi.mock('@google/generative-ai', () => ({
-  GoogleGenerativeAI: vi.fn().mockImplementation(() => ({
-    getGenerativeModel: () => ({
-      generateContent: mockGenerateContent,
-    }),
-  })),
+  GoogleGenerativeAI: class {
+    getGenerativeModel() {
+      return { generateContent: mockGenerateContent };
+    }
+  },
 }));
 
 // Set API key before imports
