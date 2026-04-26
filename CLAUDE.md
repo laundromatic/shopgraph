@@ -76,15 +76,16 @@ When a ticket is superseded: move to Canceled with a comment explaining what rep
 
 ### Active Tickets
 - LAU-280: Framework PRs — In Progress, Vercel AI SDK + LangChain PRs submitted + Phase 4 aligned 2026-04-16
-- LAU-285: Make.com app — In Progress, needs scenario testing with sg_live_ API key
+- LAU-285: Make.com app — Done (2026-04-26), all modules verified, 6 bugs fixed
 - LAU-287: Confidence scoring — In Progress, Phase 1 shipped, calibration needs ENABLE_LLM_VALIDATION
 - LAU-296: RFC 9421 identity — In Progress, infra shipped, registry registration pending (includes old LAU-307)
 - LAU-275: AgentReady scoring — In Progress, scoring API shipped, leaderboard/correlation pending
 - LAU-308: B2B vertical coverage — In Progress, 30 sites verified
 - LAU-309: Leaderboard v2 — In Progress, Phases 1-3 shipped, Phase 4 (metrics) pending
-- LAU-259: MCP directory registration — In Progress, P3 (directory listings need Phase 4 copy)
+- LAU-259: MCP directory registration — In Progress, P3. mcp-marketplace.io submitted via creator flow 2026-04-21 (pending review). LAUNCHGUIDE.md at repo root is the marketplace source-of-truth. Official MCP Registry confirmed published. CVE patches shipped (vitest 4 + mcp-sdk 1.29). Remaining: smithery.yaml stale copy + cross-directory copy audit.
 - LAU-310: Page purpose overlap (self-healing / routing / playground) — Todo
 - LAU-316: No self-serve upgrade path free → paid — Todo, High (2026-04-16, signup frontend + email stubbed)
+- LAU-324: Codify development hygiene as automated guardrails — In Progress, High. Parent-level initiative from 2026-04-21 /insights review. Scoped, bounded hooks + skills + sub-agents, rolled out in paced checkpoints. See `memory/feedback-automation-hygiene.md` for the Jan 30 constraints.
 - Recently Done: LAU-314 (confidence contract rewrite), LAU-315 (/output/ flatten), LAU-318 (FRESHNESS on force-live)
 
 ### Phase 4 Positioning (2026-04-16)
