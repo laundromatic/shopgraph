@@ -930,8 +930,8 @@ app.post('/api/enrich', async (req, res) => {
     include_score: includeScoreEnrich,
   };
 
-  // ── API key auth path (paid tiers skip MPP) ──
-  if (req.customer && redis && req.customer.tier !== 'free') {
+  // ── API key auth path (all tiers including free) ──
+  if (req.customer && redis) {
     const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
     if (!limit.allowed) {
       return res.status(429).json({
@@ -1043,8 +1043,8 @@ app.post('/api/enrich/html', async (req, res) => {
     format: formatHtml,
   };
 
-  // ── API key auth path (paid tiers skip MPP) ──
-  if (req.customer && redis && req.customer.tier !== 'free') {
+  // ── API key auth path (all tiers including free) ──
+  if (req.customer && redis) {
     const limit = await checkLimit(redis, req.customer.id, req.customer.tier);
     if (!limit.allowed) {
       return res.status(429).json({
