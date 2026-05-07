@@ -5,6 +5,12 @@
 **Scope:** GitHub, npm, MCP directories (Glama / Smithery / mcp.so / awesome-mcp-servers), Reddit, HN, Dev.to
 **Goal:** 10 candidate users or advocates + outreach drafts for the top 5
 
+> **Source-of-truth hierarchy:** The runner executes
+> `/Users/krishnabrown/Documents/Claude/Scheduled/shopgraph-growth-agent-weekly-thursday-9am/SKILL.md`.
+> This file (`docs/growth-agent-spec.md`) is the durable reference — more detailed, git-tracked,
+> diffable. Keep them in lockstep: edit the SKILL.md first (that's what runs), then reflect any
+> structural changes here. If they diverge, SKILL.md wins.
+
 ---
 
 ## Step 0 — Read the Briefing
@@ -155,7 +161,8 @@ Close with a compliance block:
 ```
 ## Compliance check
 
-- **Read briefing:** [yes — shopgraph.dev/briefing returned 200, last_updated: {date} | FAIL — {reason}]
+- **Read briefing:** [yes — shopgraph.dev/briefing.md 200, briefing.json 200, last_updated: {date from briefing.json} | FAIL — {reason}]
+- **Briefing freshness:** [{N} days old — ok | ⚠️ {N} days old — flag for refresh]
 - **Prior reports read:** [yes — {dates}]
 - **Skip list applied:** [yes — {N} names excluded]
 - **10 candidates returned:** [yes | no — {reason}]
@@ -211,3 +218,12 @@ sources: `api.github.com (direct)`, `registry.npmjs.org (direct)`,
 `hn.algolia.com (direct)`, `fetched manually`. Subagent-only sourcing is not
 acceptable for top-10 entries. Any candidate that can only be sourced from a
 subagent goes to the Honorable Mentions section.
+
+### RULE F — Briefing freshness check
+The compliance section MUST quote `last_updated` from
+`https://shopgraph.dev/briefing.json` (preferred — structured JSON). Fall back
+to parsing the `Last updated:` line in `https://shopgraph.dev/briefing.md`
+only if the JSON endpoint returns non-200. If that date is more than 60 days
+old, raise it as an action item: the briefing has likely drifted from current
+strategy and should be refreshed. If neither endpoint exposes a date, treat
+that as a hard error and flag it at the top of the compliance section.
