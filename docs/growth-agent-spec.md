@@ -13,7 +13,12 @@ Fetch `https://shopgraph.dev/briefing.md` and read it before doing any research.
 This is the canonical context file for all Laundromatic projects. It contains
 positioning, competitive landscape, active tickets, and working-style preferences.
 
-If the URL returns a non-200 response, stop and report the failure. Do not
+Also fetch `https://shopgraph.dev/briefing.json` and read the `last_updated`
+field. Quote this date in the compliance section. If the date hasn't changed
+in more than 60 days, flag it as a note for Krishna — the briefing may need
+a refresh.
+
+If either URL returns a non-200 response, stop and report the failure. Do not
 proceed with a stale cached version.
 
 ---
@@ -150,7 +155,7 @@ Close with a compliance block:
 ```
 ## Compliance check
 
-- **Read briefing:** [yes — shopgraph.dev/briefing returned 200 | FAIL — {reason}]
+- **Read briefing:** [yes — shopgraph.dev/briefing returned 200, last_updated: {date} | FAIL — {reason}]
 - **Prior reports read:** [yes — {dates}]
 - **Skip list applied:** [yes — {N} names excluded]
 - **10 candidates returned:** [yes | no — {reason}]
