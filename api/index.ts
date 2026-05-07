@@ -62,7 +62,7 @@ app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), asyn
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object as Record<string, unknown>;
+        const session = event.data.object as unknown as Record<string, unknown>;
         const shopgraphCustomerId = (session.metadata as Record<string, string>)?.shopgraph_customer_id;
         const stripeCustomerId = session.customer as string;
 
@@ -83,7 +83,7 @@ app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), asyn
       }
 
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as Record<string, unknown>;
+        const subscription = event.data.object as unknown as Record<string, unknown>;
         const stripeCustomerId = subscription.customer as string;
         const items = subscription.items as { data: Array<{ price: { id: string } }> };
         const priceId = items?.data?.[0]?.price?.id;
@@ -99,14 +99,14 @@ app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), asyn
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Record<string, unknown>;
+        const subscription = event.data.object as unknown as Record<string, unknown>;
         const stripeCustomerId = subscription.customer as string;
         await updateCustomerTierByStripe(redisClient, stripeCustomerId, 'free');
         break;
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Record<string, unknown>;
+        const invoice = event.data.object as unknown as Record<string, unknown>;
         const stripeCustomerId = invoice.customer as string;
         // Flag the account by storing a payment_failed marker
         if (stripeCustomerId) {
