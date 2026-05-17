@@ -2,7 +2,7 @@
 
 > **Purpose**: This file gives any fresh Claude instance (CoWork scheduled tasks, new sessions, new machines) the full context needed to work autonomously on Krishna's projects. Read this FIRST before doing any work.
 >
-> **Last updated**: 2026-03-31
+> **Last updated**: 2026-05-17
 > **Canonical location**: shopgraph.dev/briefing
 
 ---
