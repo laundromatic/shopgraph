@@ -7,6 +7,25 @@
 
 ---
 
+## Checklist (append this block to every response)
+
+```
+─── Discovery Restart ──────────────────────────────
+1. ☐ Research wave 2 task design — KB sign-off
+2. ☐ Spawn CoWork tasks (Gmail/LinkedIn/X authenticated)
+3. ☐ Spawn terminal sub-agents (commerce e2e map, idea rubric-check)
+4. ☐ Synthesize wave 2 findings against rubric
+5. ☐ KB decision on product direction (Path A as portfolio piece, or alternative surfaced by wave 2)
+6. ☐ Linear ticket hygiene (held until direction set)
+7. ☐ PRD for chosen direction
+Full plan: docs/next-session-handoff.md
+─────────────────────────────────────────────────────
+```
+
+Legend: `☐` not started · `⏳` in progress · `✅` done · `✕` cancelled/deferred
+
+---
+
 ## State at session end (2026-05-31)
 
 - ✅ Linear roadmap audit complete: `docs/path-a-c-linear-audit-2026-05-19.md`
