@@ -1,12 +1,14 @@
 # ShopGraph — Project Rules
 
-## Active Plan — Path A + Path C (set 2026-05-19)
+## Active Plan — Restart Discovery (set 2026-05-31)
 
-**Source of truth:** `docs/path-a-c-plan.md`
+**Source of truth:** `docs/next-session-handoff.md`
 
-There is an active multi-session plan to evolve ShopGraph (Path A: ShopGraph + Operator Review) and build Agent Identity (Path C). Read `docs/path-a-c-plan.md` at the start of any session involving these topics.
+The session of 2026-05-31 closed with Path C cancelled, Path A paused, and a discovery research wave 2 proposed. Path A had Step 1 + Step 4 rubric weakness that was overlooked; ShopGraph still has zero paying users. No PRD is written until research wave 2 informs direction.
 
-**Behavior:** When working on Path A or Path C in this project, append the **Checklist block** from `docs/path-a-c-plan.md` to every response until all 7 items are complete. Update the plan file (status legend: `☐ ⏳ ✅ ✕`) when an item changes state. Do this without being asked.
+**Behavior:** On any session involving ShopGraph evolution or new product discovery, read `docs/next-session-handoff.md` first, then `.claude/SESSION_NOTES.md` for the failure-mode log. Do not anchor to Path A, Path C, or any prior framing. Do not write PRDs until KB approves a direction.
+
+**Superseded:** `docs/path-a-c-plan.md` (kept for history; the "Path A+C" framing is historical).
 
 ## Critical Product Rules
 

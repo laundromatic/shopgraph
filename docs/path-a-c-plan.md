@@ -1,19 +1,19 @@
-# Path A + Path C — Active Plan
+# Path A + Path C — Active Plan (SUPERSEDED 2026-05-31)
 
-**Last updated:** 2026-05-19 (end of session)
-**Direction set:** 2026-05-19
-**Domain focus:** Commerce/shopping first; architecture generalizes
+> **⚠️ SUPERSEDED.** This document is historical. The "Path A + Path C" framing was retired at end of session 2026-05-31 after Path C was cancelled and Path A was paused pending broader discovery research. The active source of truth is `docs/next-session-handoff.md`. The failure-mode log is in `.claude/SESSION_NOTES.md`. Do not work from this file for active planning.
 
-> **For Claude**: When working in this project on Path A or Path C topics, append the **Checklist block** below to every response until all items are done. Update item status in this file as work progresses. The block is what KB sees; the details below are the source of truth.
+**Last updated:** 2026-05-31 (marked superseded)
+**Domain focus at the time:** Commerce/shopping first; architecture generalizes
 
 ---
 
 ## How to resume (read this first on next session)
 
-**State at session end (2026-05-19):**
+**State at session end (2026-05-31):**
 - ✅ Linear roadmap audit complete → `docs/path-a-c-linear-audit-2026-05-19.md`
-- ⏸ Linear ticket hygiene **on hold** until Path A PRD lands (KB decision: avoid rewriting tickets twice)
-- → **Next action:** spawn Path A PRD sub-agent
+- ✅ Path C reframed after 4-track research (workload identity dropped, off-chain behavioral reputation is the surviving direction) → see step 3 below
+- ⏸ Linear ticket hygiene **on hold** until Path A PRD lands (KB decision 2026-05-19)
+- → **Next action:** spawn Path A PRD sub-agent (Path C PRD waits for KB approval of reframe + v1 wedge decision)
 
 **PRD workflow (KB decision, 2026-05-19):**
 1. Sub-agent drafts PRD to `docs/specs/YYYY-MM-DD-{path}-DRAFT.md`
@@ -22,8 +22,9 @@
 4. Final PRD written to `docs/specs/YYYY-MM-DD-{path}.md`
 
 **Open decisions to bring to KB at session start:**
-- Path C v1 scope: layers 1+2 (foundational), 1+2+3 thin-file scoring (novel), or both presented as options? *(Default if not answered: sub-agent presents both options in the draft.)*
-- Path A and Path C sub-agents in parallel, or A first then C? *(Default: A first, since Path A is closer to existing infra and informs Path C reference implementation positioning.)*
+- Approve Path C reframe (off-chain behavioral reputation, commerce-first) → confirm before Path C PRD spawn
+- Path C v1 wedge: consumer affiliate-disclosure badge (regulatory tailwind) OR enterprise procurement rubric (sharper buyer) OR sub-agent presents both. *(Default: present both if undecided.)*
+- Path A and Path C sub-agents in parallel, or A first then C? *(Default: A first.)*
 
 **Key files for new session context:**
 - This plan: `docs/path-a-c-plan.md`
@@ -40,7 +41,7 @@
 ─── Path A+C Plan ───────────────────────────────────
 1. ✅ Linear roadmap audit (docs/path-a-c-linear-audit-2026-05-19.md)
 2. ☐ Path A PRD (ShopGraph + Operator Review)
-3. ☐ Path C PRD (Agent Identity)
+3. ☐ Path C PRD (Off-Chain Behavioral Reputation)
 4. ☐ shopgraph.dev website update
 5. ☐ Distribution / marketing plan
 6. ☐ Existing surfaces audit (MCPs, n8n, Make, PRs)
@@ -58,8 +59,8 @@ Legend: `☐` not started | `⏳` in progress | `✅` done | `✕` deferred / ca
 ### Path A — ShopGraph + Operator Review (commerce-first)
 ShopGraph evolves from extraction API to **extraction with confidence-gated escalation paths**. When a field falls below confidence threshold, the system routes an escalation to a human reviewer with output + evidence + act controls. Reviewer approves / rejects / requests re-extraction. Audit trail included. Pricing: per-seat for reviewer seats; subscription for API.
 
-### Path C — Agent Identity as a service (separate, longer horizon)
-Neutral third-party trust bureau for agents. Four layers: credentials, provenance, behavioral reputation (the novel one), outcome tracking. Thin-file scoring from public data (MCP registries, npm, GitHub) is buildable immediately. Behavioral reputation takes 6–18 months of instrumented data. ShopGraph's RFC 9421 + `.well-known/agent-card.json` infra is the reference implementation.
+### Path C — Off-Chain Behavioral Reputation for AI Agents (reframed 2026-05-31)
+Off-chain behavioral reputation layer for AI agents, anchored on consumer trust signals for agentic commerce. The original "broad agent identity service" framing is dead — workload identity is fully claimed by IAM giants + ~$1B in funded startups (Microsoft Entra Agent ID, Google Cloud IAM, Okta for AI Agents, Keycard $38M, SGNL $628M exit, Oasis $120M, et al.). The off-chain reputation space is empty. Crypto/ERC-8004 owns on-chain (different buyer). Consumer-facing "Trustpilot for agents" destination is unclaimed. Fork-aware reputation and behavioral lineage are KB coinages with zero public competition. Path A's extraction + confidence pipeline is the behavioral substrate Path C consumes.
 
 ---
 
@@ -81,13 +82,56 @@ Neutral third-party trust bureau for agents. Four layers: credentials, provenanc
 **Covers:** product story, positioning, user flows (developer integration + reviewer experience), architecture, escalation payload schema, review UI, routing (Slack/email/webhook), persistence, pricing model (per-seat for reviewers + subscription for API), v1 scope vs deferred, open questions, risks
 **Sub-agent prompt notes:** anchor on `shopgraph-positioning-corrected.md` and `discovery-research-findings-2026-05.md` memory files; reference Linear audit; flag any design decisions for KB rather than locking them; include Pattern E (reviewer correction rate dashboard) as a v1 differentiator
 
-### 3. Path C PRD — Agent Identity
-**Goal:** Product spec for agent trust/reputation layer as standalone service.
-**Output:** `docs/specs/YYYY-MM-DD-path-c-agent-identity.md`
-**Status:** ☐ Not started
+### 3. Path C PRD — Off-Chain Behavioral Reputation for AI Agents
+
+**Reframed 2026-05-31** based on four-track research. Old framing ("broad agent identity service") is dead — workload identity space is fully claimed by IAM giants + ~$1B in funded startups (Microsoft Entra Agent ID, Google Cloud IAM Agent Identity, Okta for AI Agents, Keycard $38M, SGNL $628M exit, Oasis $120M, Andromeda Security, Natoma→Snowflake, Clutch, Anetac, Astrix→Cisco, Otterize→Cyera, BentoLabs, Runtime, Sentrial).
+
+**Reframed goal:** Off-chain behavioral reputation layer for AI agents, anchored on consumer trust signals for agentic commerce. Crypto/ERC-8004 owns on-chain; off-chain is empty.
+
+**Working name:** *Off-chain behavioral reputation for AI agents — starting with consumer trust signals for agentic commerce.*
+
+**Why this survives all four research tracks** (full evidence in `~/Documents/Claude/Projects/discovery-research/agent-reputation-*-2026-05-31.md` and `agent-identity-startups-2026-05-31.md`):
+
+| Evidence | Source |
+|---|---|
+| 75% of Americans would lose trust if shopping agents serve sponsored results (Quad/Harris, n=2,180) | Agent 2 |
+| 98% of consumers verify AI recommendations before buying (Idea Grove) | Agent 2 |
+| FTC March 2026 + EU AI Act August 2026 mandate AI affiliate disclosure — no consumer-visible "Paid Partnership" badge exists | Agent 2 |
+| G2 absorbed Capterra/SoftwareAdvice/GetApp Jan 2026 (55-58% review influence) but agent review schema is SaaS-shaped — no hallucination/rollback/override axes | Agent 2 |
+| Workload identity is fully claimed; behavioral reputation off-chain is empty (only Vouched in lane) | Agents 1+3 |
+| ACHIVX framing — *"Identity tells you who is at the door. It does not tell you how that actor behaves once the door opens."* / *"In the agentic economy, reputation is collateral."* — repeats across ≥6 sources | Agent 1 |
+| ERC-8004 (authors from MetaMask, Ethereum Foundation, Google, Coinbase) mainnet 2026-01-29, 30k+ registrations in days — but on-chain only | Agents 1+4 |
+| Princeton: same agent + same input → 2.0-4.2 distinct action sequences per 10 runs ("When Agents Disagree With Themselves") | Agent 1 |
+| Phoenix Medium "I Mass-Deployed an AI Coding Agent. Then the Model Updated and Nobody Told Me" + Anthropic claude-code #31480 / #46935 quality regression — practitioners feeling pain, framing as bugs not reputation | Agent 4 |
+| `@rep_hq` on X: *"Human verification is the choke point... The agent problem is solved by reputation attached to the agent"* — worth direct outreach | Agent 4 |
+
+**The four gaps to position into:**
+1. Off-chain (non-crypto) behavioral reputation — empty category
+2. Consumer-facing "Trustpilot for agents" destination — empty (AgentFolio is registry, not destination; Trustpilot itself is positioning the inverse)
+3. Fork-aware reputation as a specific primitive — KB's coinage, zero public conversation
+4. Enterprise procurement rubric — buyers have no language for scoring agents they are considering
+
+**Working vocabulary:**
+- HIGH signal (use to reach existing conversation): *agent reputation, agent trust layer, agent passport, AgentRank, behavioral fingerprint*
+- LOW signal but DEFENSIBLE (own these): *fork-aware reputation, behavioral lineage, off-chain reputation infrastructure*
+- AVOID conflation with: workload identity, agent IAM, agentic IAM, agent authn
+
+**Direct outreach candidate identified:** `@rep_hq` on X — articulates exact thesis. https://x.com/rep_hq/status/2056722041789702237
+
+**Path A overlap (why this is one coherent portfolio, not two unrelated products):**
+ShopGraph's extraction + confidence + escalation pipeline IS the behavioral substrate. *"This shopping agent's last 1000 product recommendations had a 12% return rate, sourced from extractions with average 0.71 confidence, 14% requiring human review."* That fingerprint is something no on-chain product can build without an off-chain extraction layer. Path A produces the data; Path C consumes it.
+
+**Output:** `docs/specs/YYYY-MM-DD-path-c-behavioral-reputation.md`
+**Status:** ☐ Not started — ready for sub-agent PRD draft after KB approves this reframe
 **Workflow:** sub-agent drafts → Claude reviews/adjusts → KB reviews → final
-**Covers:** product story, layer scope (which of 4 in v1), public data ingestion (MCP registries / npm / GitHub), manifest spec extending agent-card.json, cold start strategy, trust model, v1 scope, risks (gaming, regulatory)
-**Open decision for KB at session start:** v1 scope — layers 1+2 only, or 1+2+3 thin-file scoring, or sub-agent presents both options? Default to "present both" if undecided.
+**Covers:** product story, segmentation (consumer / SMB / enterprise procurement), v1 wedge (likely consumer affiliate-disclosure badge driven by FTC/EU AI Act, or enterprise procurement rubric — pick one with KB), behavioral signal sources (extraction outcomes, model version drift, reviewer overrides, agent-action audit trails), on-chain interop (read ERC-8004 if present, do not require it), positioning against ACHIVX/AgentFolio/Recall, integration with Path A, risks (gaming, cold start, legal exposure), open questions
+
+**Open decision for KB before PRD spawn:** Which v1 wedge — consumer affiliate-disclosure badge (regulatory tailwind, brand-driven, slower B2B) or enterprise procurement rubric (faster sales, sharper buyer)? Sub-agent can present both options in the draft if undecided.
+
+---
+
+**Original Path C competitive intel kept below for record (pre-reframe, 2026-05-19 → 2026-05-31):**
+
 
 ### 4. shopgraph.dev website update
 **Goal:** Reflect corrected positioning + add operator review surface
@@ -135,6 +179,16 @@ Neutral third-party trust bureau for agents. Four layers: credentials, provenanc
 
 ---
 
+## Research methodology gaps (to fix before next discovery wave)
+
+Identified 2026-05-31 after AgentFolio surfaced through user, not through discovery tasks:
+
+1. **GitHub Discussions not queried.** task-collaboration-pain searched GitHub Issues on major agent frameworks but not Discussions. Discussions is where feature requests and product announcements (like AgentFolio's AutoGen #7363) often land first. Add Discussions API search to next wave.
+2. **"Agent trust score / reputation / verification" vocabulary not searched.** Discovery tasks searched HITL primitives, agent identity (RFC 9421 angle), and review surfaces — but not the specific category of "score/rate/verify the agent itself." Add this vocabulary to next wave.
+3. **Web3/crypto-native agent products not in scope.** A whole category of products built on Solana, Ethereum, etc., for agent identity/marketplace is invisible to discovery tasks that focus on traditional SaaS / OSS / framework spaces. Decide explicitly whether crypto-native products are competitors or out of scope.
+4. **Once a Path C-like product idea is named in conversation, run a fresh focused competitive search before treating it as novel.** This was the gap that let AgentFolio go unfound. Synthesis ≠ verification.
+5. **Major IAM vendor product launches not monitored.** Microsoft Entra Agent ID, Google Cloud IAM Agent Identity, Okta for AI Agents, Palo Alto IDIRA — all shipped or framework-published May 2026. Discovery tasks did not check Microsoft / Google / Okta blogs, did not search "AI agent IAM" or "agentic IAM," did not include r/cybersecurity (30+ comment thread on this topic), did not check enterprise security vendor whitepapers or Gartner/Forrester coverage. The research thought the agent identity space was emerging because it was looking in agent-developer communities, not where enterprise security products live. **This is the largest methodology gap from the May 2026 research.**
+
 ## Decision log
 
 ### 2026-05-19 — Direction set
@@ -150,4 +204,19 @@ Neutral third-party trust bureau for agents. Four layers: credentials, provenanc
 - Linear ticket hygiene **on hold** until Path A PRD lands (don't rewrite ticket bodies twice)
 - PRD workflow: sub-agent drafts → Claude reviews/adjusts against session context → KB reviews → finalize
 - DRAFT vs final filename pattern: `docs/specs/YYYY-MM-DD-{path}-DRAFT.md` → `docs/specs/YYYY-MM-DD-{path}.md`
-- Next session opens with: confirm Path C v1 scope question, spawn Path A PRD sub-agent first
+- Next session opens with: confirm Path C v1 scope question, spawn Path A PRD sub-agent
+
+### 2026-05-31 — Path C reframe (significant)
+**What changed:** Original Path C ("broad agent identity service, 4 layers") was killed and replaced with "off-chain behavioral reputation for AI agents, commerce-first."
+
+**Triggered by:** KB surfaced (via Google search) Microsoft Entra Agent ID, Google Cloud IAM Agent Identity, Okta for AI Agents, Palo Alto IDIRA, Dock Labs, Andromeda Security, AgentFolio — all missed by May discovery. Plus the Reddit r/AI_Agents "Why Agent Identity Is the Wrong Question" post and KB's Trustpilot-for-agents reframe.
+
+**Four parallel research sub-agents** dispatched 2026-05-31, all completed:
+1. Behavioral reputation general → `~/Documents/Claude/Projects/discovery-research/agent-reputation-2026-05-31.md`
+2. Consumer + SMB segments → `~/Documents/Claude/Projects/discovery-research/agent-reputation-consumer-smb-2026-05-31.md`
+3. Andromeda + adjacent startups → `~/Documents/Claude/Projects/discovery-research/agent-identity-startups-2026-05-31.md`
+4. X.com cross-reference → `~/Documents/Claude/Projects/discovery-research/agent-reputation-x-signals-2026-05-31.md`
+
+**Confirmed:** Workload identity space is fully claimed (~$1B+ funded). Off-chain behavioral reputation is empty. ERC-8004 owns on-chain. Consumer + regulatory tailwind for agentic commerce trust signals is the strongest commercial wedge.
+
+**Performance failures from this session** documented in `.claude/SESSION_NOTES.md` for future-session learning. first
