@@ -1,5 +1,13 @@
 # ShopGraph — Project Rules
 
+## Active Plan — Path A + Path C (set 2026-05-19)
+
+**Source of truth:** `docs/path-a-c-plan.md`
+
+There is an active multi-session plan to evolve ShopGraph (Path A: ShopGraph + Operator Review) and build Agent Identity (Path C). Read `docs/path-a-c-plan.md` at the start of any session involving these topics.
+
+**Behavior:** When working on Path A or Path C in this project, append the **Checklist block** from `docs/path-a-c-plan.md` to every response until all 7 items are complete. Update the plan file (status legend: `☐ ⏳ ✅ ✕`) when an item changes state. Do this without being asked.
+
 ## Critical Product Rules
 
 ### Free Tier Must Work on ICP URLs (LAU-304)
@@ -86,6 +94,7 @@ When a ticket is superseded: move to Canceled with a comment explaining what rep
 - LAU-310: Page purpose overlap (self-healing / routing / playground) — Todo
 - LAU-316: No self-serve upgrade path free → paid — Todo, High (2026-04-16, signup frontend + email stubbed)
 - LAU-324: Codify development hygiene as automated guardrails — In Progress, High. Parent-level initiative from 2026-04-21 /insights review. Scoped, bounded hooks + skills + sub-agents, rolled out in paced checkpoints. See `memory/feedback-automation-hygiene.md` for the Jan 30 constraints.
+- LAU-323 / LAU-254 / LAU-255: Atlas PRs (quietloudlab/ai-interaction-atlas) — In Progress. Maintainer Brandon Harwood. PR #1 task_harvest awaiting Netlify→merge, PR #2 human_delegate revisions pushed `51c6d46` (2026-04-28) awaiting re-review, PR #3 task_reconcile parked pending Brandon's decision on top-level task vs workflow template framing. Local repo: `/Users/krishnabrown/sceneinbloom-visual-builder/ai-interaction-atlas`. See `memory/atlas-spinouts-prs.md`.
 - Recently Done: LAU-314 (confidence contract rewrite), LAU-315 (/output/ flatten), LAU-318 (FRESHNESS on force-live)
 
 ### Phase 4 Positioning (2026-04-16)
