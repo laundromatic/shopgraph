@@ -511,6 +511,8 @@ app.get('/api/run-calibration', async (req, res) => {
   const report = await generateCalibrationReport(redis);
   console.log('[run-calibration]', JSON.stringify({
     sample_size: report.sample_size,
+    overall_ece: report.overall_ece,
+    overall_auc: report.overall_auc,
     overall_pearson_r: report.overall_pearson_r,
     recommendation: report.recommendation,
   }));
