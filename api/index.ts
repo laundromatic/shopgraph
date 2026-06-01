@@ -16,7 +16,7 @@ import { createServer } from '../src/server.js';
 import { EnrichmentCache } from '../src/cache.js';
 import { PaymentManager } from '../src/payments.js';
 import { FreeTierTracker, checkPlaygroundLimit } from '../src/free-tier.js';
-import { extractProduct, extractFromRawHtml, extractBasicFromUrl } from '../src/extract.js';
+import { extractProduct, extractFromRawHtml, extractBasicFromUrl, applyThresholdAndMetadata } from '../src/extract.js';
 import { TOOL_PRICING, FREE_TIER, TIER_CONFIGS } from '../src/types.js';
 import type { EnrichmentOptions, Customer, SubscriptionTier } from '../src/types.js';
 import { mapToUcp } from '../src/ucp-mapper.js';
@@ -172,6 +172,11 @@ function parseFormat(req: express.Request): 'default' | 'ucp' {
 /** Parse include_score option from request body or query string. */
 function parseIncludeScore(req: express.Request): boolean {
   return req.body?.include_score === true || req.query?.include_score === 'true';
+}
+
+/** Parse force_refresh option from request body or query string. */
+function parseForceRefresh(req: express.Request): boolean {
+  return req.body?.force_refresh === true || req.query?.force_refresh === 'true';
 }
 
 // ---------------------------------------------------------------------------
@@ -675,10 +680,12 @@ app.post('/api/score', async (req, res) => {
   const rawThreshold = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
   const threshold = rawThreshold != null ? parseFloat(String(rawThreshold)) : undefined;
   const format = parseFormat(req);
+  const forceRefresh = parseForceRefresh(req);
   const options: EnrichmentOptions = {
     strict_confidence_threshold: (threshold != null && !isNaN(threshold)) ? threshold : undefined,
     format,
     include_score: true,
+    force_refresh: forceRefresh,
   };
 
   // ── API key auth path ──
@@ -694,14 +701,15 @@ app.post('/api/score', async (req, res) => {
       });
     }
 
-    const cached = cache.get(url);
+    const cached = forceRefresh ? undefined : cache.get(url);
     if (cached) {
-      const score = scoreAgentReadiness(cached);
+      const product = applyThresholdAndMetadata({ ...cached }, options, true);
+      const score = scoreAgentReadiness(product);
       if (format === 'ucp') {
-        const ucpResult = mapToUcp(cached, options);
+        const ucpResult = mapToUcp(product, options);
         return res.json({ ...ucpResult, score, cached: true });
       }
-      return res.json({ product: cached, score, cached: true });
+      return res.json({ product, score, cached: true });
     }
 
     try {
@@ -743,14 +751,15 @@ app.post('/api/score', async (req, res) => {
     return res.status(402).json({ error: 'payment_failed', message });
   }
 
-  const cached = cache.get(url);
+  const cached = forceRefresh ? undefined : cache.get(url);
   if (cached) {
-    const score = scoreAgentReadiness(cached);
+    const product = applyThresholdAndMetadata({ ...cached }, options, true);
+    const score = scoreAgentReadiness(product);
     if (format === 'ucp') {
-      const ucpResult = mapToUcp(cached, options);
+      const ucpResult = mapToUcp(product, options);
       return res.json({ ...ucpResult, score, receipt, cached: true });
     }
-    return res.json({ product: cached, score, receipt, cached: true });
+    return res.json({ product, score, receipt, cached: true });
   }
 
   try {
@@ -793,17 +802,20 @@ app.post('/api/enrich/basic', async (req, res) => {
   const thresholdEarly = rawThresholdEarly != null ? parseFloat(String(rawThresholdEarly)) : undefined;
   const formatEarly = parseFormat(req);
   const includeScoreBasic = parseIncludeScore(req);
+  const forceRefreshBasic = parseForceRefresh(req);
   const optionsEarly: EnrichmentOptions = {
     strict_confidence_threshold: (thresholdEarly != null && !isNaN(thresholdEarly)) ? thresholdEarly : undefined,
     format: formatEarly,
     include_score: includeScoreBasic,
+    force_refresh: forceRefreshBasic,
   };
 
-  // Check cache first
-  const cached = cache.get(url);
+  // Check cache first (bypass when force_refresh is set)
+  const cached = forceRefreshBasic ? undefined : cache.get(url);
   if (cached) {
-    // Re-apply threshold and format to cached results
-    const product = { ...cached, image_urls: [], primary_image_url: null };
+    // Re-apply threshold and format to cached results (with freshness decay)
+    const decayed = applyThresholdAndMetadata({ ...cached }, optionsEarly, true);
+    const product = { ...decayed, image_urls: [], primary_image_url: null };
     const scoreData = includeScoreBasic ? { score: scoreAgentReadiness(product) } : {};
     if (formatEarly === 'ucp') {
       const ucpResult = mapToUcp(product, optionsEarly);
@@ -874,6 +886,7 @@ app.post('/api/enrich/basic', async (req, res) => {
   const optionsBasic: EnrichmentOptions = {
     strict_confidence_threshold: (thresholdBasic != null && !isNaN(thresholdBasic)) ? thresholdBasic : undefined,
     format: formatBasic,
+    force_refresh: forceRefreshBasic,
   };
 
   try {
@@ -976,21 +989,24 @@ app.post('/api/playground', async (req, res) => {
   const includeScore = parseIncludeScore(req);
   const rawThreshold = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
   const threshold = rawThreshold != null ? parseFloat(String(rawThreshold)) : undefined;
+  const forceRefreshPlayground = parseForceRefresh(req);
   const options: EnrichmentOptions = {
     strict_confidence_threshold: (threshold != null && !isNaN(threshold)) ? threshold : undefined,
     format,
     include_score: includeScore,
+    force_refresh: forceRefreshPlayground,
   };
 
-  // Check cache first
-  const cached = cache.get(url);
+  // Check cache first (bypass when force_refresh is set)
+  const cached = forceRefreshPlayground ? undefined : cache.get(url);
   if (cached) {
-    const scoreData = includeScore ? { score: scoreAgentReadiness(cached) } : {};
+    const product = applyThresholdAndMetadata({ ...cached }, options, true);
+    const scoreData = includeScore ? { score: scoreAgentReadiness(product) } : {};
     if (format === 'ucp') {
-      const ucpResult = mapToUcp(cached, options);
+      const ucpResult = mapToUcp(product, options);
       return res.json({ ...ucpResult, ...scoreData, playground: true, runs_remaining: limit.limit - limit.used, cached: true });
     }
-    return res.json({ product: cached, ...scoreData, playground: true, runs_remaining: limit.limit - limit.used, cached: true });
+    return res.json({ product, ...scoreData, playground: true, runs_remaining: limit.limit - limit.used, cached: true });
   }
 
   // Run full extraction pipeline (same as /api/enrich but no auth)
@@ -1055,10 +1071,12 @@ app.post('/api/enrich', async (req, res) => {
   const thresholdEnrich = rawThresholdEnrich != null ? parseFloat(String(rawThresholdEnrich)) : undefined;
   const formatEnrich = parseFormat(req);
   const includeScoreEnrich = parseIncludeScore(req);
+  const forceRefreshEnrich = parseForceRefresh(req);
   const optionsEnrich: EnrichmentOptions = {
     strict_confidence_threshold: (thresholdEnrich != null && !isNaN(thresholdEnrich)) ? thresholdEnrich : undefined,
     format: formatEnrich,
     include_score: includeScoreEnrich,
+    force_refresh: forceRefreshEnrich,
   };
 
   // ── API key auth path (all tiers including free) ──
@@ -1074,14 +1092,15 @@ app.post('/api/enrich', async (req, res) => {
       });
     }
 
-    const cached = cache.get(url);
+    const cached = forceRefreshEnrich ? undefined : cache.get(url);
     if (cached) {
-      const scoreEnrichCached = includeScoreEnrich ? { score: scoreAgentReadiness(cached) } : {};
+      const product = applyThresholdAndMetadata({ ...cached }, optionsEnrich, true);
+      const scoreEnrichCached = includeScoreEnrich ? { score: scoreAgentReadiness(product) } : {};
       if (formatEnrich === 'ucp') {
-        const ucpResult = mapToUcp(cached, optionsEnrich);
+        const ucpResult = mapToUcp(product, optionsEnrich);
         return res.json({ ...ucpResult, ...scoreEnrichCached, cached: true });
       }
-      return res.json({ product: cached, ...scoreEnrichCached, cached: true });
+      return res.json({ product, ...scoreEnrichCached, cached: true });
     }
 
     try {
@@ -1123,14 +1142,15 @@ app.post('/api/enrich', async (req, res) => {
     return res.status(402).json({ error: 'payment_failed', message });
   }
 
-  const cached = cache.get(url);
+  const cached = forceRefreshEnrich ? undefined : cache.get(url);
   if (cached) {
-    const scoreEnrichMppCached = includeScoreEnrich ? { score: scoreAgentReadiness(cached) } : {};
+    const product = applyThresholdAndMetadata({ ...cached }, optionsEnrich, true);
+    const scoreEnrichMppCached = includeScoreEnrich ? { score: scoreAgentReadiness(product) } : {};
     if (formatEnrich === 'ucp') {
-      const ucpResult = mapToUcp(cached, optionsEnrich);
+      const ucpResult = mapToUcp(product, optionsEnrich);
       return res.json({ ...ucpResult, ...scoreEnrichMppCached, receipt, cached: true });
     }
-    return res.json({ product: cached, ...scoreEnrichMppCached, cached: true, receipt });
+    return res.json({ product, ...scoreEnrichMppCached, cached: true, receipt });
   }
 
   try {
@@ -1169,9 +1189,11 @@ app.post('/api/enrich/html', async (req, res) => {
   const rawThresholdHtml = req.body?.strict_confidence_threshold ?? req.query?.strict_confidence_threshold;
   const thresholdHtml = rawThresholdHtml != null ? parseFloat(String(rawThresholdHtml)) : undefined;
   const formatHtml = parseFormat(req);
+  const forceRefreshHtml = parseForceRefresh(req);
   const optionsHtml: EnrichmentOptions = {
     strict_confidence_threshold: (thresholdHtml != null && !isNaN(thresholdHtml)) ? thresholdHtml : undefined,
     format: formatHtml,
+    force_refresh: forceRefreshHtml,
   };
 
   // ── API key auth path (all tiers including free) ──
@@ -1187,13 +1209,14 @@ app.post('/api/enrich/html', async (req, res) => {
       });
     }
 
-    const cached = cache.get(url);
+    const cached = forceRefreshHtml ? undefined : cache.get(url);
     if (cached) {
+      const product = applyThresholdAndMetadata({ ...cached }, optionsHtml, true);
       if (formatHtml === 'ucp') {
-        const ucpResult = mapToUcp(cached, optionsHtml);
+        const ucpResult = mapToUcp(product, optionsHtml);
         return res.json({ ...ucpResult, cached: true });
       }
-      return res.json({ product: cached, cached: true });
+      return res.json({ product, cached: true });
     }
 
     try {
@@ -1233,13 +1256,14 @@ app.post('/api/enrich/html', async (req, res) => {
     return res.status(402).json({ error: 'payment_failed', message });
   }
 
-  const cached = cache.get(url);
+  const cached = forceRefreshHtml ? undefined : cache.get(url);
   if (cached) {
+    const product = applyThresholdAndMetadata({ ...cached }, optionsHtml, true);
     if (formatHtml === 'ucp') {
-      const ucpResult = mapToUcp(cached, optionsHtml);
+      const ucpResult = mapToUcp(product, optionsHtml);
       return res.json({ ...ucpResult, receipt, cached: true });
     }
-    return res.json({ product: cached, cached: true, receipt });
+    return res.json({ product, cached: true, receipt });
   }
 
   try {

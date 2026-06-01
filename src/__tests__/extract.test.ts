@@ -782,3 +782,80 @@ describe('_shopgraph.field_modifiers (per-field confidence ledger)', () => {
     expect((hybridLedger[0] as { base: number; method: string }).method).toBe('hybrid');
   });
 });
+
+describe('applyThresholdAndMetadata — fromCache freshness', () => {
+  // Minimal product fixture with explicit extracted_at so we can age it
+  function buildCachedProduct(extractedAt: string) {
+    return {
+      url: 'https://example.com/product',
+      extracted_at: extractedAt,
+      extraction_method: 'schema_org' as const,
+      product_name: 'Test Product',
+      brand: 'TestBrand',
+      description: 'desc',
+      price: { amount: 9.99, currency: 'USD', sale_price: null },
+      availability: 'in_stock' as const,
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: {
+        overall: 0.9,
+        per_field: { price: 0.93, brand: 0.85, product_name: 0.9 },
+      },
+    };
+  }
+
+  it('does NOT attach field_freshness when fromCache=false (live extraction)', async () => {
+    const { applyThresholdAndMetadata } = await import('../extract.js');
+    const product = buildCachedProduct(new Date().toISOString());
+    const result = applyThresholdAndMetadata({ ...product }, undefined, false);
+
+    expect(result._shopgraph).toBeDefined();
+    expect(result._shopgraph?.data_source).toBe('live');
+    expect(result._shopgraph?.field_freshness).toBeUndefined();
+    // Confidence values match originals when not from cache
+    expect(result._shopgraph?.field_confidence?.price).toBe(0.93);
+  });
+
+  it('attaches field_freshness and decays confidence when fromCache=true', async () => {
+    const { applyThresholdAndMetadata } = await import('../extract.js');
+    // Aged 4 hours (4 * half-lives for real_time fields like price)
+    const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+    const product = buildCachedProduct(fourHoursAgo);
+    const result = applyThresholdAndMetadata({ ...product }, undefined, true);
+
+    expect(result._shopgraph).toBeDefined();
+    expect(result._shopgraph?.data_source).toBe('cache');
+    expect(result._shopgraph?.field_freshness).toBeDefined();
+
+    const freshness = result._shopgraph!.field_freshness!;
+    // price is real_time (30min half-life) — 4 hours = 8 half-lives → decayed
+    expect(freshness.price.volatility_class).toBe('real_time');
+    expect(freshness.price.decayed).toBe(true);
+    expect(freshness.price.original_confidence).toBe(0.93);
+
+    // Effective confidence should be heavily decayed for price
+    const decayedPrice = result._shopgraph!.field_confidence!.price;
+    expect(decayedPrice).toBeLessThan(0.05);
+
+    // brand is stable (7d half-life) — 4 hours barely touches it
+    expect(freshness.brand.volatility_class).toBe('stable');
+    expect(freshness.brand.decayed).toBe(false);
+  });
+
+  it('threshold scrubbing operates on decayed confidence when fromCache=true', async () => {
+    const { applyThresholdAndMetadata } = await import('../extract.js');
+    // Aged 4 hours — price will decay below 0.5 threshold even though base is 0.93
+    const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+    const product = buildCachedProduct(fourHoursAgo);
+    const result = applyThresholdAndMetadata({ ...product }, { strict_confidence_threshold: 0.5 }, true);
+
+    // price field should be scrubbed because decayed confidence < 0.5
+    expect(result.price).toBeNull();
+    expect(result._extraction_status?.price?.status).toBe('below_threshold');
+  });
+});
