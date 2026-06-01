@@ -51,8 +51,10 @@ export type { CorpusEntry } from './types.js';
 export const BATCH_SIZE = 6;
 const EXTRACTION_TIMEOUT_MS = 15_000;
 
-/** Number of URLs per batch to run LLM validation on (cost control). */
-export const VALIDATION_SAMPLE_SIZE = 3;
+/** Number of URLs per batch to run LLM validation on (cost control).
+ *  Env-var controllable so it can be tuned without redeploy.
+ *  Default 50 accelerates calibration accumulation; effective cap is BATCH_SIZE per firing. */
+export const VALIDATION_SAMPLE_SIZE = Number(process.env.VALIDATION_SAMPLE_SIZE ?? 50);
 
 /** Counter for how many validations have been done in current batch. */
 let _validationCount = 0;
