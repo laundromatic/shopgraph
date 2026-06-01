@@ -178,19 +178,16 @@ describe('validateExtraction', () => {
     });
 
     const product = makeProduct();
-    let result: ValidationResult | undefined;
-    await expect(async () => {
-      result = await validateExtraction(product, sampleHtml);
-    }).not.toThrow();
+    // Direct await — if validateExtraction throws on null fields, this test fails.
+    const result = await validateExtraction(product, sampleHtml);
 
-    expect(result).toBeDefined();
     // Null/undefined entries are skipped; only the two valid ones are counted.
-    expect(result!.fields_verified.product_name).toBeUndefined();
-    expect(result!.fields_verified.description).toBeUndefined();
-    expect(result!.fields_verified.brand.correct).toBe(true);
-    expect(result!.fields_verified.price_amount.correct).toBe(false);
-    expect(result!.fields_verified.price_amount.correction).toBe('39.99');
-    expect(result!.overall_accuracy).toBeCloseTo(0.5);
+    expect(result.fields_verified.product_name).toBeUndefined();
+    expect(result.fields_verified.description).toBeUndefined();
+    expect(result.fields_verified.brand.correct).toBe(true);
+    expect(result.fields_verified.price_amount.correct).toBe(false);
+    expect(result.fields_verified.price_amount.correction).toBe('39.99');
+    expect(result.overall_accuracy).toBeCloseTo(0.5);
   });
 
   it('throws when no API key is available', async () => {
