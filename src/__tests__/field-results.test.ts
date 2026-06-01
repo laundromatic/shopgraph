@@ -124,7 +124,7 @@ describe('ground truth comparison', () => {
     expect(result.ground_truth_match?.product_name).toBe(false);
   });
 
-  it('matches brand with exact case-insensitive comparison', () => {
+  it('matches brand with case-insensitive comparison', () => {
     const product = makeProduct({ brand: 'ACME' });
     const entry = makeEntry({ ground_truth: { brand: 'acme' } });
     const result = buildFieldResults(product, entry);
@@ -132,12 +132,14 @@ describe('ground truth comparison', () => {
     expect(result.ground_truth_match?.brand).toBe(true);
   });
 
-  it('fails brand match when not exact', () => {
+  it('matches brand bidirectionally when extracted is longer (LAU-334)', () => {
+    // Extractor returned the legal name; ground truth is the short canonical
+    // form. Bidirectional substring => match.
     const product = makeProduct({ brand: 'Acme Corp' });
     const entry = makeEntry({ ground_truth: { brand: 'acme' } });
     const result = buildFieldResults(product, entry);
 
-    expect(result.ground_truth_match?.brand).toBe(false);
+    expect(result.ground_truth_match?.brand).toBe(true);
   });
 
   it('matches price within 1% tolerance', () => {
@@ -258,6 +260,65 @@ describe('ground truth comparison', () => {
       makeEntry({ ground_truth: { product_name: '' } }),
     );
     expect(r3.ground_truth_match?.product_name).toBe(false);
+  });
+
+  // LAU-334: bidirectional brand matcher regression cases
+  it('matches brand when extracted is legal name and gt is canonical (LAU-334)', () => {
+    // e.g. extractor returned "Apple Inc." but ground_truth is "Apple"
+    const product = makeProduct({ brand: 'Apple Inc.' });
+    const entry = makeEntry({ ground_truth: { brand: 'Apple' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.brand).toBe(true);
+  });
+
+  it('matches brand when extracted is canonical and gt is legal name (LAU-334)', () => {
+    // Reverse case: extractor returned the short canonical name but ground
+    // truth is the verbose legal name.
+    const product = makeProduct({ brand: 'Apple' });
+    const entry = makeEntry({ ground_truth: { brand: 'Apple Inc.' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.brand).toBe(true);
+  });
+
+  it('does not match brand for unrelated strings (LAU-334)', () => {
+    const product = makeProduct({ brand: 'Apple' });
+    const entry = makeEntry({ ground_truth: { brand: 'Samsung' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.brand).toBe(false);
+  });
+
+  it('matches brand case-insensitively (LAU-334)', () => {
+    const product = makeProduct({ brand: 'apple' });
+    const entry = makeEntry({ ground_truth: { brand: 'Apple' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.brand).toBe(true);
+  });
+
+  it('handles empty / null brand edge cases gracefully (LAU-334)', () => {
+    // null extracted vs valid gt
+    const r1 = buildFieldResults(
+      makeProduct({ brand: null }),
+      makeEntry({ ground_truth: { brand: 'Apple' } }),
+    );
+    expect(r1.ground_truth_match?.brand).toBe(false);
+
+    // empty extracted vs valid gt
+    const r2 = buildFieldResults(
+      makeProduct({ brand: '' }),
+      makeEntry({ ground_truth: { brand: 'Apple' } }),
+    );
+    expect(r2.ground_truth_match?.brand).toBe(false);
+
+    // valid extracted vs empty gt
+    const r3 = buildFieldResults(
+      makeProduct({ brand: 'Apple' }),
+      makeEntry({ ground_truth: { brand: '' } }),
+    );
+    expect(r3.ground_truth_match?.brand).toBe(false);
   });
 });
 

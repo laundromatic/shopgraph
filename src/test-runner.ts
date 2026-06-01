@@ -140,8 +140,23 @@ export function buildFieldResults(product: ProductData, entry: CorpusEntry): Fie
       }
     }
     if (gt.brand !== undefined) {
-      matches.brand = product.brand !== null &&
-        product.brand.toLowerCase() === gt.brand.toLowerCase();
+      // Bidirectional substring match (LAU-334): handles brand asymmetry where
+      // extracted is the legal-name variant ("Apple Inc.") and ground_truth is
+      // the canonical short name ("Apple") — or vice versa. Mirrors the
+      // product_name matcher introduced in LAU-331. Empty / null on either
+      // side => no match.
+      const extractedBrand = product.brand;
+      const truthBrand = gt.brand;
+      if (
+        extractedBrand !== null && extractedBrand !== undefined && extractedBrand !== '' &&
+        truthBrand !== null && truthBrand !== undefined && truthBrand !== ''
+      ) {
+        const e = extractedBrand.toLowerCase();
+        const t = truthBrand.toLowerCase();
+        matches.brand = e.includes(t) || t.includes(e);
+      } else {
+        matches.brand = false;
+      }
     }
     if (gt.price_amount !== undefined) {
       matches.price = product.price !== null && product.price.amount !== null &&
