@@ -3,7 +3,7 @@ import type { ProductData, ExtractionMethod, FieldModifierEntry, AvailabilityVal
 import { LLM_BASE_BASELINE, LLM_LOW_BASELINE, LLM_BOOSTED_BASELINE, FIELD_CONFIDENCE_MODIFIERS, getFieldConfidence } from './types.js';
 import { cleanHtml, type PriceHints } from './html-cleaner.js';
 import { parseAvailabilitySignals, AVAILABILITY_CONFIDENCE, type AvailabilityPattern } from './availability-parser.js';
-import { detectTruncation } from './description-quality.js';
+import { detectTruncation, classifyDescriptionCopy } from './description-quality.js';
 
 const EXTRACTION_PROMPT = `You are a product data extraction expert. Given the text content of a product page, extract structured product information.
 
@@ -279,9 +279,11 @@ function applyDescriptionQuality(
   if (!ledger || ledger.length === 0) return;
 
   const trunc = detectTruncation(description);
-  if (!trunc.truncated) return;
+  const copy = classifyDescriptionCopy(description);
+  const totalDelta = trunc.delta + copy.delta;
+  if (totalDelta === 0) return;
 
-  const newScore = Math.max(0, Math.min(1, current + trunc.delta));
+  const newScore = Math.max(0, Math.min(1, current + totalDelta));
   perField[fieldName] = newScore;
 
   // Insert quality entries before the trailing `result` row, then rewrite
@@ -289,11 +291,20 @@ function applyDescriptionQuality(
   const tail = ledger[ledger.length - 1];
   const hasResultRow = tail && 'result' in tail;
   const body = hasResultRow ? ledger.slice(0, -1) : ledger;
-  body.push({
-    delta: trunc.delta,
-    reason: trunc.reason ?? 'Truncation detected',
-    source: 'description-quality heuristic (LAU-333)',
-  });
+  if (trunc.truncated) {
+    body.push({
+      delta: trunc.delta,
+      reason: trunc.reason ?? 'Truncation detected',
+      source: 'description-quality heuristic (LAU-333)',
+    });
+  }
+  if (copy.delta !== 0) {
+    body.push({
+      delta: copy.delta,
+      reason: copy.reason ?? `Copy classified as ${copy.classification}`,
+      source: 'description-quality heuristic (LAU-333)',
+    });
+  }
   body.push({ result: newScore });
   perFieldModifiers[fieldName] = body;
 }
