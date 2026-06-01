@@ -57,7 +57,7 @@
           <tr><td><code>description</code></td><td>string | null</td><td>No</td><td>Product description text</td></tr>
           <tr><td><code>image</code></td><td>string | null</td><td>No</td><td>Primary image URL</td></tr>
           <tr><td><code>images</code></td><td>string[]</td><td>No</td><td>All discovered image URLs</td></tr>
-          <tr><td><code>availability</code></td><td>string | null</td><td>No</td><td>InStock, OutOfStock, PreOrder, etc.</td></tr>
+          <tr><td><code>availability</code></td><td>string | null</td><td>No</td><td>Normalized values: <code>in_stock</code>, <code>out_of_stock</code>, <code>low_stock</code>, <code>backordered</code>, <code>preorder</code>, <code>quote_only</code>, <code>unknown</code>. See <a href="/tools/api.html#availability-values">API reference</a> for per-value confidence baselines.</td></tr>
           <tr><td><code>sku</code></td><td>string | null</td><td>No</td><td>Store SKU or product ID</td></tr>
           <tr><td><code>gtin</code></td><td>string | null</td><td>No</td><td>GTIN, UPC, EAN barcode</td></tr>
           <tr><td><code>mpn</code></td><td>string | null</td><td>No</td><td>Manufacturer part number</td></tr>

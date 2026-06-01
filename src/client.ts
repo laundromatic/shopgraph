@@ -36,7 +36,14 @@ export interface ProductData {
   brand: string | null;
   description: string | null;
   price: { amount: number | null; currency: string | null; sale_price?: number | null } | null;
-  availability: 'in_stock' | 'out_of_stock' | 'preorder' | 'unknown';
+  availability:
+    | 'in_stock'
+    | 'out_of_stock'
+    | 'low_stock'
+    | 'backordered'
+    | 'preorder'
+    | 'quote_only'
+    | 'unknown';
   categories: string[];
   image_urls: string[];
   primary_image_url: string | null;

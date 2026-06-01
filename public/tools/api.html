@@ -212,6 +212,26 @@
       <h3><span class="badge badge-gray">GET</span> <code>/api/health-check</code></h3>
       <p>Health check endpoint. Returns system status and success rates.</p>
 
+      <hr>
+
+      <h2 id="availability-values">Availability Values</h2>
+      <p>The <code>availability</code> field is normalized via a structured-signal parser (LAU-330). Each value emits a per-pattern confidence baseline that flows through the freshness decay model.</p>
+      <table>
+        <thead>
+          <tr><th>Value</th><th>Signal Detected</th><th>Confidence Baseline</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>in_stock</code></td><td>"In Stock", "Available now", "Add to Cart" button present, "Ready to ship"</td><td>0.85</td></tr>
+          <tr><td><code>out_of_stock</code></td><td>"Out of Stock", "Sold Out", "Currently Unavailable", "Notify me when available"</td><td>0.85</td></tr>
+          <tr><td><code>low_stock</code></td><td>"Only N left", "N remaining", "Low stock", "Selling fast" (N ≤ 20). Includes <code>quantity_remaining</code> when N is extractable.</td><td>0.80</td></tr>
+          <tr><td><code>backordered</code></td><td>"Backordered", "On backorder", "Ships in N weeks", "Coming soon"</td><td>0.75</td></tr>
+          <tr><td><code>preorder</code></td><td>Schema.org <code>PreOrder</code> term, "Pre-order today" (back-compat with Schema.org availability vocabulary)</td><td>0.80</td></tr>
+          <tr><td><code>quote_only</code></td><td>"Contact for Pricing", "Quote on Request", "Call for price", "POA"</td><td>0.70</td></tr>
+          <tr><td><code>unknown</code></td><td>No structured signal detected. <strong>Calibration baseline lowered from mid-range to 0.30 in LAU-330</strong> so uncertainty is honestly reflected in confidence.</td><td>0.30</td></tr>
+        </tbody>
+      </table>
+      <p>Availability decays faster than most fields. By default it uses the <code>real_time</code> volatility class (30-min half-life). Promo-heavy domains (Etsy, eBay, AliExpress, Temu, Shein) route to <code>hyper_volatile</code> (10-min half-life). See <a href="/features/self-healing">Self-healing freshness</a> for the decay model.</p>
+
       <h2>Error Responses</h2>
       <table>
         <thead><tr><th>Status</th><th>Meaning</th></tr></thead>

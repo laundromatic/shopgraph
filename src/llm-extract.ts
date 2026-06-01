@@ -1,7 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { ProductData, ExtractionMethod, FieldModifierEntry } from './types.js';
+import type { ProductData, ExtractionMethod, FieldModifierEntry, AvailabilityValue } from './types.js';
 import { LLM_BASE_BASELINE, LLM_LOW_BASELINE, LLM_BOOSTED_BASELINE, FIELD_CONFIDENCE_MODIFIERS, getFieldConfidence } from './types.js';
 import { cleanHtml, type PriceHints } from './html-cleaner.js';
+import { parseAvailabilitySignals, AVAILABILITY_CONFIDENCE, type AvailabilityPattern } from './availability-parser.js';
 
 const EXTRACTION_PROMPT = `You are a product data extraction expert. Given the text content of a product page, extract structured product information.
 
@@ -13,7 +14,7 @@ Return a valid JSON object with these fields:
   "price_amount": "number or null - the current/active selling price as a number (no currency symbols)",
   "price_currency": "string or null - 3-letter code like USD, EUR, GBP",
   "sale_price": "number or null - sale/discounted price if different from regular price",
-  "availability": "in_stock | out_of_stock | preorder | unknown",
+  "availability": "in_stock | out_of_stock | low_stock | backordered | preorder | quote_only | unknown",
   "categories": ["array of category strings"],
   "color": ["array of color strings"],
   "material": ["array of material strings"],
@@ -150,9 +151,23 @@ export async function extractWithLlm(
   // Boost confidence if we had price hints that the LLM confirmed
   setField('price', price, hasPriceHints && price !== null);
 
-  const availability = parseAvailability(parsed.availability);
-  // Boost confidence if we had availability hints
-  setField('availability', availability, hasAvailHints && availability !== 'unknown');
+  // Availability via structured-signal parser (LAU-330). Parser inspects the
+  // raw page text + priceHints and returns a canonical value + per-pattern
+  // confidence baseline. KEY calibration fix: `unknown` baseline drops from
+  // ~LLM_BASE (≈0.75 - 0.10 modifier) to 0.30, so noisy "unknown" emissions
+  // no longer dominate the availability R correlation.
+  const llmAvailability = parseAvailability(parsed.availability);
+  const availabilitySignal = parseAvailabilitySignals(llmAvailability, priceHints, text);
+  const availability = availabilitySignal.value;
+  perField['availability'] = availabilitySignal.confidence;
+  perFieldMethod['availability'] =
+    availabilitySignal.matched_pattern === 'no_signal' ? 'llm' : 'llm_boosted';
+  perFieldModifiers['availability'] = buildAvailabilityLedger(
+    availabilitySignal.confidence,
+    availabilitySignal.matched_pattern,
+    llmAvailability,
+    availability,
+  );
 
   const categories = Array.isArray(parsed.categories)
     ? parsed.categories.filter((c): c is string => typeof c === 'string')
@@ -199,6 +214,47 @@ export async function extractWithLlm(
       per_field_modifiers: perFieldModifiers,
     },
   };
+}
+
+/**
+ * Build the confidence modifier ledger for an availability value produced by
+ * the structured-signal parser (LAU-330). Unlike the generic LLM ledger,
+ * availability bypasses the LLM_BASE / FIELD_CONFIDENCE_MODIFIERS pipeline
+ * and emits the parser's per-pattern baseline directly.
+ *
+ * Ledger shape:
+ *   1. base = parser confidence baseline + method
+ *   2. delta entry describing which signal matched (or "No structured signal")
+ *   3. result = final confidence (same as base for now; no further modifiers)
+ */
+function buildAvailabilityLedger(
+  finalScore: number,
+  pattern: AvailabilityPattern,
+  llmValue: AvailabilityValue,
+  resolvedValue: AvailabilityValue,
+): FieldModifierEntry[] {
+  const method: ExtractionMethod = pattern === 'no_signal' ? 'llm' : 'llm_boosted';
+  const ledger: FieldModifierEntry[] = [];
+  ledger.push({ base: finalScore, method });
+
+  const reasonByPattern: Record<AvailabilityPattern, string> = {
+    in_stock_signal: 'In-stock signal detected',
+    out_of_stock_signal: 'Out-of-stock signal detected',
+    low_stock_signal: 'Low-stock / quantified-scarcity signal detected',
+    backordered_signal: 'Backorder / pre-order / ships-in-N signal detected',
+    quote_only_signal: 'Quote-only / contact-for-pricing signal detected',
+    no_signal: llmValue === 'unknown'
+      ? 'No structured signal found; emitting unknown at 0.30 baseline'
+      : 'No structured signal found; trusting LLM value with reduced confidence',
+  };
+  ledger.push({
+    delta: 0,
+    reason: reasonByPattern[pattern],
+    source: `availability=${resolvedValue} (llm said ${llmValue})`,
+  });
+
+  ledger.push({ result: finalScore });
+  return ledger;
 }
 
 /**
@@ -328,6 +384,7 @@ export async function validateExtraction(
 
   if (parsed.fields) {
     for (const [fieldName, fieldResult] of Object.entries(parsed.fields)) {
+      if (!fieldResult) continue;
       const correct = fieldResult.correct === true;
       const confidence = typeof fieldResult.confidence === 'number' ? fieldResult.confidence : 0;
       fieldsVerified[fieldName] = { correct, confidence };
@@ -349,9 +406,12 @@ export async function validateExtraction(
 
 function parseAvailability(value: unknown): ProductData['availability'] {
   if (typeof value !== 'string') return 'unknown';
-  const lower = value.toLowerCase();
+  const lower = value.toLowerCase().trim();
   if (lower === 'in_stock') return 'in_stock';
   if (lower === 'out_of_stock') return 'out_of_stock';
-  if (lower === 'preorder') return 'preorder';
+  if (lower === 'low_stock') return 'low_stock';
+  if (lower === 'backordered' || lower === 'back_ordered') return 'backordered';
+  if (lower === 'preorder' || lower === 'pre_order') return 'preorder';
+  if (lower === 'quote_only') return 'quote_only';
   return 'unknown';
 }

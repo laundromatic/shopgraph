@@ -1,5 +1,6 @@
 import type { ProductData, PriceData, ExtractionMethod, FieldModifierEntry } from './types.js';
 import { SCHEMA_ORG_BASELINE, FIELD_CONFIDENCE_MODIFIERS, getFieldConfidence } from './types.js';
+import { AVAILABILITY_CONFIDENCE } from './availability-parser.js';
 
 /**
  * Extract Product data from JSON-LD blocks in HTML.
@@ -38,7 +39,19 @@ export function extractSchemaOrg(html: string): Partial<ProductData> | null {
   if (price) setField('price', price);
 
   const availability = extractAvailability(product);
-  setField('availability', availability);
+  if (availability === 'unknown') {
+    // LAU-330: emit unknown at 0.30 baseline (was inheriting SCHEMA_ORG_BASELINE
+    // - 0.10 ≈ 0.83 even when no offer.availability was actually present).
+    perField['availability'] = AVAILABILITY_CONFIDENCE.unknown;
+    perFieldMethod['availability'] = 'schema_org';
+    perFieldModifiers['availability'] = [
+      { base: AVAILABILITY_CONFIDENCE.unknown, method: 'schema_org' },
+      { delta: 0, reason: 'No schema.org availability signal; emitting unknown at 0.30 baseline' },
+      { result: AVAILABILITY_CONFIDENCE.unknown },
+    ];
+  } else {
+    setField('availability', availability);
+  }
 
   const imageUrls = extractImages(product);
   if (imageUrls.length > 0) setField('image_urls', imageUrls);

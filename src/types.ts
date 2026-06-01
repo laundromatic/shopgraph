@@ -5,6 +5,21 @@
 export type ExtractionMethod = 'schema_org' | 'llm' | 'llm_boosted' | 'hybrid' | 'playwright';
 
 /**
+ * Availability values emitted by the structured-signal parser (LAU-330).
+ * `preorder` is retained for schema.org back-compat (PreOrder is a defined
+ * Schema.org availability term); `backordered` covers the broader pattern
+ * of "ships in N weeks" / "back-order" / non-schema PreOrder signals.
+ */
+export type AvailabilityValue =
+  | 'in_stock'
+  | 'out_of_stock'
+  | 'low_stock'
+  | 'backordered'
+  | 'preorder'
+  | 'quote_only'
+  | 'unknown';
+
+/**
  * Core product data interface returned by the enrichment engine.
  */
 export interface ProductData {
@@ -15,7 +30,7 @@ export interface ProductData {
   brand: string | null;
   description: string | null;
   price: PriceData | null;
-  availability: 'in_stock' | 'out_of_stock' | 'preorder' | 'unknown';
+  availability: AvailabilityValue;
   categories: string[];
   image_urls: string[];
   primary_image_url: string | null;
