@@ -3,6 +3,7 @@ import type { ProductData, ExtractionMethod, FieldModifierEntry, AvailabilityVal
 import { LLM_BASE_BASELINE, LLM_LOW_BASELINE, LLM_BOOSTED_BASELINE, FIELD_CONFIDENCE_MODIFIERS, getFieldConfidence } from './types.js';
 import { cleanHtml, type PriceHints } from './html-cleaner.js';
 import { parseAvailabilitySignals, AVAILABILITY_CONFIDENCE, type AvailabilityPattern } from './availability-parser.js';
+import { detectTruncation } from './description-quality.js';
 
 const EXTRACTION_PROMPT = `You are a product data extraction expert. Given the text content of a product page, extract structured product information.
 
@@ -142,7 +143,9 @@ export async function extractWithLlm(
   setField('brand', brand);
 
   const description = typeof parsed.description === 'string' ? parsed.description : null;
-  setField('description', description);
+  if (setField('description', description)) {
+    applyDescriptionQuality('description', description, perField, perFieldModifiers);
+  }
 
   const priceAmount = typeof parsed.price_amount === 'number' ? parsed.price_amount : null;
   const priceCurrency = typeof parsed.price_currency === 'string' ? parsed.price_currency : null;
@@ -255,6 +258,44 @@ function buildAvailabilityLedger(
 
   ledger.push({ result: finalScore });
   return ledger;
+}
+
+/**
+ * Apply description-quality heuristics (truncation + marketing-copy) on top
+ * of the per-field confidence already set by setField. Mutates `perField`
+ * and `perFieldModifiers` in place. No-op when the description is null /
+ * empty or when no heuristic fires. LAU-333.
+ */
+function applyDescriptionQuality(
+  fieldName: string,
+  description: string | null,
+  perField: Record<string, number>,
+  perFieldModifiers: Record<string, FieldModifierEntry[]>,
+): void {
+  if (!description) return;
+  const current = perField[fieldName];
+  if (current === undefined) return;
+  const ledger = perFieldModifiers[fieldName];
+  if (!ledger || ledger.length === 0) return;
+
+  const trunc = detectTruncation(description);
+  if (!trunc.truncated) return;
+
+  const newScore = Math.max(0, Math.min(1, current + trunc.delta));
+  perField[fieldName] = newScore;
+
+  // Insert quality entries before the trailing `result` row, then rewrite
+  // the result row with the new score.
+  const tail = ledger[ledger.length - 1];
+  const hasResultRow = tail && 'result' in tail;
+  const body = hasResultRow ? ledger.slice(0, -1) : ledger;
+  body.push({
+    delta: trunc.delta,
+    reason: trunc.reason ?? 'Truncation detected',
+    source: 'description-quality heuristic (LAU-333)',
+  });
+  body.push({ result: newScore });
+  perFieldModifiers[fieldName] = body;
 }
 
 /**

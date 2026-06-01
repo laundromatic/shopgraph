@@ -1,6 +1,7 @@
 import type { ProductData, PriceData, ExtractionMethod, FieldModifierEntry } from './types.js';
 import { SCHEMA_ORG_BASELINE, FIELD_CONFIDENCE_MODIFIERS, getFieldConfidence } from './types.js';
 import { AVAILABILITY_CONFIDENCE } from './availability-parser.js';
+import { detectTruncation } from './description-quality.js';
 
 /**
  * Extract Product data from JSON-LD blocks in HTML.
@@ -33,7 +34,9 @@ export function extractSchemaOrg(html: string): Partial<ProductData> | null {
   setField('brand', brand);
 
   const description = extractString(product.description);
-  setField('description', description);
+  if (setField('description', description)) {
+    applyDescriptionQuality('description', description, perField, perFieldModifiers);
+  }
 
   const price = extractPrice(product);
   if (price) setField('price', price);
@@ -91,6 +94,42 @@ export function extractSchemaOrg(html: string): Partial<ProductData> | null {
       per_field_modifiers: perFieldModifiers,
     },
   };
+}
+
+/**
+ * Apply description-quality heuristics (truncation + marketing-copy) on top
+ * of the per-field confidence already set by setField. Mutates `perField`
+ * and `perFieldModifiers` in place. No-op when the description is null /
+ * empty or when no heuristic fires. LAU-333.
+ */
+function applyDescriptionQuality(
+  fieldName: string,
+  description: string | null,
+  perField: Record<string, number>,
+  perFieldModifiers: Record<string, FieldModifierEntry[]>,
+): void {
+  if (!description) return;
+  const current = perField[fieldName];
+  if (current === undefined) return;
+  const ledger = perFieldModifiers[fieldName];
+  if (!ledger || ledger.length === 0) return;
+
+  const trunc = detectTruncation(description);
+  if (!trunc.truncated) return;
+
+  const newScore = Math.max(0, Math.min(1, current + trunc.delta));
+  perField[fieldName] = newScore;
+
+  const tail = ledger[ledger.length - 1];
+  const hasResultRow = tail && 'result' in tail;
+  const body = hasResultRow ? ledger.slice(0, -1) : ledger;
+  body.push({
+    delta: trunc.delta,
+    reason: trunc.reason ?? 'Truncation detected',
+    source: 'description-quality heuristic (LAU-333)',
+  });
+  body.push({ result: newScore });
+  perFieldModifiers[fieldName] = body;
 }
 
 /**
