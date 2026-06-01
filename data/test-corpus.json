@@ -11,14 +11,26 @@
     "vertical": "Agriculture & Farm Supply",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Outdoor Farmstand",
+      "brand": "Lettuce Grow",
+      "price_amount": 649,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.copic.jp/en/product/sketch/",
     "vertical": "Arts & Crafts",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Copic Sketch",
+      "brand": "Copic",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.dickblick.com/products/blick-studio-acrylics/",
@@ -81,14 +93,26 @@
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Vercel Pro Plan",
+      "brand": "Vercel",
+      "price_amount": 20,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.figma.com/pricing/",
     "vertical": "B2B Software & SaaS",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Figma Professional Plan",
+      "brand": "Figma",
+      "price_amount": 16,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.notion.com/product",
@@ -102,28 +126,52 @@
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "DEWALT 20V MAX Jig Saw, Tool Only (DCS331B)",
+      "brand": "DEWALT",
+      "price_amount": 129,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.iFixit.com/products/essential-electronics-toolkit",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "iFixit Essential Electronics Toolkit",
+      "brand": "iFixit",
+      "price_amount": 29.95,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.iFixit.com/products/minnow-driver-kit",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Minnow Driver Kit: Pocket-Size Screwdriver + Portable Bit Set",
+      "brand": "iFixit",
+      "price_amount": 14.95,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.iFixit.com/products/pro-tech-toolkit",
     "vertical": "DIY & Prosumer",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "iFixit Pro Tech® Toolkit: Computer, Phone, Electronics Repair Kit",
+      "brand": "iFixit",
+      "price_amount": 79.95,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://store.google.com/product/pixel_9_pro",
@@ -137,56 +185,104 @@
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Google Nest Hub (2nd gen)",
+      "brand": "Google",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://store.google.com/us/product/pixel_buds_pro_2",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Pixel Buds Pro 2",
+      "brand": "Google",
+      "price_amount": 229,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/Apple-MacBook-Laptop-12%E2%80%91core-19%E2%80%91core/dp/B0BSHF7LLL",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple 2023 MacBook Pro M2 Pro 16-inch",
+      "brand": "Apple",
+      "price_amount": 2693.87,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B09V3KXJPB",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple iPad Air (5th Generation)",
+      "brand": "Apple",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B0CL61F39H",
     "vertical": "Electronics & Tech",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "PlayStation 5 Disc Edition Console (slim)",
+      "brand": "Sony",
+      "price_amount": 629.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B0CX22ZW1T",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple 2024 MacBook Air 13-inch M3",
+      "brand": "Apple",
+      "price_amount": 1185.65,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B0D1XD1ZV3",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple AirPods Pro 2",
+      "brand": "Apple",
+      "price_amount": 199.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B0D54JZTHY",
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple AirTag (1st Generation) 4 Pack",
+      "brand": "Apple",
+      "price_amount": 99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B0D7Q7FLNT",
@@ -226,7 +322,13 @@
     "vertical": "Electronics & Tech",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Razer DeathAdder V3",
+      "brand": "Razer",
+      "price_amount": 69.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.samsung.com/us/smartphones/galaxy-s25-ultra/",
@@ -250,7 +352,7 @@
     "ground_truth": {
       "product_name": "Era 300",
       "brand": "Sonos",
-      "price_amount": 479.0,
+      "price_amount": 479,
       "price_currency": "USD"
     }
   },
@@ -259,14 +361,26 @@
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Men's Solids Ankle Sock 4-Pack",
+      "brand": "Bombas",
+      "price_amount": 50,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://bombas.com/products/men-s-solid-ankle-sock-white-large-1?variant=white",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Men's Solids Ankle Sock",
+      "brand": "Bombas",
+      "price_amount": 14,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.6pm.com/p/adidas-running-ultraboost-5x/product/9971875",
@@ -284,7 +398,7 @@
     "ground_truth": {
       "product_name": "Men's Tree Runner",
       "brand": "Allbirds",
-      "price_amount": 100.0,
+      "price_amount": 100,
       "price_currency": "USD"
     }
   },
@@ -293,91 +407,169 @@
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The Mini Crossbody in Glazed Opal Blue",
+      "brand": "Away Travel",
+      "price_amount": 85,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.awaytravel.com/products/softside-garment-roller-navy-blue",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Softside Garment Roller in Navy Blue",
+      "brand": "Away Travel",
+      "price_amount": 495,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.awaytravel.com/products/stadium-bag-island-pink",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Stadium Bag in Island Pink",
+      "brand": "Away Travel",
+      "price_amount": 75,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.chubbiesshorts.com/products/the-midnight-adventures-6-everywear-short",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The Midnight Adventures 6\" Everywear Short",
+      "brand": "Chubbies",
+      "price_amount": 64.5,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.jcrew.com/p/girls/categories/clothing/t-shirts-and-tops/sequin-stripe-t-shirt/BV025",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Sequin Stripe T-shirt",
+      "brand": "J.Crew",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.koio.co/products/capri-triple-white",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Capri Leather Sneaker in Triple White",
+      "brand": "KOIO",
+      "price_amount": 225.25,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.nike.com/t/air-force-1-07-mens-shoes-jBrhbr/CW2288-111",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Nike Air Force 1 '07 Men's Shoes",
+      "brand": "Nike",
+      "price_amount": 115,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.patagonia.com/product/mens-better-sweater-fleece-jacket/25528.html",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Men's Better Sweater Fleece Jacket",
+      "brand": "Patagonia",
+      "price_amount": 169,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.quince.com/women/mongolian-cashmere-crewneck-sweater",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Mongolian Cashmere Crewneck Sweater",
+      "brand": "Quince",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.skims.com/products/fits-everybody-t-shirt-bra-onyx",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Fits Everybody T-Shirt Bra",
+      "brand": "SKIMS",
+      "price_amount": 54,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.trueclassictees.com/products/heather-polo-3-pack",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Heather Polo 3-Pack",
+      "brand": "True Classic",
+      "price_amount": 89.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.trueclassictees.com/products/sleeveless-active-muscle-tee-3-pack",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Sleeveless Active Muscle Tee 3-Pack",
+      "brand": "True Classic",
+      "price_amount": 59.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.trueclassictees.com/products/the-staple-6-pack",
     "vertical": "Fashion & Apparel",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The Staple Classic Crew Neck 6-Pack",
+      "brand": "True Classic",
+      "price_amount": 119.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.lemonade.com/renters",
@@ -440,35 +632,65 @@
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Organic Virgin Coconut Oil",
+      "brand": "Thrive Market",
+      "price_amount": 9.49,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.counterculturecoffee.com/shop/coffee/big-trouble",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Big Trouble",
+      "brand": "Counter Culture Coffee",
+      "price_amount": 19.5,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.counterculturecoffee.com/shop/coffee/hologram",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Hologram",
+      "brand": "Counter Culture Coffee",
+      "price_amount": 20,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.drinkolipop.com/products/orange-squeeze",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Orange Squeeze Prebiotic Soda 9g Fiber",
+      "brand": "OLIPOP",
+      "price_amount": 35.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.drinkolipop.com/products/strawberry-vanilla",
     "vertical": "Food & Beverage",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Strawberry Vanilla Prebiotic Soda 9g Fiber",
+      "brand": "OLIPOP",
+      "price_amount": 35.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.drinkolipop.com/products/vintage-cola",
@@ -492,7 +714,7 @@
     "ground_truth": {
       "product_name": "Sizzle Extra Virgin Olive Oil",
       "brand": "Graza",
-      "price_amount": 16.0,
+      "price_amount": 16,
       "price_currency": "USD"
     }
   },
@@ -501,14 +723,26 @@
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Ball Spray",
+      "brand": "Dollar Shave Club",
+      "price_amount": 10,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://us.dollarshaveclub.com/products/beard-oil",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Beard Oil",
+      "brand": "Dollar Shave Club",
+      "price_amount": 9,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.drsquatch.com/products/pine-tar",
@@ -519,7 +753,7 @@
     "ground_truth": {
       "product_name": "Pine Tar Bar Soap",
       "brand": "Dr. Squatch",
-      "price_amount": 7.0,
+      "price_amount": 7,
       "price_currency": "USD"
     }
   },
@@ -532,7 +766,7 @@
     "ground_truth": {
       "product_name": "Boy Brow",
       "brand": "Glossier",
-      "price_amount": 22.0,
+      "price_amount": 22,
       "price_currency": "USD"
     }
   },
@@ -541,28 +775,52 @@
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Body Wash",
+      "brand": "Native",
+      "price_amount": 11,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.nativecos.com/products/deodorant-stick",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Deodorant Stick",
+      "brand": "Native",
+      "price_amount": 14,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.nativecos.com/products/deodorant-stick-plastic-free",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Plastic Free Deodorant Stick",
+      "brand": "Native",
+      "price_amount": 14,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.nativecos.com/products/hand-soap",
     "vertical": "Health & Beauty",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Hand Soap",
+      "brand": "Native",
+      "price_amount": 6,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.fishersci.com/shop/products/p/S25361A",
@@ -582,7 +840,13 @@
     "vertical": "Healthcare & Life Sciences",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Jamar Inclinometer",
+      "brand": "Jamar",
+      "price_amount": 101.66,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.rehabmart.com/product/drive-blue-streak-wheelchair-45019.html",
@@ -603,7 +867,13 @@
     "vertical": "Home & Furniture",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Breeze Comforter",
+      "brand": "Buffy",
+      "price_amount": 250,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://materialkitchen.com/products/the-grippy-reboard",
@@ -614,7 +884,7 @@
     "ground_truth": {
       "product_name": "The (grippy) reBoard",
       "brand": "Material",
-      "price_amount": 40.0,
+      "price_amount": 40,
       "price_currency": "USD"
     }
   },
@@ -623,21 +893,39 @@
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The Midi MK Free Board",
+      "brand": "Material Kitchen",
+      "price_amount": 44,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://materialkitchen.com/products/the-mk-free-board",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The MK Free Board",
+      "brand": "Material Kitchen",
+      "price_amount": 52,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://materialkitchen.com/products/the-mk-free-set",
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The MK Free Set",
+      "brand": "Material Kitchen",
+      "price_amount": 91,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.article.com/product/1891/sven-charme-tan-sofa",
@@ -671,7 +959,13 @@
     "vertical": "Home & Furniture",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The Dutchess",
+      "brand": "Great Jones",
+      "price_amount": 205,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.ikea.com/us/en/p/kallax-shelf-unit-white-20275814/",
@@ -691,7 +985,13 @@
     "vertical": "Home & Furniture",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Comfort Roll-Arm Slipcovered Sofa",
+      "brand": "Pottery Barn",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.saatva.com/mattresses/saatva-classic",
@@ -702,7 +1002,7 @@
     "ground_truth": {
       "product_name": "Saatva Classic Mattress",
       "brand": "Saatva",
-      "price_amount": 2179.0,
+      "price_amount": 2179,
       "price_currency": "USD"
     }
   },
@@ -732,7 +1032,13 @@
     "vertical": "Niche Health & Wellness",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Oura Ring Heritage",
+      "brand": "Oura",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.athleticgreens.com/en",
@@ -746,56 +1052,104 @@
     "vertical": "Niche Health & Wellness",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Essential for Women Multivitamin 18+",
+      "brand": "Ritual",
+      "price_amount": 37.5,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B00006IE8J",
     "vertical": "Office & Supplies",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "uni-ball Vision Rollerball Pens, 0.7mm, Fine Point, Black Ink, 12-Pack",
+      "brand": "uni-ball",
+      "price_amount": 14.65,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.amazon.com/dp/B0000AQODM",
     "vertical": "Office & Supplies",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "UHU Tac Removable and Reusable Glue Pads, 80 Tac Pads",
+      "brand": "UHU",
+      "price_amount": 6.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.moleskine.com/en-us/classic-notebook-hard-cover-black-8058647626604.html",
     "vertical": "Office & Supplies",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Classic Notebook Hard Cover",
+      "brand": "Moleskine",
+      "price_amount": 25,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.petplate.com/products/chompin-chicken",
     "vertical": "Pets",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Chompin' Chicken",
+      "brand": "PetPlate",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.petplate.com/products/tail-waggin-turkey",
     "vertical": "Pets",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Tail Waggin' Turkey",
+      "brand": "PetPlate",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.wildone.com/products/harness-walk-kit",
     "vertical": "Pets",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Cushioned Harness + Waterproof Leash Walk Kit",
+      "brand": "Wild One",
+      "price_amount": 98,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.wildone.com/products/walk-kit",
     "vertical": "Pets",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Cushioned Harness + Waterproof Leash Walk Kit",
+      "brand": "Wild One",
+      "price_amount": 98,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.webstaurantstore.com/vollrath-47935-5-qt-stainless-steel-mixing-bowl/92247935.html",
@@ -815,63 +1169,117 @@
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "iPhone 14 Pro",
+      "brand": "Apple",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.gazelle.com/products/iphone-15-pro-max",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "iPhone 15 Pro Max",
+      "brand": "Apple",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.refurbed.com/en-us/p/apple-iphone-15-pro-max",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple iPhone 15 Pro Max",
+      "brand": "Apple",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.swappa.com/buy/apple-iphone-14",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple iPhone 14",
+      "brand": "Apple",
+      "price_amount": 185,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.swappa.com/buy/apple-iphone-15-pro-max",
     "vertical": "Second-hand & Circular Economy",
     "added": "2026-03-26",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Apple iPhone 15 Pro Max",
+      "brand": "Apple",
+      "price_amount": 515,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.gymshark.com/products/gymshark-arrival-contrast-t-shirt-ss-tops",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Arrival Contrast T-Shirt",
+      "brand": "Gymshark",
+      "price_amount": 24,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.gymshark.com/products/gymshark-geo-seamless-t-shirt-ss-tops-blue-ss26",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Geo Seamless T-Shirt",
+      "brand": "Gymshark",
+      "price_amount": 36,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.gymshark.com/products/gymshark-vital-t-shirt-ss-tops",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "Vital Seamless T-Shirt",
+      "brand": "Gymshark",
+      "price_amount": 38,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.stanley1913.com/products/clutch-bottle-16-oz",
     "vertical": "Sports & Outdoors",
     "added": "2026-03-24",
     "verified": "2026-03-26",
-    "segment": "b2c"
+    "segment": "b2c",
+    "ground_truth": {
+      "product_name": "The Stanley Clutch Bottle 16 oz",
+      "brand": "Stanley",
+      "price_amount": 55,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.stanley1913.com/products/quencher-protour-flipstraw-tumbler",
@@ -882,7 +1290,7 @@
     "ground_truth": {
       "product_name": "Quencher ProTour Flip Straw Tumbler 40 oz",
       "brand": "Stanley",
-      "price_amount": 45.0,
+      "price_amount": 45,
       "price_currency": "USD"
     }
   },
@@ -1026,13 +1434,25 @@
     "url": "https://www.cdw.com/product/cisco-catalyst-9500-network-advantage-switch-48-port-managed/5083143",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Cisco Catalyst 9500 - Network Advantage - switch - 48 ports - managed - rack-mountable",
+      "brand": "Cisco",
+      "price_amount": 37824.02,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/cisco-catalyst-9300-network-advantage-switch-48-ports-managed-rac/4842720",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Cisco Catalyst 9300 - Network Advantage - switch - 48 ports - managed - rack-mountable",
+      "brand": "Cisco",
+      "price_amount": 13057.89,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/lenovo-thinkpad-p16v-gen-3-ai-workstation-16-intel-core-ultra-9-28/8469505",
@@ -1050,85 +1470,169 @@
     "url": "https://www.cdw.com/product/lenovo-thinkpad-p1-gen-8-ai-workstation-16-intel-core-ultra-9-285h/8515858",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Lenovo ThinkPad P1 Gen 8 - AI Workstation - 16\" - Intel Core Ultra 9 - 285H - Intel Evo vPro Enterprise Platform - 32 GB",
+      "brand": "Lenovo",
+      "price_amount": 5786.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/lenovo-thinkpad-p14s-gen-6-copilot-pc-ai-workstation-14-amd-ryzen/8446145",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Lenovo ThinkPad P14s Gen 6 - Copilot+ PC, AI Workstation - 14\" - AMD Ryzen AI 7 PRO - 350 - AMD PRO - 32 GB RAM - 1 TB",
+      "brand": "Lenovo",
+      "price_amount": 2727.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/ubiquiti-unifi-enterprise-fortress-security-appliance/8417002",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Ubiquiti UniFi Enterprise Fortress - security appliance",
+      "brand": "Ubiquiti",
+      "price_amount": 1999,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/microsoft-windows-server-2025-license/3446600",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Microsoft Windows Server 2025 - License",
+      "brand": "Microsoft",
+      "price_amount": 52.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/lenovo-thinkpad-p16s-gen-4-ai-workstation-16-intel-core-ultra-7-26/8515862",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Lenovo ThinkPad P16s Gen 4 - AI Workstation - 16\" - Intel Core Ultra 7 - 265H - vPro Enterprise - 96 GB RAM - 2 TB SSD",
+      "brand": "Lenovo",
+      "price_amount": 7312.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/lenovo-thinkpad-p16-gen-3-ai-workstation-16-intel-core-ultra-7-255/8531569",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Lenovo ThinkPad P16 Gen 3 - AI Workstation - 16\" - Intel Core Ultra 7 - 255HX - 32 GB RAM - 512 GB SSD - English - with",
+      "brand": "Lenovo",
+      "price_amount": 4142.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-15044/Corrugated-Boxes-200-Test/",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "26 x 26 x 4\" Corrugated Boxes",
+      "brand": "Uline",
+      "price_amount": 82.05,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-2414LBPS/Colored-Shipping-Tags/Shipping-Tags-5-4-3-4-x-2-3-8-Pre-strung-Light-Blue",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Shipping Tags - #5, 4 3/4 x 2 3/8\", Pre-strung, Light Blue",
+      "brand": "Uline",
+      "price_amount": 69,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-15723R/Barcode-Labels/Industrial-Thermal-Transfer-Labels-Red-2-x-1-Ribbons-Required",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Industrial Thermal Transfer Labels - Red, 2 x 1\", Ribbons Required",
+      "brand": "Uline",
+      "price_amount": 296,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-19731/Laminating-Machines-and-Supplies/Laminating-Pouches-Glossy-Half-Letter-Size-5-Mil",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Laminating Pouches - Glossy, Half Letter Size, 5 Mil",
+      "brand": "Uline",
+      "price_amount": 25,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-11355/Insulated-Shippers-and-Supplies/Insulated-Foam-Shipping-Kit-8-x-6-x-12",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Insulated Foam Shipping Kit - 8 x 6 x 12\"",
+      "brand": "Uline",
+      "price_amount": 57,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-25159/Dunnage-Bags/Kraft-Dunnage-Bags-2-Ply-36-x-66",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Kraft Dunnage Bags - 2-Ply, 36 x 66\"",
+      "brand": "Uline",
+      "price_amount": 165,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/S-25139-1/Warehouse-Signs/Monitored-By-Video-Camera-Decals-3-1-2-x-5",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "\"Monitored By Video Camera\" Decals - 3 1/2 x 5\"",
+      "brand": "Uline",
+      "price_amount": 20,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-676/Label-Dispensers/Label-Tape-Dispenser-18",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Label/Tape Dispenser - 18\"",
+      "brand": "Uline",
+      "price_amount": 95,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-958/Desktop-Tape-Dispensers/Uline-Bench-Tape-Dispenser-2",
@@ -1138,7 +1642,7 @@
     "ground_truth": {
       "product_name": "Uline Bench Tape Dispenser - 2\"",
       "brand": "Uline",
-      "price_amount": 21.0,
+      "price_amount": 21,
       "price_currency": "USD"
     }
   },
@@ -1146,7 +1650,13 @@
     "url": "https://www.uline.com/Product/Detail/H-380/Hand-Held-Tape-Dispensers/Uline-Metal-Strapping-Tape-Dispenser-2",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Uline Metal Strapping Tape Dispenser - 2\"",
+      "brand": "Uline",
+      "price_amount": 11,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.sigmaaldrich.com/US/en/product/sigald/179124",
@@ -1176,7 +1686,13 @@
     "url": "https://www.sigmaaldrich.com/US/en/product/sigald/32201",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Acetone",
+      "brand": "Sigma-Aldrich",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.sigmaaldrich.com/US/en/product/mm/567440",
@@ -1188,13 +1704,25 @@
     "url": "https://www.sigmaaldrich.com/US/en/product/sigald/793566",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Sodium chloride",
+      "brand": "Sigma-Aldrich",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.sigmaaldrich.com/US/en/product/sigald/s9625",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Sodium chloride",
+      "brand": "Sigma-Aldrich",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.sigmaaldrich.com/US/en/product/sigald/s9888",
@@ -1284,31 +1812,61 @@
     "url": "https://www.fishersci.com/shop/products/spare-evaporation-beaker-flask-4000-ml/05405076",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "BUCHI Spare Evaporation Beaker Flask, 4000 mL",
+      "brand": "BUCHI",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.fishersci.com/shop/products/grid-lab-notebook-blue-200pg/501537762",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Laboratory Notebook, Gridded Pages, Blue Cover, 200 Page Book",
+      "brand": "Research Products International Corp",
+      "price_amount": 61.19,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.fishersci.com/shop/products/lab-starter-kit/12141460",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "DWK Life Sciences Kimble Lab Starter Kit",
+      "brand": "DWK Life Sciences",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.fishersci.com/shop/products/metromax-i-polymer-lab-worktable-black-phenolic-top-solid-i-shelf/11100218",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Metro MetroMax i Polymer Lab Worktable",
+      "brand": "Metro",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.fishersci.com/shop/products/laboratory-notebook-9/p-8436003",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Laboratory Notebooks",
+      "brand": "Fisherbrand",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://us.rs-online.com/product/panasonic-electronic-components/cb1-r-m-12v/70158499/",
@@ -1338,25 +1896,49 @@
     "url": "https://www.newark.com/omron-electronic-components/xs2g-d4s2/sensor-conn-m12-plug-4pos-cable/dp/88M5228",
     "vertical": "Electronic Components",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Omron XS2G-D4S2 Sensor Connector M12 Plug 4-Pos Cable",
+      "brand": "Omron",
+      "price_amount": 13.8,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.newark.com/raspberry-pi/rp2040ct/mcu-32bit-133mhz-qfn-56/dp/49AJ8739",
     "vertical": "Electronic Components",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Raspberry Pi RP2040CT MCU 32-bit 133MHz QFN-56",
+      "brand": "Raspberry Pi",
+      "price_amount": 1,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.newark.com/embest/embedded-pi/i-o-bridge-rpi-arduino-arm/dp/67W2379",
     "vertical": "Electronic Components",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Embest Embedded Pi I/O Bridge",
+      "brand": "Embest",
+      "price_amount": 25.66,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.newark.com/gertboard/gertduino/arduino-uno-compatible-i-o-board/dp/01X2969",
     "vertical": "Electronic Components",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Gertboard Gertduino Arduino Uno-Compatible I/O Board",
+      "brand": "Gertboard",
+      "price_amount": 23.4,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.alibaba.com/product-detail/Wholesale-Commercial-Bakery-Equipment-Industrial-Electric_60488279134.html",
@@ -1374,7 +1956,13 @@
     "url": "https://www.alibaba.com/product-detail/Custom-Factory-Supply-Industrial-Heating-Equipment_1601578658025.html",
     "vertical": "Wholesale & Trade",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Custom Factory Supply Industrial Heating Equipment Gas Burner 50kw to 14000kw",
+      "brand": "Shanghai Bailingde Technology Equipment Co., Ltd.",
+      "price_amount": 550,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.alibaba.com/product-detail/Wholesale-China-Industrial-Laundry-Equipment-Heavy_10000031646667.html",
@@ -1392,7 +1980,13 @@
     "url": "https://www.alibaba.com/product-detail/Magnetic-Sheet-Wholesale-Factory-Supply-Industrial_1601201834957.html",
     "vertical": "Wholesale & Trade",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Magnetic Sheet Isotropic Strong Ferrite Soft Rubber Magnet",
+      "brand": "AMC Group Limited",
+      "price_amount": 2,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.alibaba.com/product-detail/Wholesale-Industrial-Factory-Heating-and-Stirrer_1601295044774.html",
@@ -1404,13 +1998,25 @@
     "url": "https://www.alibaba.com/product-detail/wholesale-industrial-ep200-ep250-18MPA-800mm_60692376175.html",
     "vertical": "Wholesale & Trade",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Industrial EP200/EP250 18MPA 800mm Rubber Conveyor Belt",
+      "brand": "Hebei Jiuduan Import And Export Trading Co., Ltd.",
+      "price_amount": 3,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.alibaba.com/product-detail/Commercial-Baking-Equipment-Industry-China-Wholesale_1601594990695.html",
     "vertical": "Wholesale & Trade",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Commercial Conveyor Belt Pizza Oven Multi-functional Oven",
+      "brand": "Henan Baba Trading Co.,ltd.",
+      "price_amount": 1950,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.zoro.com/dewalt-impact-drill-bit-1164-dd5111/i/G8614990/",
@@ -1476,31 +2082,61 @@
     "url": "https://www.uline.com/Product/Detail/H-93/Stretch-Wrap-Dispensers/Metal-Dispenser-for-Mini-Wrap-with-Adjustable-Setting",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Metal Dispenser for Mini-Wrap with Adjustable Setting",
+      "brand": "Uline",
+      "price_amount": 29.95,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-440/Desktop-Tape-Dispensers/Uline-Industrial-Multi-Roll-Tape-Dispenser-2",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Uline Industrial Multi-Roll Tape Dispenser - 2\"",
+      "brand": "Uline",
+      "price_amount": 17,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/lenovo-thinkpad-p14s-gen-6-ai-workstation-14.5-intel-core-ultra-7/8515879",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Lenovo ThinkPad P14s Gen 6 - AI Workstation - 14.5\" - Intel Core Ultra 7 - 255H - 16 GB RAM - 512 GB SSD - English",
+      "brand": "Lenovo",
+      "price_amount": 2324.99,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.cdw.com/product/Microsoft-Windows-Server-Enterprise-Edition-license-software-assurance/2320028",
     "vertical": "IT & Enterprise Hardware",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Microsoft Windows Server Enterprise Edition - license & software assurance",
+      "brand": "Microsoft",
+      "price_amount": null,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.newark.com/chipkit/chipkit-pi/dev-board-pic32-chipkit-pi-for/dp/01X2967",
     "vertical": "Electronic Components",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "chipKIT Pi PIC32 Dev Board",
+      "brand": "chipKIT",
+      "price_amount": 18.09,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.alibaba.com/product-detail/Factory-Wholesale-Industrial-Combustion-Electromechanical-Magnetic_1601345946856.html",
@@ -1512,36 +2148,72 @@
     "url": "https://www.fishersci.com/shop/products/laboratory-research-notebook/NC9874118",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "LABORATORY RESEARCH NOTEBOOK",
+      "brand": "Scientific Notebook Company",
+      "price_amount": 37.75,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.fishersci.com/shop/products/laboratory-notebooks/NC9905897",
     "vertical": "Industrial Chemicals & Lab Equipment",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "LABORATORY NOTEBOOKS",
+      "brand": "Scientific Notebook Company",
+      "price_amount": 38.23,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-801/Kraft-Tape-Dispensers/Paper-Tape-Dispenser-3",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Paper Tape Dispenser - 3\"",
+      "brand": "Uline",
+      "price_amount": 170,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-465LIME/Hand-Held-Tape-Dispensers/Uline-Heavy-Duty-Tape-Dispenser-3-Lime-Green",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Uline Heavy Duty Tape Dispenser - 3\", Lime Green",
+      "brand": "Uline",
+      "price_amount": 30,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-1162/Hand-Held-Tape-Dispensers/Metal-Tape-Dispenser-3",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Uline Metal Strapping Tape Dispenser - 3\"",
+      "brand": "Uline",
+      "price_amount": 15,
+      "price_currency": "USD"
+    }
   },
   {
     "url": "https://www.uline.com/Product/Detail/H-108/Hand-Held-Tape-Dispensers/Metal-Tape-Dispenser-1",
     "vertical": "Office & Shipping Wholesale",
     "added": "2026-04-08",
-    "segment": "b2b"
+    "segment": "b2b",
+    "ground_truth": {
+      "product_name": "Uline Metal Strapping Tape Dispenser - 1\"",
+      "brand": "Uline",
+      "price_amount": 10,
+      "price_currency": "USD"
+    }
   }
 ]
