@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { pearsonR } from '../calibration.js';
+import { FIELD_CONFIDENCE_MODIFIERS } from '../types.js';
 
 describe('pearsonR', () => {
   it('returns 1.0 for perfectly correlated data', () => {
@@ -91,5 +92,26 @@ describe('calibration bucket logic', () => {
     const MIN_SAMPLES = 10;
     const recommendation = sampleSize < MIN_SAMPLES ? 'insufficient_data' : 'check_further';
     expect(recommendation).toBe('insufficient_data');
+  });
+});
+
+describe('calibration-driven field modifier regressions', () => {
+  // 2026-06-01: Live calibration showed product_name with Pearson R = -0.0945
+  // (anti-correlated — higher confidence meant LOWER accuracy). Root cause was
+  // the +0.05 product_name modifier inflating Schema.org product_name to 0.98
+  // while ground-truth match accuracy was only 40% in that bucket. Brand at
+  // baseline 0.93 (modifier 0.00) calibrated correctly at 100%.
+  //
+  // Do not re-introduce a positive product_name modifier without calibration
+  // data justifying it. Any positive boost must show a measurable correlation
+  // improvement in /api/stats/calibration field_pearson_r.product_name.
+  it('product_name modifier is not positive (avoids anti-correlation)', () => {
+    expect(FIELD_CONFIDENCE_MODIFIERS.product_name).toBeLessThanOrEqual(0);
+  });
+
+  it('product_name and brand modifiers are aligned (both are core identity fields)', () => {
+    // Calibration showed brand at modifier 0.00 calibrates correctly.
+    // product_name should track brand unless data justifies divergence.
+    expect(FIELD_CONFIDENCE_MODIFIERS.product_name).toBe(FIELD_CONFIDENCE_MODIFIERS.brand);
   });
 });

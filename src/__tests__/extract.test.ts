@@ -387,12 +387,12 @@ describe('strict_confidence_threshold', () => {
     mockFetch.mockResolvedValueOnce(mockResponse(shopifyHtml));
 
     // Schema.org extraction: availability gets 0.83 confidence (0.93 - 0.10)
-    // Setting threshold to 0.90 should scrub availability but keep product_name (0.98)
+    // Setting threshold to 0.90 should scrub availability but keep product_name (0.93)
     const result = await extractProduct('https://example.com/product', {
       strict_confidence_threshold: 0.90,
     });
 
-    // product_name (0.98) should survive
+    // product_name (0.93) should survive
     expect(result.product_name).toBe('Vintage Rose Gold Ring');
     // availability (0.83) should be scrubbed
     expect(result.availability).toBe('unknown');

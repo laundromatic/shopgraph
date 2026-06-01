@@ -144,7 +144,7 @@ describe('extractSchemaOrg', () => {
     const result = extractSchemaOrg(shopifyHtml);
     expect(result!.confidence.overall).toBeGreaterThan(0.85);
     // SCHEMA_ORG_BASELINE=0.93 + per-field modifiers
-    expect(result!.confidence.per_field.product_name).toBeCloseTo(0.98, 10); // 0.93 + 0.05
+    expect(result!.confidence.per_field.product_name).toBeCloseTo(0.93, 10); // 0.93 + 0.00 (was +0.05 until 2026-06-01)
     expect(result!.confidence.per_field.price).toBeCloseTo(0.93, 10);        // 0.93 + 0.00
     expect(result!.confidence.per_field.description).toBeCloseTo(0.88, 10);  // 0.93 - 0.05
     expect(result!.confidence.per_field.availability).toBeCloseTo(0.83, 10); // 0.93 - 0.10

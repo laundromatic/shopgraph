@@ -18,10 +18,12 @@ describe('types', () => {
 
 describe('getFieldConfidence', () => {
   it('applies known field modifier', () => {
-    // product_name has +0.05 modifier
-    expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'product_name')).toBeCloseTo(0.98, 10);
+    // product_name modifier is 0 (was +0.05 until 2026-06-01 calibration removed it)
+    expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'product_name')).toBeCloseTo(0.93, 10);
     // availability has -0.10 modifier
     expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'availability')).toBeCloseTo(0.83, 10);
+    // description has -0.05 modifier
+    expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'description')).toBeCloseTo(0.88, 10);
   });
 
   it('returns baseline for unknown fields', () => {
@@ -29,8 +31,8 @@ describe('getFieldConfidence', () => {
   });
 
   it('clamps to [0, 1]', () => {
-    // High baseline + positive modifier should not exceed 1
-    expect(getFieldConfidence(0.99, 'product_name')).toBe(1.0);
+    // High baseline should not exceed 1
+    expect(getFieldConfidence(1.05, 'product_name')).toBe(1.0);
     // Low baseline + negative modifier should not go below 0
     expect(getFieldConfidence(0.05, 'availability')).toBe(0);
   });

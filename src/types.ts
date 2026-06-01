@@ -107,9 +107,22 @@ export const LLM_BASE_BASELINE = 0.70;
 export const LLM_LOW_BASELINE = 0.60;
 export const LLM_BOOSTED_BASELINE = 0.85;
 
-/** Per-field confidence modifiers applied on top of tier baselines */
+/** Per-field confidence modifiers applied on top of tier baselines.
+ *
+ * Calibration data (2026-06-01) showed product_name with the WORST per-field
+ * calibration of any tracked field (Pearson R = -0.0945, anti-correlated):
+ * Schema.org @ 0.98 ground-truth-match accuracy was 40%, while brand @ 0.93
+ * (modifier 0.00) calibrated at 100% accuracy. The +0.05 product_name
+ * modifier was a hypothesis added in LAU-287 that the data did not support
+ * — Schema.org `Product.name` is not measurably more reliable than other
+ * structured fields, and the boost inflated the confidence into the highest
+ * bucket where ground-truth matching is hardest (canonical product names
+ * often substring-mismatch verbose ground-truth strings). Removing the
+ * modifier brings product_name in line with brand at baseline 0.93 /
+ * LLM 0.70.
+ */
 export const FIELD_CONFIDENCE_MODIFIERS: Record<string, number> = {
-  product_name: 0.05,
+  product_name: 0.00,
   brand: 0.00,
   description: -0.05,
   price: 0.00,
