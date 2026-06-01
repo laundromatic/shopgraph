@@ -123,8 +123,21 @@ export function buildFieldResults(product: ProductData, entry: CorpusEntry): Fie
     const gt = entry.ground_truth;
 
     if (gt.product_name !== undefined) {
-      matches.product_name = product.product_name !== null &&
-        product.product_name.toLowerCase().includes(gt.product_name.toLowerCase());
+      // Bidirectional substring match (LAU-331): handles asymmetry where
+      // extracted is the canonical short name and gt is the verbose marketing
+      // name (or vice versa). Empty / null on either side => no match.
+      const extracted = product.product_name;
+      const truth = gt.product_name;
+      if (
+        extracted !== null && extracted !== undefined && extracted !== '' &&
+        truth !== null && truth !== undefined && truth !== ''
+      ) {
+        const e = extracted.toLowerCase();
+        const t = truth.toLowerCase();
+        matches.product_name = e.includes(t) || t.includes(e);
+      } else {
+        matches.product_name = false;
+      }
     }
     if (gt.brand !== undefined) {
       matches.brand = product.brand !== null &&

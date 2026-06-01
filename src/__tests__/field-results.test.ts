@@ -205,6 +205,60 @@ describe('ground truth comparison', () => {
     expect(result.ground_truth_match?.price).toBe(false);
     expect(result.accuracy_score).toBe(0);
   });
+
+  // LAU-331: bidirectional ground_truth matcher regression cases
+  it('matches product_name when extracted is canonical short name (gt longer)', () => {
+    // e.g. extractor returned "Pine Tar" but ground_truth is the verbose
+    // marketing name "Pine Tar Bar Soap". Should match.
+    const product = makeProduct({ product_name: 'Pine Tar' });
+    const entry = makeEntry({ ground_truth: { product_name: 'Pine Tar Bar Soap' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.product_name).toBe(true);
+  });
+
+  it('matches product_name when extracted is verbose and gt is canonical short name', () => {
+    // e.g. extractor returned "Apple iPhone 16 Pro 256GB Black Titanium" but
+    // ground_truth is "iPhone 16 Pro". Should match (gt is substring of extracted).
+    const product = makeProduct({
+      product_name: 'Apple iPhone 16 Pro 256GB Black Titanium',
+    });
+    const entry = makeEntry({ ground_truth: { product_name: 'iPhone 16 Pro' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.product_name).toBe(true);
+  });
+
+  it('does not match product_name for unrelated strings', () => {
+    const product = makeProduct({ product_name: 'totally different product' });
+    const entry = makeEntry({ ground_truth: { product_name: 'Some Product' } });
+    const result = buildFieldResults(product, entry);
+
+    expect(result.ground_truth_match?.product_name).toBe(false);
+  });
+
+  it('handles empty / null product_name edge cases gracefully', () => {
+    // null extracted vs empty gt
+    const r1 = buildFieldResults(
+      makeProduct({ product_name: null }),
+      makeEntry({ ground_truth: { product_name: '' } }),
+    );
+    expect(r1.ground_truth_match?.product_name).toBe(false);
+
+    // empty extracted vs valid gt
+    const r2 = buildFieldResults(
+      makeProduct({ product_name: '' }),
+      makeEntry({ ground_truth: { product_name: 'Widget' } }),
+    );
+    expect(r2.ground_truth_match?.product_name).toBe(false);
+
+    // valid extracted vs empty gt
+    const r3 = buildFieldResults(
+      makeProduct({ product_name: 'Widget' }),
+      makeEntry({ ground_truth: { product_name: '' } }),
+    );
+    expect(r3.ground_truth_match?.product_name).toBe(false);
+  });
 });
 
 describe('cross_signal_agreement and llm_validation fields', () => {
