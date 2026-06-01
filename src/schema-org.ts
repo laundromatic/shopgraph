@@ -1,7 +1,7 @@
 import type { ProductData, PriceData, ExtractionMethod, FieldModifierEntry } from './types.js';
 import { SCHEMA_ORG_BASELINE, FIELD_CONFIDENCE_MODIFIERS, getFieldConfidence } from './types.js';
 import { AVAILABILITY_CONFIDENCE } from './availability-parser.js';
-import { detectTruncation, classifyDescriptionCopy } from './description-quality.js';
+import { detectTruncation } from './description-quality.js';
 
 /**
  * Extract Product data from JSON-LD blocks in HTML.
@@ -115,30 +115,19 @@ function applyDescriptionQuality(
   if (!ledger || ledger.length === 0) return;
 
   const trunc = detectTruncation(description);
-  const copy = classifyDescriptionCopy(description);
-  const totalDelta = trunc.delta + copy.delta;
-  if (totalDelta === 0) return;
+  if (!trunc.truncated) return;
 
-  const newScore = Math.max(0, Math.min(1, current + totalDelta));
+  const newScore = Math.max(0, Math.min(1, current + trunc.delta));
   perField[fieldName] = newScore;
 
   const tail = ledger[ledger.length - 1];
   const hasResultRow = tail && 'result' in tail;
   const body = hasResultRow ? ledger.slice(0, -1) : ledger;
-  if (trunc.truncated) {
-    body.push({
-      delta: trunc.delta,
-      reason: trunc.reason ?? 'Truncation detected',
-      source: 'description-quality heuristic (LAU-333)',
-    });
-  }
-  if (copy.delta !== 0) {
-    body.push({
-      delta: copy.delta,
-      reason: copy.reason ?? `Copy classified as ${copy.classification}`,
-      source: 'description-quality heuristic (LAU-333)',
-    });
-  }
+  body.push({
+    delta: trunc.delta,
+    reason: trunc.reason ?? 'Truncation detected',
+    source: 'description-quality heuristic (LAU-333)',
+  });
   body.push({ result: newScore });
   perFieldModifiers[fieldName] = body;
 }
