@@ -135,11 +135,19 @@ export const LLM_BOOSTED_BASELINE = 0.85;
  * often substring-mismatch verbose ground-truth strings). Removing the
  * modifier brings product_name in line with brand at baseline 0.93 /
  * LLM 0.70.
+ *
+ * LAU-333 (2026-06-01): description modifier dropped from -0.05 to -0.10.
+ * Description had Pearson R = -0.51, the worst-correlated field after
+ * availability. The [0.85, 1.0] confidence bin showed 50% accuracy. Lower
+ * baseline pushes typical description confidence into a band where
+ * calibration is more honest; truncation + marketing-copy detection layered
+ * on top (see llm-extract.ts) widens the distribution into the 0.4-0.7
+ * range for low-quality emissions.
  */
 export const FIELD_CONFIDENCE_MODIFIERS: Record<string, number> = {
   product_name: 0.00,
   brand: 0.00,
-  description: -0.05,
+  description: -0.10,
   price: 0.00,
   availability: -0.10,
   categories: 0.00,

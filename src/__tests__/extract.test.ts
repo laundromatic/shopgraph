@@ -81,7 +81,8 @@ describe('extractProduct', () => {
     const result = await extractProduct('https://example.com/product');
     expect(result.extraction_method).toBe('schema_org');
     expect(result.product_name).toBe('Vintage Rose Gold Ring');
-    expect(result.confidence.overall).toBeGreaterThan(0.9);
+    // Overall confidence: schema.org tier averages 0.85+ (description -0.10 + availability -0.10 pull mean down from 0.93)
+    expect(result.confidence.overall).toBeGreaterThan(0.85);
     expect(result.url).toBe('https://example.com/product');
   });
 
@@ -396,7 +397,7 @@ describe('strict_confidence_threshold', () => {
     expect(result.product_name).toBe('Vintage Rose Gold Ring');
     // availability (0.83) should be scrubbed
     expect(result.availability).toBe('unknown');
-    // description (0.88) should be scrubbed
+    // description (0.83 — LAU-333 lowered baseline) should be scrubbed
     expect(result.description).toBeNull();
 
     expect(result._extraction_status).toBeDefined();

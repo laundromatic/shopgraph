@@ -22,8 +22,8 @@ describe('getFieldConfidence', () => {
     expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'product_name')).toBeCloseTo(0.93, 10);
     // availability has -0.10 modifier
     expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'availability')).toBeCloseTo(0.83, 10);
-    // description has -0.05 modifier
-    expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'description')).toBeCloseTo(0.88, 10);
+    // description has -0.10 modifier (LAU-333 calibration tightening)
+    expect(getFieldConfidence(SCHEMA_ORG_BASELINE, 'description')).toBeCloseTo(0.83, 10);
   });
 
   it('returns baseline for unknown fields', () => {
@@ -40,6 +40,6 @@ describe('getFieldConfidence', () => {
   it('works with LLM baselines', () => {
     expect(getFieldConfidence(LLM_BASE_BASELINE, 'brand')).toBeCloseTo(0.70, 10);
     expect(getFieldConfidence(LLM_BOOSTED_BASELINE, 'price')).toBeCloseTo(0.85, 10);
-    expect(getFieldConfidence(LLM_LOW_BASELINE, 'description')).toBeCloseTo(0.55, 10);
+    expect(getFieldConfidence(LLM_LOW_BASELINE, 'description')).toBeCloseTo(0.50, 10);
   });
 });
