@@ -163,6 +163,36 @@ describe('validateExtraction', () => {
     expect(result.overall_accuracy).toBe(1.0);
   });
 
+  it('handles null field values in validator response without throwing (LAU-332)', async () => {
+    mockGenerateContent.mockResolvedValue({
+      response: {
+        text: () => JSON.stringify({
+          fields: {
+            product_name: null,
+            brand: { correct: true, confidence: 0.9 },
+            description: undefined,
+            price_amount: { correct: false, confidence: 0.5, correction: '39.99' },
+          },
+        }),
+      },
+    });
+
+    const product = makeProduct();
+    let result: ValidationResult | undefined;
+    await expect(async () => {
+      result = await validateExtraction(product, sampleHtml);
+    }).not.toThrow();
+
+    expect(result).toBeDefined();
+    // Null/undefined entries are skipped; only the two valid ones are counted.
+    expect(result!.fields_verified.product_name).toBeUndefined();
+    expect(result!.fields_verified.description).toBeUndefined();
+    expect(result!.fields_verified.brand.correct).toBe(true);
+    expect(result!.fields_verified.price_amount.correct).toBe(false);
+    expect(result!.fields_verified.price_amount.correction).toBe('39.99');
+    expect(result!.overall_accuracy).toBeCloseTo(0.5);
+  });
+
   it('throws when no API key is available', async () => {
     const originalKey = process.env.GOOGLE_API_KEY;
     delete process.env.GOOGLE_API_KEY;
