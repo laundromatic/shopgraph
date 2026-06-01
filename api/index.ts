@@ -28,7 +28,7 @@ import { verifyUrl } from '../src/verify-url.js';
 import { getRedis } from '../src/redis.js';
 import { createAuthMiddleware } from '../src/auth-middleware.js';
 import { checkLimit, incrementUsage, getUsageSummary } from '../src/subscriptions.js';
-import { getLeaderboardEntries, logSubmission, tryIngestToLeaderboard, isProductUrl } from '../src/leaderboard.js';
+import { getLeaderboardEntries, logSubmission, tryIngestToLeaderboard, deduplicateLeaderboard, getSubmissionStats, isProductUrl } from '../src/leaderboard.js';
 import { checkRateLimit } from '../src/rate-limiter.js';
 import { createMagicLink, verifyMagicLink, findOrCreateCustomer } from '../src/auth.js';
 import { generateApiKey, hashApiKey, storeApiKey, revokeApiKey } from '../src/api-keys.js';
@@ -436,6 +436,40 @@ app.get('/api/leaderboard', async (_req, res) => {
   res.json({ entries, count: entries.length });
 });
 
+// POST /api/admin/leaderboard/dedup — one-time backfill to collapse duplicate domains
+// Gated behind CRON_SECRET to prevent public triggering.
+app.post('/api/admin/leaderboard/dedup', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  const removed = await deduplicateLeaderboard(redisClient);
+  const entries = await getLeaderboardEntries(redisClient);
+  res.json({ ok: true, removed, remaining: entries.length });
+});
+
+// GET /api/admin/playground/stats — internal metrics digest (Phase 4)
+// Scans submission logs and returns summary stats. Gated behind CRON_SECRET.
+app.get('/api/admin/playground/stats', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  const redisClient = getRedis();
+  if (!redisClient) return res.status(500).json({ error: 'Redis not configured' });
+
+  try {
+    const stats = await getSubmissionStats(redisClient);
+    res.json(stats);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Stats generation failed';
+    res.status(500).json({ error: message });
+  }
+});
+
 // GET /api/stats/calibration — confidence calibration report
 app.get('/api/stats/calibration', async (_req, res) => {
   const redis = getRedis();
@@ -454,6 +488,27 @@ app.post('/api/run-calibration', async (req, res) => {
   if (!redis) return res.status(500).json({ error: 'Redis not configured' });
   const { generateCalibrationReport } = await import('../src/calibration.js');
   const report = await generateCalibrationReport(redis);
+  res.json(report);
+});
+
+// GET /api/run-calibration — Vercel cron trigger (cron daemon issues GET requests).
+// Same auth contract as POST: requires Bearer CRON_SECRET.
+// Scheduled in vercel.json: daily at 04:00 UTC. Cost: 1 Redis SCAN pass + N GETs
+// per stored result key; no LLM calls — calibration only reads stored validation data.
+app.get('/api/run-calibration', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  const redis = getRedis();
+  if (!redis) return res.status(500).json({ error: 'Redis not configured' });
+  const { generateCalibrationReport } = await import('../src/calibration.js');
+  const report = await generateCalibrationReport(redis);
+  console.log('[run-calibration]', JSON.stringify({
+    sample_size: report.sample_size,
+    overall_pearson_r: report.overall_pearson_r,
+    recommendation: report.recommendation,
+  }));
   res.json(report);
 });
 
@@ -521,6 +576,80 @@ app.get('/api/run-tests', async (req, res) => {
       error: 'Test runner failed',
       message: err instanceof Error ? err.message : String(err),
     });
+  }
+});
+
+// Cron: weekly leaderboard re-scoring (Phase 3.3)
+// Reads all existing leaderboard entries from Redis, re-extracts each URL,
+// and calls tryIngestToLeaderboard to update scores with fresh data.
+// Only updates existing entries — does not add new domains.
+app.get('/api/leaderboard/rescore', async (req, res) => {
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret) {
+    const authHeader = req.headers.authorization;
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+  }
+
+  const redisClient = getRedis();
+  if (!redisClient) {
+    return res.status(500).json({ error: 'Redis not configured' });
+  }
+
+  const entries = await getLeaderboardEntries(redisClient);
+  if (entries.length === 0) {
+    return res.json({ ok: true, rescored: 0, failed: 0, skipped: 0 });
+  }
+
+  let rescored = 0;
+  let failed = 0;
+  let skipped = 0;
+
+  for (const entry of entries) {
+    try {
+      const product = await extractProduct(entry.url, {});
+      if (!product.product_name) {
+        skipped++;
+        continue;
+      }
+      // tryIngestToLeaderboard updates if score or confidence is higher
+      const updated = await tryIngestToLeaderboard(redisClient, entry.url, product);
+      if (updated) {
+        rescored++;
+      } else {
+        skipped++;
+      }
+    } catch {
+      failed++;
+    }
+  }
+
+  console.log(`[leaderboard/rescore] rescored=${rescored} failed=${failed} skipped=${skipped} total=${entries.length}`);
+  res.json({ ok: true, rescored, failed, skipped, total: entries.length });
+});
+
+// Cron: daily stats digest (Phase 4)
+// Calls getSubmissionStats and logs the digest to console.
+// Gated behind CRON_SECRET — internal only.
+app.get('/api/admin/stats-digest', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
+  const redisClient = getRedis();
+  if (!redisClient) {
+    return res.status(500).json({ error: 'Redis not configured' });
+  }
+
+  try {
+    const stats = await getSubmissionStats(redisClient);
+    console.log('[stats-digest]', JSON.stringify(stats));
+    res.json({ ok: true, stats });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Stats digest failed';
+    res.status(500).json({ error: message });
   }
 });
 
@@ -870,10 +999,12 @@ app.post('/api/playground', async (req, res) => {
     cache.set(url, product);
 
     // Log submission and try leaderboard ingestion (fire-and-forget)
-    logSubmission(redis, url, ip, product, null).catch(() => {});
-    if (product.product_name) {
-      tryIngestToLeaderboard(redis, url, product).catch(() => {});
-    }
+    // Pass logKey to tryIngestToLeaderboard so it can update added_to_leaderboard.
+    logSubmission(redis, url, ip, product, null).then(({ logKey }) => {
+      if (product.product_name) {
+        tryIngestToLeaderboard(redis, url, product, logKey).catch(() => {});
+      }
+    }).catch(() => {});
 
     // Detect non-product pages: if all core fields are null/empty, the URL likely isn't a product page
     const hasProductData = product.product_name || product.brand || (product.price && product.price.amount);
@@ -898,7 +1029,7 @@ app.post('/api/playground', async (req, res) => {
     res.json({ product, ...scoreData, playground: true, runs_remaining: limit.limit - limit.used, cached: false });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Extraction failed';
-    // Log failed submission
+    // Log failed submission (fire-and-forget)
     logSubmission(redis, url, ip, null, message).catch(() => {});
     res.status(500).json({ error: 'extraction_failed', message: 'This site blocked the extraction request. Try a different URL, or try again in a few minutes.', playground: true, runs_remaining: limit.limit - limit.used });
   }
