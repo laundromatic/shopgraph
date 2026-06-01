@@ -150,10 +150,11 @@ export interface EnrichmentOptions {
 }
 
 // ── Volatility & decay ────────────────────────────────────────────
-export type VolatilityClass = 'real_time' | 'volatile' | 'slow_change' | 'stable';
+export type VolatilityClass = 'hyper_volatile' | 'real_time' | 'volatile' | 'slow_change' | 'stable';
 
 /** Half-life in seconds for each volatility class */
 export const VOLATILITY_HALF_LIFE: Record<VolatilityClass, number> = {
+  hyper_volatile: 10 * 60,   // 10 minutes — promo-heavy retailers (LAU-330)
   real_time: 30 * 60,        // 30 minutes
   volatile: 2 * 60 * 60,     // 2 hours
   slow_change: 24 * 60 * 60, // 24 hours
