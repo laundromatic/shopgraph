@@ -557,7 +557,9 @@ async function extractFromHtmlContent(html: string, url: string, options?: Enric
     // it, the cross-tier signal is only observed on the (smaller) population
     // of partial Schema.org pages.
     const partial = isPartialSchemaResult(schemaProduct);
-    const shouldCrossCheck = partial || isCrossTierCheckEnabled();
+    const crossTierEnv = isCrossTierCheckEnabled();
+    const shouldCrossCheck = partial || crossTierEnv;
+    console.log(`[extract] cross-tier check decision for ${url}: partial=${partial}, env=${crossTierEnv}, willRunLLM=${shouldCrossCheck}`);
     if (shouldCrossCheck) {
       try {
         const llmResult = await extractWithLlm(html, url);
