@@ -184,11 +184,26 @@ export interface FieldFreshness {
 }
 
 /**
+ * Resolve a field's volatility class. By default uses FIELD_VOLATILITY; callers
+ * can pass a per-merchant override (e.g. promo-heavy domains routed to
+ * hyper_volatile via getVolatilityClass from volatility-profile.ts).
+ */
+export type VolatilityResolver = (field: string) => VolatilityClass;
+
+const defaultVolatilityResolver: VolatilityResolver = (field) =>
+  FIELD_VOLATILITY[field] ?? 'slow_change';
+
+/**
  * Compute decayed confidence for a field based on time since extraction.
  * Formula: base * (0.5 ^ (age / half_life))
  */
-export function decayConfidence(baseConfidence: number, fieldName: string, ageSeconds: number): number {
-  const volatility = FIELD_VOLATILITY[fieldName] ?? 'slow_change';
+export function decayConfidence(
+  baseConfidence: number,
+  fieldName: string,
+  ageSeconds: number,
+  resolveVolatility: VolatilityResolver = defaultVolatilityResolver,
+): number {
+  const volatility = resolveVolatility(fieldName);
   const halfLife = VOLATILITY_HALF_LIFE[volatility];
   return baseConfidence * Math.pow(0.5, ageSeconds / halfLife);
 }
@@ -200,11 +215,12 @@ export function buildFieldFreshness(
   fieldConfidence: Record<string, number>,
   ageSeconds: number,
   decayThreshold: number = 0.01,
+  resolveVolatility: VolatilityResolver = defaultVolatilityResolver,
 ): Record<string, FieldFreshness> {
   const freshness: Record<string, FieldFreshness> = {};
   for (const [field, originalConf] of Object.entries(fieldConfidence)) {
-    const volatility = FIELD_VOLATILITY[field] ?? 'slow_change';
-    const decayed = decayConfidence(originalConf, field, ageSeconds);
+    const volatility = resolveVolatility(field);
+    const decayed = decayConfidence(originalConf, field, ageSeconds, resolveVolatility);
     const isDecayed = decayed < originalConf * 0.9; // >10% loss = decayed
     freshness[field] = {
       volatility_class: volatility,
@@ -222,10 +238,11 @@ export function buildFieldFreshness(
 export function applyDecay(
   fieldConfidence: Record<string, number>,
   ageSeconds: number,
+  resolveVolatility: VolatilityResolver = defaultVolatilityResolver,
 ): Record<string, number> {
   const decayed: Record<string, number> = {};
   for (const [field, conf] of Object.entries(fieldConfidence)) {
-    decayed[field] = decayConfidence(conf, field, ageSeconds);
+    decayed[field] = decayConfidence(conf, field, ageSeconds, resolveVolatility);
   }
   return decayed;
 }
@@ -237,9 +254,10 @@ export function anyFieldBelowThreshold(
   fieldConfidence: Record<string, number>,
   ageSeconds: number,
   threshold: number,
+  resolveVolatility: VolatilityResolver = defaultVolatilityResolver,
 ): boolean {
   for (const [field, conf] of Object.entries(fieldConfidence)) {
-    if (decayConfidence(conf, field, ageSeconds) < threshold) return true;
+    if (decayConfidence(conf, field, ageSeconds, resolveVolatility) < threshold) return true;
   }
   return false;
 }

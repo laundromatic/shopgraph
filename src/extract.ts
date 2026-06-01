@@ -1,5 +1,6 @@
 import type { ProductData, EnrichmentOptions, ShopGraphMetadata, ExtractionStatus, FieldFreshness, ExtractionMethod, FieldModifierEntry } from './types.js';
 import { buildFieldFreshness, applyDecay } from './types.js';
+import { getVolatilityClass } from './volatility-profile.js';
 import { extractSchemaOrg } from './schema-org.js';
 import { extractWithLlm } from './llm-extract.js';
 import { signRequest } from './agent-identity.js';
@@ -62,16 +63,21 @@ export function applyThresholdAndMetadata(
   const extractionTime = new Date(product.extracted_at);
   const ageSeconds = Math.max(0, Math.floor((now.getTime() - extractionTime.getTime()) / 1000));
 
+  // Per-merchant volatility resolver (LAU-330): promo-heavy domains route
+  // price + availability to hyper_volatile (10-min half-life). Falls back to
+  // FIELD_VOLATILITY for all other (domain, field) pairs.
+  const resolveVolatility = (field: string) => getVolatilityClass(product.url, field);
+
   // Compute decayed confidence when serving from cache
   const originalConfidence = { ...product.confidence.per_field };
   const effectiveConfidence = fromCache && ageSeconds > 0
-    ? applyDecay(originalConfidence, ageSeconds)
+    ? applyDecay(originalConfidence, ageSeconds, resolveVolatility)
     : originalConfidence;
 
   // Build field_freshness block (always present, shows decay state)
   const fieldFreshness: Record<string, FieldFreshness> | undefined =
     fromCache && ageSeconds > 0
-      ? buildFieldFreshness(originalConfidence, ageSeconds)
+      ? buildFieldFreshness(originalConfidence, ageSeconds, 0.01, resolveVolatility)
       : undefined;
 
   // Promote per-field method + modifier ledger from the extraction result
