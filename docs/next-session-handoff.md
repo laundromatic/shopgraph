@@ -30,7 +30,7 @@ Legend: `☐` not started · `⏳` in progress · `✅` done · `✕` cancelled/
 
 - ✅ Linear roadmap audit complete: `docs/path-a-c-linear-audit-2026-05-19.md`
 - ✅ Path C cancelled — agent identity/reputation does not fit KB's constraints (solo, no partnerships, no crypto, tool user must be developer/agent or honest-fit equivalent)
-- ⚠️ Path A (ShopGraph + Operator Review) **PRD on hold**. Path A has Step 1 + Step 4 weakness in rubric. ShopGraph has zero paying users; customer demand for confidence-gated escalation is inferred, not validated.
+- ⚠️ Path A (ShopGraph + Operator Review) **PRD on hold**. Path A has Step 1 weakness specifically on the **commerce-extraction sub-vertical** (the broader HITL pattern passes per `path-a-verification-subagent-2026-05-31.md` and `commerce-evidence-reeval-2026-05-31.md`). ~~Step 4 weakness~~ *[2026-06-01: "Step 4 weakness because ShopGraph has zero paying users" was a conflation. PROJECT.md Step 4 measures category-adoption-willingness via adjacent pricing + downloads/stars/active use — not candidate-product monetization. Per the latest applied framing, paid customers are NOT required. Step 4 weakness for Path A applies to the commerce-extraction CATEGORY adoption signal, not to ShopGraph's revenue.]*
 - ⚠️ Path A may still be worth shipping as a portfolio completion piece (extends ShopGraph's substrate), but should NOT be locked as the primary product direction until research wave 2 informs whether something stronger exists.
 - ⏸ Linear ticket hygiene on hold until product direction is clear (avoid rewriting tickets twice).
 - 📋 Discovery research wave 2 not yet started — this is the next action.
@@ -70,10 +70,11 @@ Bake these into the task prompt itself, not as post-hoc filters:
 1. **Identify the tool user for every finding.** Developer / agent / both / SMB owner / consumer. If consumer, flag explicitly — it is out of PROJECT.md's literal scope and requires KB judgment.
 
 2. **Apply PROJECT.md rubric in order, not Step 5 first:**
+   > **📌 APPLICATION CLARIFICATION — 2026-06-01:** PROJECT.md rubric is the LATEST (not deprecated). Step 4's "pricing proxies" refers to **adjacent solutions** (does anyone pay for the comparable thing? — a category-adoption-willingness signal) — NOT to the candidate product's monetization. **Paid customers are NOT required** for the candidate product (`path-a-verification-subagent-2026-05-31.md:3`; `path-a-scope-eval-2026-05-31.md:5`). The bar is "would be USED" (downloads, stars, active use). PROJECT.md now has the same clarification banner at `~/Documents/Claude/Scheduled/PROJECT.md`.
    - Step 1: Is the problem experienced? (behavioral evidence — workarounds, custom builds, hired headcount)
    - Step 2: How widespread? (≥6 sources, ≥4 source types)
    - Step 3: Are people trying to solve it but can't? (attempted solutions, where they fail)
-   - Step 4: Would they adopt a purpose-built tool? (adoption signals for adjacent products, pricing proxies)
+   - Step 4: Would they adopt a purpose-built tool? (adoption signals — downloads, stars, active use; adjacent-category pricing as category-adoption proxy, NOT candidate-product monetization gate)
    - Step 5: Is the gap real? (incumbents check — ONLY after 1–4 pass)
 
 3. **Check data accessibility against KB's hard constraints:**

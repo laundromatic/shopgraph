@@ -10,10 +10,67 @@ The session of 2026-05-31 closed with Path C cancelled, Path A paused, and a dis
 
 **Superseded:** `docs/path-a-c-plan.md` (kept for history; the "Path A+C" framing is historical).
 
+## ICP — Documented Path A Use Cases
+
+Path A's working framing: **developer is the buyer + integrator; the human reviewer is either the developer themselves or an operator/operator team they route low-confidence extractions to** for review, verification, training, and correction. Pricing: per-seat for the operator/reviewer + subscription for the API (per-operation pricing for the reviewer surface is explicitly banned).
+
+**Source-of-record:** `~/Documents/Claude/Projects/discovery-research/SESSION-TRANSCRIPT-2026-05-19.md:4615-4625, 4798-4812, 4868-4880`; `docs/path-a-c-plan.md:173-179`; `docs/path-a-c-linear-audit-2026-05-19.md:64-76`. Linear ticket descriptions are thin; transcript and docs are canonical.
+
+### 2 jobs-to-be-done, 4 customer archetypes
+
+**JTBD 1 — Data-quality exception queue for vendors with structured-data products.** Reviewer = vendor's in-house data analyst / data quality team.
+
+- **Wiser Solutions** (B2C price intelligence, "strongest verified fit") — extraction layer for sites where the crawler returns uncertain pricing; low-confidence routes to a Wiser data analyst.
+- **Thomasnet** (B2B industrial supplier data normalization) — specs/material/tolerance below-threshold routes to their data team before publishing to the directory.
+- **Sovrn Commerce** (B2C affiliate / publisher feed) — fills long-tail + B2B merchants their merchant feeds miss; low-confidence routes to a Sovrn data quality analyst.
+- **Skimlinks** (B2C affiliate / publisher feed) — same pattern via "Product Key" enrichment.
+
+**JTBD 2 — Confidence-gated procurement automation.** Reviewer = operator team on the buying side (procurement ops), Slack/email/webhook routing.
+
+- **Mid-market B2B procurement** ($50M-ish manufacturers buying from 150+ niche suppliers without APIs or punchout) — agent extracts, auto-fills verified fields into POs, routes below-threshold fields to `#procurement-ops` for approve/re-extract/reject. **Only archetype without a verified named customer** (transcript:4806 — "hypothesis with no public case studies").
+
+### Implications for the assistant
+
+- **B2B coverage is on-ICP** — justified by Thomasnet (JTBD 1) and mid-market procurement (JTBD 2). Do not strip B2B from corpus, leaderboard, or LAU-308.
+- **Long-tail B2C coverage is on-ICP** — justified by Wiser, Sovrn, Skimlinks (all JTBD 1).
+- **The four archetypes are the ICP** — not big-box (Amazon, Home Depot, Grainger block serverless), not enterprise procurement via Power Automate, not authenticated extraction proxies (all retired in `path-a-c-linear-audit-2026-05-19.md`).
+
+### Rubric verdict (verified 2026-06-01)
+
+Four rounds of independent sub-agent verification against PROJECT.md (correctly-applied: Step 4 = adjacent-category adoption signal, paid customers NOT required) — Path A passes Steps 1-4 + constraints + goal; Step 5 is **WEAK PASS** (gap is real but K3 differentiation against falsified Box/Extend/Sensible at $499-1499/mo is load-bearing). The general pattern is well-evidenced (60+ repos reinventing it, 30,700+ files, 18+ production vendors); the vehicle (commerce extraction) is a forward bet.
+
+### Three load-bearing risks (carry forward into any Path A build)
+
+1. **Demo positioning** — foreground public-web product pages + three-tier escalation + signed attestations + agent-readiness leaderboard. If demo reads as "Box for web pages," K3 falsification applies retroactively.
+2. **Calibration evidence** — Pearson R > 0.70 is precondition for threshold routing being defensible (`path-a-scope-eval-2026-05-31.md:63`). Current state (2026-06-01): 274 samples, overall R -0.106, only price (0.688) positive. Engineering work (matcher asymmetry fix, distribution widening, per-field improvements) closes it. Reaching the bar requires **substantial extraction improvements** — particularly availability (R = -0.01, most volatile field, needs structured-signal parsing tighter freshness coupling) and description. Field-level work is the cleanest next move; ShopGraph IS the forward bet on agentic commerce, and the bet's defensibility depends on calibration being real.
+3. **Commerce-as-vehicle is a forward bet** — falsification trigger: Shopify Sidekick + Walmart Sparky lock to first-party data feeds. Monitor Q3-Q4 2026 platform announcements.
+
+### Build scope (chosen 2026-06-01)
+
+Option A from the four documented scope options: agent-ready product feed with verifiable handoff lane + operator review queue (`path-a-scope-eval-2026-05-31.md:38`). Chosen because it's the only option that demonstrates end-to-end using existing substrate. Yes, this is the weakest vehicle by source evidence (commerce purchase agents are "claimed but not adequately verified" per `task-where-collaboration-happens.md:10`) — the trade-off is taken consciously because the pattern is universal and the substrate is built.
+
+### Future vehicles (post-Path A commerce, NOT current roadmap)
+
+Code review and data labeling are STRONGER-evidenced HITL vehicles in the source corpus:
+- **Code review:** CodeRabbit ($24/dev/mo), Cursor BugBot ($40/user/mo), Greptile ($30/seat/mo), GitHub Copilot — funded, priced, hired reviewer roles, production-deployed.
+- **Data labeling:** Scale AI (~$7B+ valuation), Labelbox, Surge — explicit HITL reviewer workflows, entrenched ML-team relationships.
+
+ShopGraph's substrate (commerce extraction pipeline) does NOT transfer to either vehicle without new infrastructure. **These are documented as FOLLOW-ON vehicles — "will follow" after the commerce vehicle reaches a working state — subject to fresh discovery on whether incumbents leave a defensible angle for a solo founder.** Neither is a current roadmap commitment.
+
+**ShopGraph IS the forward bet on agentic commerce** — that is the operative vehicle commitment. Code-review and data-labeling are optional future explorations, not commitments.
+
+### Context-only
+
+This section anchors the assistant on Path A evolution. Do NOT use it to drive site copy or positioning changes — site copy stays segment-agnostic. Do NOT write PRDs or take build actions without explicit KB approval. **Path A is currently on pause** per `docs/next-session-handoff.md:33-34` (PRD on hold pending research wave 2); use cases + rubric verdict are documented, pause is procedural pending KB direction.
+
+### Verification trail (2026-06-01)
+
+Sub-agent rounds: `a06e9aae7dc847dd7` (initial rubric, pre-correction); `ab5f9d7352f9cf9f6` (standalone-product framing corrected; goal recaptured); `a35eb25bf0d0674e9` (Step 4 interpretation corrected — adjacent-category, not candidate-product); `a2d63899c53e880f9` (final verdict against correctly-applied rubric). PROJECT.md latest at `~/Documents/Claude/Scheduled/PROJECT.md` (with 2026-06-01 application clarification banners).
+
 ## Critical Product Rules
 
 ### Free Tier Must Work on ICP URLs (LAU-304)
-The free tier's only job is to eliminate the buyer's objection "does this work on my URL?" If it fails on the URLs your ICP uses (B2B suppliers, large retailers), you are failing on qualified leads. A working demo at 25 calls beats a broken demo at 500. Never ship a demo that fails on the first click. The playground is the primary conversion path — if it doesn't work, nothing downstream converts.
+The free tier's only job is to eliminate the buyer's objection "does this work on my URL?" If it fails on the URLs your ICP uses (long-tail B2C retailers — DTC brands, mid-market e-commerce, Shopify stores, and niche retailers without structured merchant feeds), you are failing on qualified leads. A working demo at 25 calls beats a broken demo at 500. Never ship a demo that fails on the first click. The playground is the primary conversion path — if it doesn't work, nothing downstream converts.
 
 Current state: Playground now uses `/api/playground` (full pipeline, 100/day IP throttle for testing). Free tier changed from 500 Schema.org-only to 50 full-pipeline calls/month.
 
