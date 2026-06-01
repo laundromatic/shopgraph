@@ -1,5 +1,5 @@
 import type { ProductData, EnrichmentOptions, ShopGraphMetadata, ExtractionStatus, FieldFreshness, ExtractionMethod, FieldModifierEntry } from './types.js';
-import { buildFieldFreshness, applyDecay } from './types.js';
+import { buildFieldFreshness, applyDecay, HYBRID_AGREE_BASELINE, HYBRID_DISAGREE_BASELINE } from './types.js';
 import { getVolatilityClass } from './volatility-profile.js';
 import { extractSchemaOrg } from './schema-org.js';
 import { extractWithLlm } from './llm-extract.js';
@@ -18,6 +18,14 @@ const FETCH_TIMEOUT_MS = 15_000;
  */
 export function isBrowserFallbackEnabled(): boolean {
   return process.env.ENABLE_BROWSER_FALLBACK === 'true';
+}
+
+/**
+ * Check if the cross-tier agreement check is forced on for every extraction
+ * (not just partial-Schema.org cases). LAU-335 / Architect Move 1.
+ */
+export function isCrossTierCheckEnabled(): boolean {
+  return process.env.ENABLE_CROSS_TIER_CHECK === 'true';
 }
 
 /**
@@ -399,26 +407,72 @@ function mergeResults(primary: ProductData, secondary: Partial<ProductData>): Pr
     }
   }
 
-  // For fields both tiers produced AND agreed on, tag as 'hybrid'. The
-  // Schema.org-based "Single source" penalty (applied during initial
-  // extraction) is removed since cross-validation now exists; this
-  // preserves existing field_confidence math because the underlying
-  // FIELD_CONFIDENCE_MODIFIERS constant stays the same — we simply
-  // re-frame the ledger reason to reflect the hybrid source.
+  // Cross-tier agreement / disagreement pricing (LAU-335 / Architect Move 1).
+  //
+  // The previous behaviour re-tagged the method as 'hybrid' but explicitly
+  // preserved the existing FIELD_CONFIDENCE math — the agreement signal was
+  // observed and thrown away. Architect verdict 2026-06-01: agreement is the
+  // strongest signal of correctness available; price it in.
+  //
+  //  - agree → overwrite confidence to HYBRID_AGREE_BASELINE (0.95) and
+  //    append a ledger delta with reason 'cross_tier_agree'.
+  //  - both tiers extracted but disagreed → overwrite to
+  //    HYBRID_DISAGREE_BASELINE (0.45) and append delta 'cross_tier_disagree'.
+  //  - only one tier extracted → leave existing baseline / ledger alone.
   for (const field of Object.keys(agree)) {
-    if (!agree[field]) continue;
-    mergedPerFieldMethod[field] = 'hybrid';
-    const original = mergedPerFieldMods[field];
-    if (original && original.length > 0) {
-      const baseEntry = original.find((e): e is { base: number; method: ExtractionMethod } => 'base' in e);
-      const deltas = original.filter((e): e is { delta: number; reason: string; source?: string } => 'delta' in e);
-      const resultEntry = original.find((e): e is { result: number } => 'result' in e);
-      if (baseEntry && resultEntry) {
-        const newLedger: FieldModifierEntry[] = [{ base: baseEntry.base, method: 'hybrid' }];
-        for (const d of deltas) newLedger.push(d);
-        newLedger.push({ result: resultEntry.result });
-        mergedPerFieldMods[field] = newLedger;
+    const bothExtracted = primaryHas[field] && secondaryHas[field];
+    if (!bothExtracted) continue;
+
+    if (agree[field]) {
+      mergedPerFieldMethod[field] = 'hybrid';
+      const original = mergedPerFieldMods[field];
+      const prior = mergedPerField[field] ?? 0;
+      const delta = HYBRID_AGREE_BASELINE - prior;
+
+      if (original && original.length > 0) {
+        const baseEntry = original.find((e): e is { base: number; method: ExtractionMethod } => 'base' in e);
+        const deltas = original.filter((e): e is { delta: number; reason: string; source?: string } => 'delta' in e);
+        if (baseEntry) {
+          const newLedger: FieldModifierEntry[] = [{ base: baseEntry.base, method: 'hybrid' }];
+          for (const d of deltas) newLedger.push(d);
+          newLedger.push({ delta, reason: 'cross_tier_agree', source: 'schema_org + llm converged on identical value' });
+          newLedger.push({ result: HYBRID_AGREE_BASELINE });
+          mergedPerFieldMods[field] = newLedger;
+        }
+      } else {
+        mergedPerFieldMods[field] = [
+          { base: prior, method: 'hybrid' },
+          { delta, reason: 'cross_tier_agree', source: 'schema_org + llm converged on identical value' },
+          { result: HYBRID_AGREE_BASELINE },
+        ];
       }
+      mergedPerField[field] = HYBRID_AGREE_BASELINE;
+    } else {
+      // Both tiers extracted, but values disagreed — one is wrong, we
+      // don't yet know which. Drop confidence to flag the uncertainty.
+      mergedPerFieldMethod[field] = 'hybrid';
+      const original = mergedPerFieldMods[field];
+      const prior = mergedPerField[field] ?? 0;
+      const delta = HYBRID_DISAGREE_BASELINE - prior;
+
+      if (original && original.length > 0) {
+        const baseEntry = original.find((e): e is { base: number; method: ExtractionMethod } => 'base' in e);
+        const deltas = original.filter((e): e is { delta: number; reason: string; source?: string } => 'delta' in e);
+        if (baseEntry) {
+          const newLedger: FieldModifierEntry[] = [{ base: baseEntry.base, method: 'hybrid' }];
+          for (const d of deltas) newLedger.push(d);
+          newLedger.push({ delta, reason: 'cross_tier_disagree', source: 'schema_org + llm produced different values' });
+          newLedger.push({ result: HYBRID_DISAGREE_BASELINE });
+          mergedPerFieldMods[field] = newLedger;
+        }
+      } else {
+        mergedPerFieldMods[field] = [
+          { base: prior, method: 'hybrid' },
+          { delta, reason: 'cross_tier_disagree', source: 'schema_org + llm produced different values' },
+          { result: HYBRID_DISAGREE_BASELINE },
+        ];
+      }
+      mergedPerField[field] = HYBRID_DISAGREE_BASELINE;
     }
   }
 
@@ -495,8 +549,16 @@ async function extractFromHtmlContent(html: string, url: string, options?: Enric
       confidence: schemaResult.confidence ?? { overall: 0, per_field: {} },
     };
 
-    // Auto-heal: if Schema.org is partial, fill gaps with LLM
-    if (isPartialSchemaResult(schemaProduct)) {
+    // Auto-heal: if Schema.org is partial, fill gaps with LLM.
+    //
+    // LAU-335: when ENABLE_CROSS_TIER_CHECK is set, ALSO run the LLM tier
+    // on complete Schema.org results purely to compute cross-tier agreement
+    // and price it into confidence. This raises the effect ceiling: without
+    // it, the cross-tier signal is only observed on the (smaller) population
+    // of partial Schema.org pages.
+    const partial = isPartialSchemaResult(schemaProduct);
+    const shouldCrossCheck = partial || isCrossTierCheckEnabled();
+    if (shouldCrossCheck) {
       try {
         const llmResult = await extractWithLlm(html, url);
         if (llmResult) {
@@ -505,7 +567,7 @@ async function extractFromHtmlContent(html: string, url: string, options?: Enric
           return applyThresholdAndMetadata(merged, options);
         }
       } catch {
-        // LLM failed — return Schema.org partial result
+        // LLM failed — return Schema.org result (partial or complete)
       }
     }
 

@@ -158,6 +158,24 @@ export const FIELD_CONFIDENCE_MODIFIERS: Record<string, number> = {
   dimensions: -0.05,
 };
 
+/**
+ * Cross-tier agreement baselines (LAU-335 / Architect Move 1).
+ *
+ * When the Schema.org tier and the LLM tier extract the SAME value for a
+ * field, that agreement is the strongest signal of correctness available:
+ * two independent extraction methods converging is near-deterministic of a
+ * correct extraction. Before this change, `mergeResults` re-tagged the
+ * method as 'hybrid' but explicitly preserved the original FIELD_CONFIDENCE
+ * math — the agreement signal was computed and thrown away.
+ *
+ * HYBRID_AGREE_BASELINE replaces the per-field merged confidence with 0.95
+ * when both tiers agree. HYBRID_DISAGREE_BASELINE drops it to 0.45 when both
+ * tiers extracted but disagreed (one is wrong; we don't yet know which).
+ * Single-tier fields are untouched and continue to use the tier baseline.
+ */
+export const HYBRID_AGREE_BASELINE = 0.95;
+export const HYBRID_DISAGREE_BASELINE = 0.45;
+
 /** Get confidence for a specific field, clamped to [0, 1] */
 export function getFieldConfidence(baseline: number, fieldName: string): number {
   const modifier = FIELD_CONFIDENCE_MODIFIERS[fieldName] ?? 0;

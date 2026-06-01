@@ -634,6 +634,8 @@ describe('_shopgraph.field_modifiers (per-field confidence ledger)', () => {
             'Single source',
             'LLM inferred',
             'Stale cache',
+            'cross_tier_agree',
+            'cross_tier_disagree',
           ]).toContain((entry as { reason: string }).reason);
         }
       }
@@ -781,6 +783,157 @@ describe('_shopgraph.field_modifiers (per-field confidence ledger)', () => {
     expect(fieldMethod.product_name).toBe('hybrid');
     const hybridLedger = fieldModifiers.product_name as Array<Record<string, unknown>>;
     expect((hybridLedger[0] as { base: number; method: string }).method).toBe('hybrid');
+  });
+});
+
+describe('cross-tier agreement pricing (LAU-335 / Architect Move 1)', () => {
+  /** Build an LLM mock result with a given product_name/brand. */
+  function llmMock(productName: string | null, brand: string | null = null) {
+    return {
+      extraction_method: 'llm' as const,
+      product_name: productName,
+      brand,
+      description: null,
+      price: null,
+      availability: 'unknown' as const,
+      categories: [],
+      image_urls: [],
+      primary_image_url: null,
+      color: [],
+      material: [],
+      dimensions: null,
+      schema_org_raw: null,
+      confidence: {
+        overall: 0.70,
+        per_field: {
+          ...(productName ? { product_name: 0.75 } : {}),
+          ...(brand ? { brand: 0.70 } : {}),
+        },
+        per_field_method: {
+          ...(productName ? { product_name: 'llm' as const } : {}),
+          ...(brand ? { brand: 'llm' as const } : {}),
+        },
+        per_field_modifiers: {
+          ...(productName ? {
+            product_name: [
+              { base: 0.70, method: 'llm' as const },
+              { delta: 0.05, reason: 'Structured data match' },
+              { result: 0.75 },
+            ],
+          } : {}),
+          ...(brand ? {
+            brand: [{ base: 0.70, method: 'llm' as const }, { result: 0.70 }],
+          } : {}),
+        },
+      },
+    };
+  }
+
+  it('agreement scenario: confidence overwritten to HYBRID_AGREE_BASELINE (0.95) with cross_tier_agree ledger entry', async () => {
+    // Partial schema (name only) so auto-heal fires. LLM agrees on name.
+    const partialSchemaHtml = `<script type="application/ld+json">
+      {"@type": "Product", "name": "Agree Product"}
+    </script>`;
+    mockFetch.mockResolvedValueOnce(mockResponse(partialSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce(llmMock('Agree Product'));
+
+    const result = await extractProduct('https://example.com/agree');
+    const fc = result._shopgraph!.field_confidence;
+    const fm = result._shopgraph!.field_modifiers!;
+    const fmeth = result._shopgraph!.field_method!;
+
+    expect(fc.product_name).toBeCloseTo(0.95, 5);
+    expect(fmeth.product_name).toBe('hybrid');
+
+    const ledger = fm.product_name as Array<Record<string, unknown>>;
+    const agreeEntry = ledger.find(e => 'reason' in e && e.reason === 'cross_tier_agree');
+    expect(agreeEntry, 'cross_tier_agree delta missing').toBeDefined();
+    const last = ledger[ledger.length - 1] as { result: number };
+    expect(last.result).toBeCloseTo(0.95, 5);
+  });
+
+  it('disagreement scenario: confidence overwritten to HYBRID_DISAGREE_BASELINE (0.45) with cross_tier_disagree ledger entry', async () => {
+    // Schema.org has a brand. LLM also extracts a brand but DIFFERENT value.
+    // Use partial schema (missing price/availability) to trigger auto-heal.
+    const partialSchemaHtml = `<script type="application/ld+json">
+      {"@type": "Product", "name": "DisagreeP", "brand": {"@type": "Brand", "name": "SchemaBrand"}}
+    </script>`;
+    mockFetch.mockResolvedValueOnce(mockResponse(partialSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce(llmMock('DisagreeP', 'LlmBrandDifferent'));
+
+    const result = await extractProduct('https://example.com/disagree');
+    const fc = result._shopgraph!.field_confidence;
+    const fm = result._shopgraph!.field_modifiers!;
+    const fmeth = result._shopgraph!.field_method!;
+
+    // brand: both tiers produced different values → disagreement
+    expect(fc.brand).toBeCloseTo(0.45, 5);
+    expect(fmeth.brand).toBe('hybrid');
+
+    const ledger = fm.brand as Array<Record<string, unknown>>;
+    const disagreeEntry = ledger.find(e => 'reason' in e && e.reason === 'cross_tier_disagree');
+    expect(disagreeEntry, 'cross_tier_disagree delta missing').toBeDefined();
+    const last = ledger[ledger.length - 1] as { result: number };
+    expect(last.result).toBeCloseTo(0.45, 5);
+  });
+
+  it('single-tier scenario: existing baseline preserved, no cross_tier_* ledger entry', async () => {
+    // Schema.org returns full data — no LLM auto-heal, no cross-check unless
+    // env var set. Without env var, cross-tier pricing should NOT apply.
+    const completeSchemaHtml = `<script type="application/ld+json">
+      {"@type": "Product", "name": "SoloP", "brand": {"@type": "Brand", "name": "SoloBrand"},
+       "offers": {"@type": "Offer", "price": "10.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}}
+    </script>`;
+    mockFetch.mockResolvedValueOnce(mockResponse(completeSchemaHtml));
+
+    delete process.env.ENABLE_CROSS_TIER_CHECK;
+
+    const result = await extractProduct('https://example.com/solo');
+    const fm = result._shopgraph!.field_modifiers!;
+    const fmeth = result._shopgraph!.field_method!;
+
+    // No cross-tier ledger entries
+    for (const ledger of Object.values(fm) as Array<Array<Record<string, unknown>>>) {
+      for (const entry of ledger) {
+        if ('reason' in entry) {
+          expect(['cross_tier_agree', 'cross_tier_disagree']).not.toContain(
+            (entry as { reason: string }).reason,
+          );
+        }
+      }
+    }
+
+    // product_name still tagged as schema_org (no merge ran)
+    expect(fmeth.product_name).toBe('schema_org');
+    expect(extractWithLlm).not.toHaveBeenCalled();
+  });
+
+  it('ENABLE_CROSS_TIER_CHECK fires LLM check on COMPLETE schema.org result', async () => {
+    const completeSchemaHtml = `<script type="application/ld+json">
+      {"@type": "Product", "name": "EnvAgree", "brand": {"@type": "Brand", "name": "EnvBrand"},
+       "offers": {"@type": "Offer", "price": "10.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}}
+    </script>`;
+    mockFetch.mockResolvedValueOnce(mockResponse(completeSchemaHtml));
+    vi.mocked(extractWithLlm).mockResolvedValueOnce(llmMock('EnvAgree', 'EnvBrand'));
+
+    process.env.ENABLE_CROSS_TIER_CHECK = 'true';
+
+    try {
+      const result = await extractProduct('https://example.com/env-check');
+      const fc = result._shopgraph!.field_confidence;
+      const fmeth = result._shopgraph!.field_method!;
+
+      // LLM was called even though schema.org was complete
+      expect(extractWithLlm).toHaveBeenCalled();
+      // Both tiers agreed on product_name → priced at 0.95
+      expect(fc.product_name).toBeCloseTo(0.95, 5);
+      expect(fmeth.product_name).toBe('hybrid');
+      // Both tiers agreed on brand → priced at 0.95
+      expect(fc.brand).toBeCloseTo(0.95, 5);
+      expect(fmeth.brand).toBe('hybrid');
+    } finally {
+      delete process.env.ENABLE_CROSS_TIER_CHECK;
+    }
   });
 });
 
