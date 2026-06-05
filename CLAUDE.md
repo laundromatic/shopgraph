@@ -147,7 +147,7 @@ When a ticket is superseded: move to Canceled with a comment explaining what rep
 - LAU-287: Confidence scoring — In Progress, Phase 1 shipped, calibration needs ENABLE_LLM_VALIDATION
 - LAU-296: RFC 9421 identity — In Progress, infra shipped, registry registration pending (includes old LAU-307)
 - LAU-275: AgentReady scoring — In Progress, scoring API shipped, leaderboard/correlation pending
-- LAU-308: B2B vertical coverage — In Progress, 30 sites verified
+- LAU-308: B2B vertical coverage — Done (2026-05-01), 30 sites verified
 - LAU-309: Leaderboard v2 — In Progress, Phases 1-3 shipped, Phase 4 (metrics) pending
 - LAU-259: MCP directory registration — In Progress, P3. mcp-marketplace.io submitted via creator flow 2026-04-21 (pending review). LAUNCHGUIDE.md at repo root is the marketplace source-of-truth. Official MCP Registry confirmed published. CVE patches shipped (vitest 4 + mcp-sdk 1.29). Remaining: smithery.yaml stale copy + cross-directory copy audit.
 - LAU-310: Page purpose overlap (self-healing / routing / playground) — Todo
